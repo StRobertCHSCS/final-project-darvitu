@@ -23,6 +23,4 @@ class Arena:
         Arguments:
             arena {int} -- the arena number to draw
         """
-        arcade.draw_texture_rectangle(self.SCREEN_WIDTH / 2,
-                                      self.SCREEN_HEIGHT / 2, self.SCREEN_WIDTH, self.SCREEN_HEIGHT,
-                                      arcade.load_texture("arena" + str(arena) + ".jpg"))
+
