@@ -37,6 +37,17 @@ class myGameWindow(arcade.Window):
             self.up = True
         if symbol == arcade.key.DOWN:
             self.down = True
+    
+    def on_key_release(self, symbol, modifiers):
+         if symbol == arcade.key.RIGHT:
+            self.right = False
+        if symbol == arcade.key.LEFT:
+            self.left = False 
+        if symbol == arcade.key.UP:
+            self.up = False
+        if symbol == arcade.key.DOWN:
+            self.down = False 
+
 
         
 
