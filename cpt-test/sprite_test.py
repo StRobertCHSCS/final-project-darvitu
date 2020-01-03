@@ -6,8 +6,6 @@ class myGameWindow(arcade.Window):
 
         arcade.set_background_color(arcade.color.BLACK)
 
-        self.sprite1 = arcade.sprite()
-
         self.player_x = 100
         self.player_y = 200
         self.player_speed = 250
@@ -30,7 +28,7 @@ class myGameWindow(arcade.Window):
             self.player_y += self.player_speed * delta_time
         if self.down:
             self.player_y -= self.player_speed * delta_time
-            
+
     def on_key_press(self, symbol, modifiers):
         if symbol == arcade.key.RIGHT:
             self.right = True

@@ -14,6 +14,7 @@ class myGameWindow(arcade.Window):
     def setup(self):
         self.player_list = arcade.SpriteList()
         self.player = arcade.AnimatedTimeSprite()
+        self.player.texture_change_frames = 20
         self.player.textures = []
 
         for i in range(3):
