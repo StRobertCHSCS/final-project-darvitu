@@ -1,0 +1,122 @@
+import arcade
+
+class myGameWindow(arcade.Window):
+    def __init__(self, width, height, title):
+        super().__init__(width, height, title)
+
+        arcade.set_background_color(arcade.color.BLACK)
+
+        self.player_speed = 250
+
+        self.right = False
+        self.left = False
+        self.up = False
+        self.down = False
+
+        self.player_list = None
+        self.player = None
+
+        self.setup()
+    
+    def face_forward(self):
+        self.player.textures = []
+        for i in range(3):
+            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=0,width=96,height=104))
+    
+    def face_left(self):
+        self.player.textures = []
+        for i in range(3):
+            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=104,width=96,height=104))
+    
+    def face_up(self):
+        self.player.textures = []
+        for i in range(1):
+            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=208,width=96,height=104))
+    
+    def face_right(self):
+        self.player.textures = []
+        for i in range(3):
+            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=312,width=96,height=104))
+    
+    def move_down(self):
+        self.player.textures = []
+        for i in range(10):
+            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=416,width=96,height=104))
+    
+    def move_left(self):
+        self.player.textures = []
+        for i in range(10):
+            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=520,width=96,height=104))
+    
+    def move_up(self):
+        self.player.textures = []
+        for i in range(10):
+            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=624,width=96,height=104))
+    
+    def move_right(self):
+        self.player.textures = []
+        for i in range(10):
+            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=728,width=96,height=104))
+        
+    def setup(self):
+        self.player_list = arcade.SpriteList()
+        self.player = arcade.AnimatedTimeSprite()
+        self.player.texture_change_frames = 15
+
+        self.face_forward()
+        
+        self.player.center_x = 1280 // 2
+        self.player.center_y = 720 // 2 
+
+        self.player_list.append(self.player)
+
+    def on_draw(self):
+        arcade.start_render()
+        self.player_list.draw()
+
+    def on_update(self, delta_time):
+        self.player_list.update_animation()
+        if self.right:
+            self.player.center_x += self.player_speed * delta_time
+        if self.left:
+            self.player.center_x -= self.player_speed * delta_time
+        if self.up:
+            self.player.center_y += self.player_speed * delta_time
+        if self.down:
+            self.player.center_y -= self.player_speed * delta_time
+            
+    def on_key_press(self, symbol, modifiers):
+        self.player.texture_change_frames = 5
+
+        if symbol == arcade.key.RIGHT:
+            self.right = True
+            self.move_right()
+        if symbol == arcade.key.LEFT:
+            self.left = True
+            self.move_left()
+        if symbol == arcade.key.UP:
+            self.up = True
+            self.move_up()
+        if symbol == arcade.key.DOWN:
+            self.down = True
+            self.move_down()
+    
+    def on_key_release(self, symbol, modifiers):
+        self.player.texture_change_frames = 15
+
+        if symbol == arcade.key.RIGHT:
+            self.right = False
+            self.face_right()
+        if symbol == arcade.key.LEFT:
+            self.left = False
+            self.face_left() 
+        if symbol == arcade.key.UP:
+            self.up = False
+            self.face_up()
+        if symbol == arcade.key.DOWN:
+            self.down = False
+            self.face_forward() 
+
+
+myGameWindow(1280,720,"Sprite Test")
+arcade.run()

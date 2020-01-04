@@ -22,8 +22,8 @@ class myGameWindow(arcade.Window):
         self.player_list = arcade.SpriteList()
         self.player = arcade.AnimatedTimeSprite()
         self.player.texture_change_frames = 20
-        self.player.textures = []
 
+        self.player.textures = []
         for i in range(3):
             self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=0,width=96,height=104))
         
