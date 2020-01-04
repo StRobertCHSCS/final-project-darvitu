@@ -6,6 +6,13 @@ class myGameWindow(arcade.Window):
 
         arcade.set_background_color(arcade.color.BLACK)
 
+        self.player_speed = 250
+
+        self.right = False
+        self.left = False
+        self.up = False
+        self.down = False
+
         self.player_list = None
         self.player = None
 
@@ -31,12 +38,35 @@ class myGameWindow(arcade.Window):
 
     def on_update(self, delta_time):
         self.player_list.update_animation()
+
+        if self.right:
+            self.player.center_x += self.player_speed * delta_time
+        if self.left:
+            self.player.center_x -= self.player_speed * delta_time
+        if self.up:
+            self.player.center_y += self.player_speed * delta_time
+        if self.down:
+            self.player.center_y -= self.player_speed * delta_time
             
     def on_key_press(self, symbol, modifiers):
-        pass
+        if symbol == arcade.key.RIGHT:
+            self.right = True
+        if symbol == arcade.key.LEFT:
+            self.left = True
+        if symbol == arcade.key.UP:
+            self.up = True
+        if symbol == arcade.key.DOWN:
+            self.down = True
     
     def on_key_release(self, symbol, modifiers):
-        pass
+        if symbol == arcade.key.RIGHT:
+            self.right = False
+        if symbol == arcade.key.LEFT:
+            self.left = False 
+        if symbol == arcade.key.UP:
+            self.up = False
+        if symbol == arcade.key.DOWN:
+            self.down = False 
 
 
 myGameWindow(1280,720,"Sprite Test")
