@@ -1,5 +1,6 @@
 import arcade
 
+
 class myGameWindow(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
@@ -25,10 +26,11 @@ class myGameWindow(arcade.Window):
 
         self.player.textures = []
         for i in range(3):
-            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=0,width=96,height=104))
-        
+            self.player.textures.append(
+                arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=0, width=96, height=104))
+
         self.player.center_x = 1280 // 2
-        self.player.center_y = 720 // 2 
+        self.player.center_y = 720 // 2
 
         self.player_list.append(self.player)
 
@@ -47,7 +49,7 @@ class myGameWindow(arcade.Window):
             self.player.center_y += self.player_speed * delta_time
         if self.down:
             self.player.center_y -= self.player_speed * delta_time
-            
+
     def on_key_press(self, symbol, modifiers):
         if symbol == arcade.key.RIGHT:
             self.right = True
@@ -57,17 +59,17 @@ class myGameWindow(arcade.Window):
             self.up = True
         if symbol == arcade.key.DOWN:
             self.down = True
-    
+
     def on_key_release(self, symbol, modifiers):
         if symbol == arcade.key.RIGHT:
             self.right = False
         if symbol == arcade.key.LEFT:
-            self.left = False 
+            self.left = False
         if symbol == arcade.key.UP:
             self.up = False
         if symbol == arcade.key.DOWN:
-            self.down = False 
+            self.down = False
 
 
-myGameWindow(1280,720,"Sprite Test")
+myGameWindow(1280, 720, "Sprite Test")
 arcade.run()
