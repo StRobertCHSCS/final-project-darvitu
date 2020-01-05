@@ -94,7 +94,7 @@ class myGameWindow(arcade.Window):
         # updates the animation state of the player sprite
         self.player_list.update_animation()
 
-        wall_hit_list = arcade.check_for_collision_with_list(self.player,self.wall_list)
+        wall_hit_list = arcade.check_for_collision_with_list(self.player,self.wall_list) 
 
         # checks the bools to see which key is being pressed and direction of movement
         if self.right:
