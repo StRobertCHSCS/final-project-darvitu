@@ -24,7 +24,7 @@ class TileMap:
                 elif self.map[y][x] == '4':
                     arcade.draw_texture_rectangle(x * 50 + 25, 750 - (50 * y) - 25, 50, 50, Blocks.COBBLESTONE)
                 elif self.map[y][x] == '5':
-                    arcade.draw_texture_rectangle(x * 50 + 25, 750 - (50 * y) - 25, 50, 50, Blocks.TREE)
+                    arcade.draw_texture_rectangle(x * 50 + 25, 750 - (50 * y) - 25, 50, 50, Blocks.WALL)
                 else:
                     pass
 
