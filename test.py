@@ -11,3 +11,4 @@ arcade.draw_texture_rectangle(175,25,50,50,Blocks.LEAVES)
 arcade.draw_texture_rectangle(225,25,50,50,Blocks.TREE)
 arcade.finish_render()
 arcade.run()
+
