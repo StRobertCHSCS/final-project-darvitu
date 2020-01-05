@@ -78,15 +78,22 @@ class myGameWindow(arcade.Window):
         self.wall_list = arcade.SpriteList()
         
         for i in range(10):
-            coin = arcade.Sprite()
+            wall = arcade.Sprite("images/new wall.png",scale=0.1)
+            wall.center_x = (i+1) * 27
+            wall.center_y = 14
+            self.wall_list.append(wall)
+
 
     def on_draw(self):
         arcade.start_render()
         self.player_list.draw()
+        self.wall_list.draw()
 
     def on_update(self, delta_time):
         # updates the animation state of the player sprite
         self.player_list.update_animation()
+
+        wall_hit_list = arcade.check_for_collision_with_list(self.player,self.wall_list)
 
         # checks the bools to see which key is being pressed and direction of movement
         if self.right:
