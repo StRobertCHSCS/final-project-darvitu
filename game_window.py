@@ -139,6 +139,3 @@ class GameWindow(arcade.Window):
             self.down = False
             self.face_forward()
 
-
-GameWindow(1280, 720, "Sprite Test")
-arcade.run()
