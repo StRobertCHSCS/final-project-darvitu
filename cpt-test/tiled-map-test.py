@@ -75,8 +75,8 @@ class myGameWindow(arcade.Window):
         self.player_list.append(self.player)
 
         # loads tiled map
-        my_map = arcade.tilemap.read_tmx("Maps/test-map-3.tmx")
-        self.ground_list = arcade.tilemap.process_layer(my_map,"ground",1,"")
+        my_map = arcade.tilemap.read_tmx("Maps/test-map-4.tmx")
+        self.ground_list = arcade.tilemap.process_layer(my_map,"ground",1,)
 
 
 
