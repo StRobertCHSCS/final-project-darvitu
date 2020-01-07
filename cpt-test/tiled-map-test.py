@@ -101,7 +101,6 @@ class myGameWindow(arcade.Window):
     def on_update(self, delta_time):
         # updates the animation state of the player sprite
         self.physics_engine.update()
-        self.player_list.update_animation()
         
         # checks the bools to see which key is being pressed and direction of movement
         if self.right:
@@ -112,6 +111,8 @@ class myGameWindow(arcade.Window):
             self.player.center_y += self.player_speed * delta_time
         if self.down:
             self.player.center_y -= self.player_speed * delta_time
+        
+        self.player_list.update_animation()
             
     def on_key_press(self, symbol, modifiers):
         # sets animation refresh to faster rate for more noticeable movement
