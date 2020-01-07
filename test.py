@@ -1,7 +1,7 @@
 import arcade
 
 
-class GameWindow(arcade.Window):
+class myGameWindow(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
 
@@ -139,3 +139,6 @@ class GameWindow(arcade.Window):
             self.down = False
             self.face_forward()
 
+
+myGameWindow(1280, 720, "Sprite Test")
+arcade.run()
