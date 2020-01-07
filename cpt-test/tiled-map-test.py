@@ -15,6 +15,11 @@ class myGameWindow(arcade.Window):
         self.player_list = None
         self.player = None
 
+        # creates wall and ground sprite list
+        self.ground_list = None
+        self.wall_list = None
+        self.physics_engine = None
+
         self.setup()
     
     # following 8 functions are animation for the player sprite
@@ -78,18 +83,26 @@ class myGameWindow(arcade.Window):
         my_map = arcade.tilemap.read_tmx("Maps/test-map-4.tmx")
         self.ground_list = arcade.tilemap.process_layer(my_map,"ground",1,"images")
 
+        # loads walls in tiled map
+        self.wall_list = arcade.tilemap.process_layer(my_map,"walls",1,"images")
+
+        # inits physics engine
+        self.physics_engine = arcade.PhysicsEngineSimple(self.player,self.wall_list)
+
+
 
 
     def on_draw(self):
         arcade.start_render()
         self.ground_list.draw()
+        self.wall_list.draw()
         self.player_list.draw()
 
     def on_update(self, delta_time):
         # updates the animation state of the player sprite
+        self.physics_engine.update()
         self.player_list.update_animation()
-
-
+        
         # checks the bools to see which key is being pressed and direction of movement
         if self.right:
             self.player.center_x += self.player_speed * delta_time
