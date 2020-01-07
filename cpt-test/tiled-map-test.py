@@ -151,5 +151,5 @@ class myGameWindow(arcade.Window):
             self.face_forward() 
 
 
-myGameWindow(800,800,"Sprite Test")
+myGameWindow(160,160,"Sprite Test")
 arcade.run()
