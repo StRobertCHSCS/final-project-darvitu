@@ -4,6 +4,7 @@ from player import Player
 direction = None
 player = None
 character_list = None
+physics_engine = None
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 500
 
@@ -53,6 +54,7 @@ def on_update(delta_time) -> None:
                 player.center_y = 25
                 on_key_release(arcade.key.DOWN, None)
                 direction = None
+
 
 
 def on_key_press(symbol, modifiers) -> None:
@@ -112,7 +114,7 @@ def on_key_release(symbol, modifiers) -> None:
 
 
 def main():
-    global player, character_list
+    global player, character_list, physics_engine
     # open window
     arcade.open_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Main")
     arcade.schedule(on_update, 1 / 100)
@@ -124,6 +126,8 @@ def main():
     # add player to the list of characters
     character_list.append(player)
     # Override arcade methods
+    # initiate physics engine
+    physics_engine = None
     window = arcade.get_window()
     window.on_key_press = on_key_press
     window.on_key_release = on_key_release
