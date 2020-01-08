@@ -1,11 +1,12 @@
 import arcade
+import random
 from player import Player
 from tiledmap import TiledMap
 from enemy import Enemy
 
 direction = None
 player = None
-enemy = None
+enemies = []
 character_list = None
 physics_engine = None
 tile_map = None
@@ -25,48 +26,38 @@ def on_draw() -> None:
     character_list.draw()
 
 
-def move_player(delta_time):
-    global direction, player, character_list
-    # changing location of player
-    if direction is not None:
-        if direction == "RIGHT":
-            player.center_x += player.player_speed * delta_time
-            if player.center_x > WINDOW_WIDTH - 25:
-                player.center_x = WINDOW_WIDTH - 25
-                on_key_release(arcade.key.RIGHT, None)
-                direction = None
-        if direction == "LEFT":
-            player.center_x -= player.player_speed * delta_time
-            if player.center_x < 25:
-                player.center_x = 25
-                on_key_release(arcade.key.LEFT, None)
-                direction = None
-        if direction == "UP":
-            player.center_y += player.player_speed * delta_time
-            if player.center_y > WINDOW_HEIGHT - 25:
-                player.center_y = WINDOW_HEIGHT - 25
-                on_key_release(arcade.key.UP, None)
-                direction = None
-        if direction == "DOWN":
-            player.center_y -= player.player_speed * delta_time
-            if player.center_y < 25:
-                player.center_y = 25
-                on_key_release(arcade.key.DOWN, None)
-                direction = None
+def move_player(delta_time) -> None:
+    """
+    Moves the player
+    :param delta_time: execution time
+    :return:
+    """
+    global direction, player
+    output = player.move_player(delta_time, direction)
+    if output is not None:
+        on_key_release(output, None)
 
 
-def move_enemy(delta_time):
-    global enemy, player
-    enemy.follow(player)
-    if enemy.direction is not None:
-        if enemy.direction == "RIGHT":
-            enemy.center_x += enemy.player_speed * delta_time
-        if enemy.direction == "LEFT":
-            enemy.center_x -= enemy.player_speed * delta_time
-        if enemy.direction == "UP":
-            enemy.center_y += enemy.player_speed * delta_time
-        if enemy.direction == "DOWN":
-            enemy.center_y -= enemy.player_speed * delta_time
+def move_enemy(delta_time) -> None:
+    """
+    Moves enemies based on the position of the player
+    :param delta_time:
+    :return:
+    """
+    global enemies, player
+    for enemy in enemies:
+        enemy.texture_change_frames = 2.5
+        wait = random.randint(25, 100)
+        enemy.follow(player, wait)
+        if enemy.direction is not None:
+            if enemy.direction == "RIGHT":
+                enemy.center_x += enemy.player_speed * delta_time
+            if enemy.direction == "LEFT":
+                enemy.center_x -= enemy.player_speed * delta_time
+            if enemy.direction == "UP":
+                enemy.center_y += enemy.player_speed * delta_time
+            if enemy.direction == "DOWN":
+                enemy.center_y -= enemy.player_speed * delta_time
 
 
 def on_update(delta_time) -> None:
@@ -75,7 +66,6 @@ def on_update(delta_time) -> None:
     :param delta_time: time of execution
     :return: none
     """
-    print(delta_time)
     # updates the animation state of the player sprite
     character_list.update_animation()
     # move player
@@ -93,7 +83,7 @@ def on_key_press(symbol, modifiers) -> None:
     '''
     global direction, player
     # increase frame rate to show animation
-    player.texture_change_frames = 5
+    player.texture_change_frames = 2.5
 
     # player movement
     if symbol == arcade.key.RIGHT:
@@ -141,19 +131,21 @@ def on_key_release(symbol, modifiers) -> None:
 
 
 def main():
-    global player, character_list, physics_engine, tile_map, enemy
+    global player, character_list, physics_engine, tile_map, enemies
     # open window
     arcade.open_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Main")
-    arcade.schedule(on_update, 1 / 100)
+    arcade.schedule(on_update, 1 / 60)
     arcade.set_background_color(arcade.color.BLACK)
     # create character list
     character_list = arcade.SpriteList()
     # setting up player
     player = Player(WINDOW_WIDTH, WINDOW_HEIGHT)
-    enemy = Enemy(WINDOW_WIDTH, WINDOW_HEIGHT)
+    enemies.append(Enemy(WINDOW_WIDTH, WINDOW_HEIGHT, 235))
+    enemies.append(Enemy(WINDOW_WIDTH, WINDOW_HEIGHT, 205))
     # add player to the list of characters
     character_list.append(player)
-    character_list.append(enemy)
+    for enemy in enemies:
+        character_list.append(enemy)
     # Override arcade methods
     physics_engine = None
     tile_map = TiledMap()

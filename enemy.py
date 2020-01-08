@@ -1,22 +1,24 @@
-import arcade
+import arcade, math
 from player import Player
 
 
 class Enemy(arcade.AnimatedTimeSprite):
-    """Constructor of the Player class, that is the entity that the user will be moving controlling.
 
-            :param direction: default direction of player
-            :param player_speed: speed of player
-            :param window_width: width of game window
-            :param window_heigth: height of game window
-            """
+    def __init__(self, window_width: int, window_heigth: int, player_speed=250, direction="DOWN"):
+        """Constructor of the Player class, that is the entity that the user will be moving controlling.
 
-    def __init__(self, window_width: int, window_heigth: int, player_speed=150, direction="DOWN"):
+                          :param direction: default direction of player
+                          :param player_speed: speed of player
+                          :param window_width: width of game window
+                          :param window_heigth: height of game window
+                          """
         super().__init__()
 
         # setting speed and direction based on creation of Player object
         self.player_speed = player_speed
         self.direction = direction
+        self.previous_direction_1 = "RIGHT"
+        self.previous_direction_2 = "UP"
 
         # change animation rate
         self.texture_change_frames = 30
@@ -32,6 +34,7 @@ class Enemy(arcade.AnimatedTimeSprite):
         self.width = None
         self.height = None
         self.movement = True
+        self.count = 0
 
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
@@ -101,21 +104,35 @@ class Enemy(arcade.AnimatedTimeSprite):
         else:
             print("Direction not valid to move")
 
-    def follow(self, player: Player) -> None:
+    def follow(self, player: Player, wait=25) -> None:
         """
-        Makes enemy follow the player
+        Makes enemy follow the player, engine that will run all moving sprites
         Method that is called in the main.py file on_update()
         :param player: the player to follow
         :return: none
         """
         if self.movement:
-            if self.center_x < player.center_x:
-                self.direction = "RIGHT"
-            if self.center_x > player.center_x:
-                self.direction = "LEFT"
+            self.count += 1
+            if abs(self.center_x - player.center_x) > 10:
+                if self.center_x < player.center_x:
+                    self.direction = "RIGHT"
+                if self.center_x > player.center_x:
+                    self.direction = "LEFT"
+            else:
+                self.count = wait
         else:
-            if self.center_y < player.center_y:
-                self.direction = "UP"
-            if self.center_y > player.center_y:
-                self.direction = "DOWN"
-        self.movement = not self.movement
+            self.count += 1
+            if abs(self.center_y - player.center_y) > 10:
+                if self.center_y < player.center_y:
+                    self.direction = "UP"
+                if self.center_y > player.center_y:
+                    self.direction = "DOWN"
+            else:
+                self.count = wait
+
+        # changing the direction (up/down to left/right) every 25 loops
+        if self.count == wait:
+            self.movement = not self.movement
+            self.count = 0
+        # update direction of sprite
+        self.move_direction(self.direction)

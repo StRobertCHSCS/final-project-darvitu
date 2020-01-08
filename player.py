@@ -2,7 +2,7 @@ import arcade
 
 
 class Player(arcade.AnimatedTimeSprite):
-    def __init__(self, window_width: int, window_heigth: int, player_speed=250, direction="DOWN"):
+    def __init__(self, window_width: int, window_height: int, player_speed=250, direction="DOWN"):
         super().__init__()
 
         """Constructor of the Player class, that is the entity that the user will be moving controlling.
@@ -24,11 +24,14 @@ class Player(arcade.AnimatedTimeSprite):
 
         # setting position of Player
         self.center_x = window_width // 2
-        self.center_y = window_heigth // 2
+        self.center_y = window_height // 2
 
         # defining size of player for later use
         self.width = None
         self.height = None
+        # setting up window size
+        self.WINDOW_HEIGHT = window_height
+        self.WINDOW_WIDTH = window_width
 
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
@@ -97,3 +100,31 @@ class Player(arcade.AnimatedTimeSprite):
                                         scale=0.5))
         else:
             print("Direction not valid to move")
+
+    def move_player(self, delta_time, direction):
+        self.direction = direction
+        if self.direction is not None:
+            if self.direction == "RIGHT":
+                self.center_x += self.player_speed * delta_time
+                if self.center_x > self.WINDOW_WIDTH - 25:
+                    self.center_x = self.WINDOW_WIDTH - 25
+                    self.direction = None
+                    return arcade.key.RIGHT
+            if self.direction == "LEFT":
+                self.center_x -= self.player_speed * delta_time
+                if self.center_x < 25:
+                    self.center_x = 25
+                    self.direction = None
+                    return arcade.key.LEFT
+            if self.direction == "UP":
+                self.center_y += self.player_speed * delta_time
+                if self.center_y > self.WINDOW_HEIGHT - 25:
+                    self.center_y = self.WINDOW_HEIGHT - 25
+                    self.direction = None
+                    return arcade.key.UP
+            if self.direction == "DOWN":
+                self.center_y -= self.player_speed * delta_time
+                if self.center_y < 25:
+                    self.center_y = 25
+                    self.direction = None
+                    return arcade.key.DOWN
