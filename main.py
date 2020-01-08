@@ -106,8 +106,6 @@ class Main():
         elif symbol == arcade.key.DOWN and self.direction == "DOWN":
             self.player.face_direction(self.direction)
             self.direction = None
-        else:
-            print("invalid key release")
 
     def create_enemies(self) -> None:
         """
@@ -128,7 +126,7 @@ class Main():
         self.character_list = arcade.SpriteList()
         # setting up player
         self.player = Player(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
-        # self.create_enemies()
+        self.create_enemies()
         # add player to the list of characters
         self.character_list.append(self.player)
         self.tile_map = TiledMap()
