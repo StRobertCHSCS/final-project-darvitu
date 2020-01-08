@@ -25,8 +25,8 @@ class myGameWindow(arcade.Window):
     # following 8 functions are animation for the player sprite
     def face_forward(self):
         self.player.textures = []
-        for i in range(3):
-            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=0,width=96,height=104,scale=0.5))
+        for i in range(1):
+            self.player.textures.append(arcade.load_texture("images\new_sprite_sheet.png",x=i*96,y=0,width=96,height=104,scale=0.5))
     
     def face_left(self):
         self.player.textures = []
@@ -121,16 +121,12 @@ class myGameWindow(arcade.Window):
         # checks for arrow key press, runs animation of walking
         if symbol == arcade.key.RIGHT:
             self.right = True
-            self.move_right()
         if symbol == arcade.key.LEFT:
             self.left = True
-            self.move_left()
         if symbol == arcade.key.UP:
             self.up = True
-            self.move_up()
         if symbol == arcade.key.DOWN:
             self.down = True
-            self.move_down()
     
     def on_key_release(self, symbol, modifiers):
         # sets animation to lower refresh rate

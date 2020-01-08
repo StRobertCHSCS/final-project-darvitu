@@ -122,12 +122,16 @@ def main():
     arcade.open_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Main")
     arcade.schedule(on_update, 1 / 100)
     arcade.set_background_color(arcade.color.BLACK)
+
     # create character list
     character_list = arcade.SpriteList()
+
     # setting up player
     player = Player(WINDOW_WIDTH, WINDOW_HEIGHT)
+
     # add player to the list of characters
     character_list.append(player)
+    
     # Override arcade methods
     physics_engine = None
     tile_map = TiledMap()
