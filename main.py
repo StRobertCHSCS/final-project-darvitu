@@ -1,9 +1,11 @@
 import arcade
 from player import Player
 from tiledmap import TiledMap
+from enemy import Enemy
 
 direction = None
 player = None
+enemy = None
 character_list = None
 physics_engine = None
 tile_map = None
@@ -23,15 +25,8 @@ def on_draw() -> None:
     character_list.draw()
 
 
-def on_update(delta_time) -> None:
-    """
-    Update function called periodically
-    :param delta_time: time of execution
-    :return: none
-    """
+def move_player(delta_time):
     global direction, player, character_list
-    # updates the animation state of the player sprite
-    character_list.update_animation()
     # changing location of player
     if direction is not None:
         if direction == "RIGHT":
@@ -58,6 +53,35 @@ def on_update(delta_time) -> None:
                 player.center_y = 25
                 on_key_release(arcade.key.DOWN, None)
                 direction = None
+
+
+def move_enemy(delta_time):
+    global enemy, player
+    enemy.follow(player)
+    if enemy.direction is not None:
+        if enemy.direction == "RIGHT":
+            enemy.center_x += enemy.player_speed * delta_time
+        if enemy.direction == "LEFT":
+            enemy.center_x -= enemy.player_speed * delta_time
+        if enemy.direction == "UP":
+            enemy.center_y += enemy.player_speed * delta_time
+        if enemy.direction == "DOWN":
+            enemy.center_y -= enemy.player_speed * delta_time
+
+
+def on_update(delta_time) -> None:
+    """
+    Update function called periodically
+    :param delta_time: time of execution
+    :return: none
+    """
+    print(delta_time)
+    # updates the animation state of the player sprite
+    character_list.update_animation()
+    # move player
+    move_player(delta_time)
+    # move enemies
+    move_enemy(delta_time)
 
 
 def on_key_press(symbol, modifiers) -> None:
@@ -117,7 +141,7 @@ def on_key_release(symbol, modifiers) -> None:
 
 
 def main():
-    global player, character_list, physics_engine, tile_map
+    global player, character_list, physics_engine, tile_map, enemy
     # open window
     arcade.open_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Main")
     arcade.schedule(on_update, 1 / 100)
@@ -126,8 +150,10 @@ def main():
     character_list = arcade.SpriteList()
     # setting up player
     player = Player(WINDOW_WIDTH, WINDOW_HEIGHT)
+    enemy = Enemy(WINDOW_WIDTH, WINDOW_HEIGHT)
     # add player to the list of characters
     character_list.append(player)
+    character_list.append(enemy)
     # Override arcade methods
     physics_engine = None
     tile_map = TiledMap()

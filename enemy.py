@@ -3,16 +3,17 @@ from player import Player
 
 
 class Enemy(arcade.AnimatedTimeSprite):
+    """Constructor of the Player class, that is the entity that the user will be moving controlling.
+
+            :param direction: default direction of player
+            :param player_speed: speed of player
+            :param window_width: width of game window
+            :param window_heigth: height of game window
+            """
+
     def __init__(self, window_width: int, window_heigth: int, player_speed=150, direction="DOWN"):
         super().__init__()
 
-        """Constructor of the Player class, that is the entity that the user will be moving controlling.
-
-        :param direction: default direction of player
-        :param player_speed: speed of player
-        :param window_width: width of game window
-        :param window_heigth: height of game window
-        """
         # setting speed and direction based on creation of Player object
         self.player_speed = player_speed
         self.direction = direction
@@ -107,11 +108,14 @@ class Enemy(arcade.AnimatedTimeSprite):
         :param player: the player to follow
         :return: none
         """
-        if self.center_x < player.center_x:
-            self.center_x += 10
-        if self.center_x > player.center_x:
-            self.center_x -= 10
-        if self.center_y < player.center_y:
-            self.center_y += 10
-        if self.center_y > player.center_y:
-            self.center_y -= 10
+        if self.movement:
+            if self.center_x < player.center_x:
+                self.direction = "RIGHT"
+            if self.center_x > player.center_x:
+                self.direction = "LEFT"
+        else:
+            if self.center_y < player.center_y:
+                self.direction = "UP"
+            if self.center_y > player.center_y:
+                self.direction = "DOWN"
+        self.movement = not self.movement
