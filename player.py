@@ -6,15 +6,15 @@ from typing import Tuple
 class Player(arcade.AnimatedTimeSprite):
     def __init__(self, window_width: int, window_height: int, player_speed=250, direction="DOWN", player_width=32,
                  player_height=48):
-        super().__init__()
-
         """Constructor of the Player class, that is the entity that the user will be moving controlling.
 
-        :param direction: default direction of player
-        :param player_speed: speed of player
-        :param window_width: width of game window
-        :param window_heigth: height of game window
-        """
+                :param direction: default direction of player
+                :param player_speed: speed of player
+                :param window_width: width of game window
+                :param window_heigth: height of game window
+                """
+        super().__init__()
+
         # setting speed and direction based on creation of Player object
         self.player_speed = player_speed
         self.direction = direction
@@ -37,7 +37,6 @@ class Player(arcade.AnimatedTimeSprite):
         self.player_width = player_width
         self.player_height = player_height
 
-        self.get_points = self.get_points
 
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
@@ -137,22 +136,22 @@ class Player(arcade.AnimatedTimeSprite):
                 point_list.append(point)
             self._point_list_cache = tuple(point_list)
         else:
-            x1, y1 = rotate_point(self.center_x - self.player_width/2,
-                                  self.center_y - self.player_height/2,
+            x1, y1 = rotate_point(self.center_x - self.player_width / 2,
+                                  self.center_y - self.player_height / 2,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
-            x2, y2 = rotate_point(self.center_x + self.player_width/2,
-                                  self.center_y - self.player_height/2,
+            x2, y2 = rotate_point(self.center_x + self.player_width / 2,
+                                  self.center_y - self.player_height / 2,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
             x3, y3 = rotate_point(self.center_x + self.player_width / 2,
-                                  self.center_y + self.player_height/ 2,
+                                  self.center_y + self.player_height / 2,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
-            x4, y4 = rotate_point(self.center_x - self.player_width/ 2,
+            x4, y4 = rotate_point(self.center_x - self.player_width / 2,
                                   self.center_y + self.player_height / 2,
                                   self.center_x,
                                   self.center_y,
