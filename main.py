@@ -68,8 +68,6 @@ class Main():
         :param modifiers: Unused parameter
         :return: none
         '''
-        # increase frame rate to show animation
-        self.player.texture_change_frames = 2.5
 
         # player movement
         if symbol == arcade.key.RIGHT:
@@ -94,9 +92,6 @@ class Main():
         :param modifiers: unused
         :return: none
         """
-        # sets animation to lower refresh rate
-        self.player.texture_change_frames = 30
-
         # sets key direction back to None after key release, starts standing animation
         if symbol == arcade.key.RIGHT and self.direction == "RIGHT":
             self.player.face_direction(self.direction)
@@ -119,7 +114,7 @@ class Main():
         :return:
         """
         for x in range(10):
-            self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, random.randint(150, 230)))
+            self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, random.randint(125, 200)))
         for enemy in self.enemies:
             self.character_list.append(enemy)
 

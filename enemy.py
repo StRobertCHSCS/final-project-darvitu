@@ -104,10 +104,11 @@ class Enemy(arcade.AnimatedTimeSprite):
         else:
             print("Direction not valid to move")
 
-    def follow(self, player: Player, delta_time=1 / 60) -> None:
+    def follow(self, player: Player, delta_time = 1/60) -> None:
         """
         Makes enemy follow the player, engine that will run all moving sprites
         Method that is called in the main.py file on_update()
+        :param delta_time: time of rate of execution
         :param player: the player to follow
         :return: none
         """

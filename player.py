@@ -104,6 +104,7 @@ class Player(arcade.AnimatedTimeSprite):
     def move_player(self, delta_time, direction):
         self.direction = direction
         if self.direction is not None:
+            self.texture_change_frames = 2.5
             if self.direction == "RIGHT":
                 self.center_x += self.player_speed * delta_time
                 if self.center_x > self.WINDOW_WIDTH - 25:
@@ -128,3 +129,5 @@ class Player(arcade.AnimatedTimeSprite):
                     self.center_y = 25
                     self.direction = None
                     return arcade.key.DOWN
+        else:
+            self.texture_change_frames = 30
