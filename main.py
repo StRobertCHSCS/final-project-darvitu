@@ -1,12 +1,14 @@
 import arcade
 from player import Player
+from tiledmap import TiledMap
 
 direction = None
 player = None
 character_list = None
 physics_engine = None
-WINDOW_WIDTH = 500
-WINDOW_HEIGHT = 500
+tile_map = None
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 800
 
 
 def on_draw() -> None:
@@ -14,8 +16,10 @@ def on_draw() -> None:
     Holds all rendering code to screen
     :return: none, draws to the window
     """
-    global character_list
+    global character_list, tile_map
     arcade.start_render()
+    tile_map.ground_list.draw()
+    tile_map.wall_list.draw()
     character_list.draw()
 
 
@@ -54,7 +58,6 @@ def on_update(delta_time) -> None:
                 player.center_y = 25
                 on_key_release(arcade.key.DOWN, None)
                 direction = None
-
 
 
 def on_key_press(symbol, modifiers) -> None:
@@ -97,16 +100,16 @@ def on_key_release(symbol, modifiers) -> None:
     player.texture_change_frames = 30
 
     # sets key direction back to None after key release, starts standing animation
-    if symbol == arcade.key.RIGHT:
+    if symbol == arcade.key.RIGHT and direction == "RIGHT":
         player.face_direction(direction)
         direction = None
-    elif symbol == arcade.key.LEFT:
+    elif symbol == arcade.key.LEFT and direction == "LEFT":
         player.face_direction(direction)
         direction = None
-    elif symbol == arcade.key.UP:
+    elif symbol == arcade.key.UP and direction == "UP":
         player.face_direction(direction)
         direction = None
-    elif symbol == arcade.key.DOWN:
+    elif symbol == arcade.key.DOWN and direction == "DOWN":
         player.face_direction(direction)
         direction = None
     else:
@@ -114,7 +117,7 @@ def on_key_release(symbol, modifiers) -> None:
 
 
 def main():
-    global player, character_list, physics_engine
+    global player, character_list, physics_engine, tile_map
     # open window
     arcade.open_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Main")
     arcade.schedule(on_update, 1 / 100)
@@ -126,8 +129,8 @@ def main():
     # add player to the list of characters
     character_list.append(player)
     # Override arcade methods
-    # initiate physics engine
     physics_engine = None
+    tile_map = TiledMap()
     window = arcade.get_window()
     window.on_key_press = on_key_press
     window.on_key_release = on_key_release
