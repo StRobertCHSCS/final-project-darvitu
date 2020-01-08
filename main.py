@@ -1,120 +1,122 @@
 import arcade
+import random
 from player import Player
 from tiledmap import TiledMap
-
-direction = None
-player = None
-character_list = None
-physics_engine = None
-tile_map = None
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 800
+from enemy import Enemy
 
 
-def on_draw() -> None:
-    """
-    Holds all rendering code to screen
-    :return: none, draws to the window
-    """
-    global character_list, tile_map
-    arcade.start_render()
-    tile_map.ground_list.draw()
-    tile_map.wall_list.draw()
-    character_list.draw()
+class Main():
 
+    def __init__(self):
 
-def on_update(delta_time) -> None:
-    """
-    Update function called periodically
-    :param delta_time: time of execution
-    :return: none
-    """
-    global direction, player, character_list
-    # updates the animation state of the player sprite
-    character_list.update_animation()
-    # changing location of player
-    if direction is not None:
-        if direction == "RIGHT":
-            player.center_x += player.player_speed * delta_time
-            if player.center_x > WINDOW_WIDTH - 25:
-                player.center_x = WINDOW_WIDTH - 25
-                on_key_release(arcade.key.RIGHT, None)
-                direction = None
-        if direction == "LEFT":
-            player.center_x -= player.player_speed * delta_time
-            if player.center_x < 25:
-                player.center_x = 25
-                on_key_release(arcade.key.LEFT, None)
-                direction = None
-        if direction == "UP":
-            player.center_y += player.player_speed * delta_time
-            if player.center_y > WINDOW_HEIGHT - 25:
-                player.center_y = WINDOW_HEIGHT - 25
-                on_key_release(arcade.key.UP, None)
-                direction = None
-        if direction == "DOWN":
-            player.center_y -= player.player_speed * delta_time
-            if player.center_y < 25:
-                player.center_y = 25
-                on_key_release(arcade.key.DOWN, None)
-                direction = None
+        self.direction = None
+        self.player = None
+        self.enemies = []
+        self.character_list = None
+        self.physics_engine = None
+        self.tile_map = None
+        self.WINDOW_WIDTH = 800
+        self.WINDOW_HEIGHT = 800
+        self.main()
 
+    def on_draw(self) -> None:
+        """
+        Holds all rendering code to screen
+        :return: none, draws to the window
+        """
+        arcade.start_render()
+        self.tile_map.ground_list.draw()
+        self.tile_map.wall_list.draw()
+        self.character_list.draw()
 
-def on_key_press(symbol, modifiers) -> None:
-    '''
-    Moving the player based on the key pressed
-    :param symbol: keypressed
-    :param modifiers: Unused parameter
-    :return: none
-    '''
-    global direction, player
-    # increase frame rate to show animation
-    player.texture_change_frames = 5
+    def move_player(self, delta_time) -> None:
+        """
+        Moves the player
+        :param delta_time: execution time
+        :return:
+        """
+        output = self.player.move_player(delta_time, self.direction)
+        if output is not None:
+            self.on_key_release(output, None)
 
-    # player movement
-    if symbol == arcade.key.RIGHT:
-        direction = "RIGHT"
-        player.move_direction(direction)
-    elif symbol == arcade.key.LEFT:
-        direction = "LEFT"
-        player.move_direction(direction)
-    elif symbol == arcade.key.UP:
-        direction = "UP"
-        player.move_direction(direction)
-    elif symbol == arcade.key.DOWN:
-        direction = "DOWN"
-        player.move_direction(direction)
-    else:
-        print("invalid key press")
+    def move_enemy(self, delta_time) -> None:
+        """
+        Moves enemies based on the position of the player
+        :param delta_time:
+        :return:
+        """
+        for enemy in self.enemies:
+            enemy.follow(self.player, delta_time)
 
+    def on_update(self, delta_time) -> None:
+        """
+        Update function called periodically
+        :param delta_time: time of execution
+        :return: none
+        """
+        # updates the animation state of the player sprite
+        self.character_list.update_animation()
+        # move player
+        self.move_player(delta_time)
+        # move enemies
+        self.move_enemy(delta_time)
 
-def on_key_release(symbol, modifiers) -> None:
-    """
-    Handling when user releases keys (stops moving)
-    :param symbol: key released
-    :param modifiers: unused
-    :return: none
-    """
-    global player, direction
-    # sets animation to lower refresh rate
-    player.texture_change_frames = 30
+    def on_key_press(self, symbol, modifiers) -> None:
+        '''
+        Moving the player based on the key pressed
+        :param symbol: keypressed
+        :param modifiers: Unused parameter
+        :return: none
+        '''
 
-    # sets key direction back to None after key release, starts standing animation
-    if symbol == arcade.key.RIGHT and direction == "RIGHT":
-        player.face_direction(direction)
-        direction = None
-    elif symbol == arcade.key.LEFT and direction == "LEFT":
-        player.face_direction(direction)
-        direction = None
-    elif symbol == arcade.key.UP and direction == "UP":
-        player.face_direction(direction)
-        direction = None
-    elif symbol == arcade.key.DOWN and direction == "DOWN":
-        player.face_direction(direction)
-        direction = None
-    else:
-        print("invalid key release")
+        # player movement
+        if symbol == arcade.key.RIGHT:
+            self.direction = "RIGHT"
+            self.player.move_direction(self.direction)
+        elif symbol == arcade.key.LEFT:
+            self.direction = "LEFT"
+            self.player.move_direction(self.direction)
+        elif symbol == arcade.key.UP:
+            self.direction = "UP"
+            self.player.move_direction(self.direction)
+        elif symbol == arcade.key.DOWN:
+            self.direction = "DOWN"
+            self.player.move_direction(self.direction)
+        else:
+            print("invalid key press")
 
+    def on_key_release(self, symbol, modifiers) -> None:
+        """
+        Handling when user releases keys (stops moving)
+        :param symbol: key released
+        :param modifiers: unused
+        :return: none
+        """
+        # sets key direction back to None after key release, starts standing animation
+        if symbol == arcade.key.RIGHT and self.direction == "RIGHT":
+            self.player.face_direction(self.direction)
+            self.direction = None
+        elif symbol == arcade.key.LEFT and self.direction == "LEFT":
+            self.player.face_direction(self.direction)
+            self.direction = None
+        elif symbol == arcade.key.UP and self.direction == "UP":
+            self.player.face_direction(self.direction)
+            self.direction = None
+        elif symbol == arcade.key.DOWN and self.direction == "DOWN":
+            self.player.face_direction(self.direction)
+            self.direction = None
+        else:
+            print("invalid key release")
+
+    def create_enemies(self) -> None:
+        """
+        temporary testing function that creates enemies
+        :return:
+        """
+        for x in range(10):
+            self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, random.randint(125, 200)))
+        for enemy in self.enemies:
+            self.character_list.append(enemy)
 
 def main():
     global player, character_list, physics_engine, tile_map
@@ -142,4 +144,4 @@ def main():
     arcade.run()
 
 
-main()
+Main()
