@@ -26,9 +26,6 @@ class Player(arcade.AnimatedTimeSprite):
         self.center_x = window_width // 2
         self.center_y = window_height // 2
 
-        # defining size of player for later use
-        self.width = None
-        self.height = None
         # setting up window size
         self.WINDOW_HEIGHT = window_height
         self.WINDOW_WIDTH = window_width
@@ -106,28 +103,12 @@ class Player(arcade.AnimatedTimeSprite):
         if self.direction is not None:
             self.texture_change_frames = 2.5
             if self.direction == "RIGHT":
-                self.center_x += self.player_speed * delta_time
-                if self.center_x > self.WINDOW_WIDTH - 25:
-                    self.center_x = self.WINDOW_WIDTH - 25
-                    self.direction = None
-                    return arcade.key.RIGHT
+                self.change_x = 5
             if self.direction == "LEFT":
-                self.center_x -= self.player_speed * delta_time
-                if self.center_x < 25:
-                    self.center_x = 25
-                    self.direction = None
-                    return arcade.key.LEFT
+                self.change_x = -5
             if self.direction == "UP":
-                self.center_y += self.player_speed * delta_time
-                if self.center_y > self.WINDOW_HEIGHT - 25:
-                    self.center_y = self.WINDOW_HEIGHT - 25
-                    self.direction = None
-                    return arcade.key.UP
+                self.change_y = 5
             if self.direction == "DOWN":
-                self.center_y -= self.player_speed * delta_time
-                if self.center_y < 25:
-                    self.center_y = 25
-                    self.direction = None
-                    return arcade.key.DOWN
+                self.change_y = -5
         else:
             self.texture_change_frames = 30

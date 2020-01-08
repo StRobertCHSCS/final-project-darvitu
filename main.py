@@ -3,6 +3,7 @@ import random
 from player import Player
 from tiledmap import TiledMap
 from enemy import Enemy
+from collision import CollisionDetection
 
 
 class Main():
@@ -35,7 +36,7 @@ class Main():
         :param delta_time: execution time
         :return:
         """
-        output = self.player.move_player(delta_time, self.direction)
+        output = self.physics_engine.update(delta_time, self.direction)
         if output is not None:
             self.on_key_release(output, None)
 
@@ -114,7 +115,7 @@ class Main():
         :return:
         """
         for x in range(10):
-            self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, random.randint(125, 200)))
+            self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, random.randint(75, 150)))
         for enemy in self.enemies:
             self.character_list.append(enemy)
 
@@ -127,12 +128,12 @@ class Main():
         self.character_list = arcade.SpriteList()
         # setting up player
         self.player = Player(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
-        self.create_enemies()
+        # self.create_enemies()
         # add player to the list of characters
         self.character_list.append(self.player)
-        # Override arcade methods
-        self.physics_engine = None
         self.tile_map = TiledMap()
+        self.physics_engine = CollisionDetection(self.player, self.tile_map.wall_list)
+        # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press
         window.on_key_release = self.on_key_release
