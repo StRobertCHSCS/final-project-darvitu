@@ -1,4 +1,4 @@
-import arcade, math
+import arcade, math, random
 from player import Player
 
 
@@ -104,13 +104,16 @@ class Enemy(arcade.AnimatedTimeSprite):
         else:
             print("Direction not valid to move")
 
-    def follow(self, player: Player, wait=25) -> None:
+    def follow(self, player: Player, delta_time=1 / 60) -> None:
         """
         Makes enemy follow the player, engine that will run all moving sprites
         Method that is called in the main.py file on_update()
         :param player: the player to follow
         :return: none
         """
+        self.texture_change_frames = 2.5
+
+        wait = random.randint(25, 50)
         if self.movement:
             self.count += 1
             if abs(self.center_x - player.center_x) > 10:
@@ -136,3 +139,12 @@ class Enemy(arcade.AnimatedTimeSprite):
             self.count = 0
         # update direction of sprite
         self.move_direction(self.direction)
+        if self.direction is not None:
+            if self.direction == "RIGHT":
+                self.center_x += self.player_speed * delta_time
+            if self.direction == "LEFT":
+                self.center_x -= self.player_speed * delta_time
+            if self.direction == "UP":
+                self.center_y += self.player_speed * delta_time
+            if self.direction == "DOWN":
+                self.center_y -= self.player_speed * delta_time
