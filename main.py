@@ -118,30 +118,26 @@ class Main():
         for enemy in self.enemies:
             self.character_list.append(enemy)
 
-def main():
-    global player, character_list, physics_engine, tile_map
-    # open window
-    arcade.open_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Main")
-    arcade.schedule(on_update, 1 / 100)
-    arcade.set_background_color(arcade.color.BLACK)
-
-    # create character list
-    character_list = arcade.SpriteList()
-
-    # setting up player
-    player = Player(WINDOW_WIDTH, WINDOW_HEIGHT)
-
-    # add player to the list of characters
-    character_list.append(player)
-    
-    # Override arcade methods
-    physics_engine = None
-    tile_map = TiledMap()
-    window = arcade.get_window()
-    window.on_key_press = on_key_press
-    window.on_key_release = on_key_release
-    window.on_draw = on_draw
-    arcade.run()
+    def main(self):
+        # open window
+        arcade.open_window(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, "Main")
+        arcade.schedule(self.on_update, 1 / 60)
+        arcade.set_background_color(arcade.color.BLACK)
+        # create character list
+        self.character_list = arcade.SpriteList()
+        # setting up player
+        self.player = Player(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
+        self.create_enemies()
+        # add player to the list of characters
+        self.character_list.append(self.player)
+        # Override arcade methods
+        self.physics_engine = None
+        self.tile_map = TiledMap()
+        window = arcade.get_window()
+        window.on_key_press = self.on_key_press
+        window.on_key_release = self.on_key_release
+        window.on_draw = self.on_draw
+        arcade.run()
 
 
 Main()
