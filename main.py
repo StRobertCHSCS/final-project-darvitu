@@ -130,6 +130,17 @@ def on_key_release(symbol, modifiers) -> None:
         print("invalid key release")
 
 
+def create_enemies():
+    """
+    temporary testing function
+    :return:
+    """
+    global enemies, character_list
+    for x in range(10):
+        enemies.append(Enemy(WINDOW_WIDTH, WINDOW_HEIGHT, random.randint(150, 235)))
+    for enemy in enemies:
+        character_list.append(enemy)
+
 def main():
     global player, character_list, physics_engine, tile_map, enemies
     # open window
@@ -140,12 +151,9 @@ def main():
     character_list = arcade.SpriteList()
     # setting up player
     player = Player(WINDOW_WIDTH, WINDOW_HEIGHT)
-    enemies.append(Enemy(WINDOW_WIDTH, WINDOW_HEIGHT, 235))
-    enemies.append(Enemy(WINDOW_WIDTH, WINDOW_HEIGHT, 205))
+    create_enemies()
     # add player to the list of characters
     character_list.append(player)
-    for enemy in enemies:
-        character_list.append(enemy)
     # Override arcade methods
     physics_engine = None
     tile_map = TiledMap()
