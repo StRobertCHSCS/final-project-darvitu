@@ -1,10 +1,11 @@
 import arcade
+import time
 import random
 from player import Player
 from tiledmap import TiledMap
 from enemy import Enemy
 from collision import CollisionDetection
-
+from sounds import Sounds
 
 class Main():
 
@@ -14,10 +15,13 @@ class Main():
         self.player = None
         self.enemies = []
         self.character_list = None
-        self.physics_engine = None
+        self.player_engine = None
+        self.enemies_engine = None
         self.tile_map = None
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
+        self.time = 0
+        self.sound = None
         self.main()
 
     def on_draw(self) -> None:
@@ -36,7 +40,7 @@ class Main():
         :param delta_time: execution time
         :return:
         """
-        output = self.physics_engine.update(delta_time, self.direction)
+        output = self.player_engine.update(delta_time, self.direction)
         if output is not None:
             self.on_key_release(output, None)
 
@@ -46,8 +50,8 @@ class Main():
         :param delta_time:
         :return:
         """
-        for enemy in self.enemies:
-            enemy.follow(self.player, delta_time)
+        for enemy in self.enemies_engine:
+            enemy.update(self.player, delta_time, self.player)
 
     def on_update(self, delta_time) -> None:
         """
@@ -61,6 +65,7 @@ class Main():
         self.move_player(delta_time)
         # move enemies
         self.move_enemy(delta_time)
+        self.time += 1/60
 
     def on_key_press(self, symbol, modifiers) -> None:
         '''
@@ -106,8 +111,6 @@ class Main():
         elif symbol == arcade.key.DOWN and self.direction == "DOWN":
             self.player.face_direction(self.direction)
             self.direction = None
-        else:
-            print("invalid key release")
 
     def create_enemies(self) -> None:
         """
@@ -115,9 +118,11 @@ class Main():
         :return:
         """
         for x in range(10):
-            self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, random.randint(75, 150)))
+            self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
         for enemy in self.enemies:
             self.character_list.append(enemy)
+        for enemy in self.enemies:
+            self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
 
     def main(self):
         # open window
@@ -126,13 +131,19 @@ class Main():
         arcade.set_background_color(arcade.color.BLACK)
         # create character list
         self.character_list = arcade.SpriteList()
+        self.enemies_engine = []
         # setting up player
         self.player = Player(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
-        # self.create_enemies()
+
         # add player to the list of characters
         self.character_list.append(self.player)
         self.tile_map = TiledMap()
-        self.physics_engine = CollisionDetection(self.player, self.tile_map.wall_list)
+        self.player_engine = CollisionDetection(self.player, self.tile_map.wall_list)
+        self.create_enemies()
+
+        #add sounds
+        self.sound = Sounds()
+        self.sound.update()
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press

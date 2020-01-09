@@ -1,17 +1,20 @@
 import arcade
+from arcade.draw_commands import rotate_point
+from typing import Tuple
 
 
 class Player(arcade.AnimatedTimeSprite):
-    def __init__(self, window_width: int, window_height: int, player_speed=250, direction="DOWN"):
-        super().__init__()
-
+    def __init__(self, window_width: int, window_height: int, player_speed=250, direction="DOWN", player_width=32,
+                 player_height=48):
         """Constructor of the Player class, that is the entity that the user will be moving controlling.
 
-        :param direction: default direction of player
-        :param player_speed: speed of player
-        :param window_width: width of game window
-        :param window_heigth: height of game window
-        """
+                :param direction: default direction of player
+                :param player_speed: speed of player
+                :param window_width: width of game window
+                :param window_heigth: height of game window
+                """
+        super().__init__()
+
         # setting speed and direction based on creation of Player object
         self.player_speed = player_speed
         self.direction = direction
@@ -29,6 +32,11 @@ class Player(arcade.AnimatedTimeSprite):
         # setting up window size
         self.WINDOW_HEIGHT = window_height
         self.WINDOW_WIDTH = window_width
+
+        # size of player
+        self.player_width = player_width
+        self.player_height = player_height
+
 
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
@@ -112,3 +120,44 @@ class Player(arcade.AnimatedTimeSprite):
                 self.change_y = -5
         else:
             self.texture_change_frames = 30
+
+    def get_points(self) -> Tuple[Tuple[float, float]]:
+        """
+        Get the corner points for the rect that makes up the sprite.
+        """
+        if self._point_list_cache is not None:
+            return self._point_list_cache
+
+        if self._points is not None:
+            point_list = []
+            for point in range(len(self._points)):
+                point = (self._points[point][0] + self.center_x,
+                         self._points[point][1] + self.center_y)
+                point_list.append(point)
+            self._point_list_cache = tuple(point_list)
+        else:
+            x1, y1 = rotate_point(self.center_x - self.player_width / 2,
+                                  self.center_y - self.player_height / 2,
+                                  self.center_x,
+                                  self.center_y,
+                                  self.angle)
+            x2, y2 = rotate_point(self.center_x + self.player_width / 2,
+                                  self.center_y - self.player_height / 2,
+                                  self.center_x,
+                                  self.center_y,
+                                  self.angle)
+            x3, y3 = rotate_point(self.center_x + self.player_width / 2,
+                                  self.center_y + self.player_height / 2,
+                                  self.center_x,
+                                  self.center_y,
+                                  self.angle)
+            x4, y4 = rotate_point(self.center_x - self.player_width / 2,
+                                  self.center_y + self.player_height / 2,
+                                  self.center_x,
+                                  self.center_y,
+                                  self.angle)
+
+            self._point_list_cache = ((x1, y1), (x2, y2), (x3, y3), (x4, y4))
+        return self._point_list_cache
+
+    points = property(get_points, arcade.Sprite.set_points)
