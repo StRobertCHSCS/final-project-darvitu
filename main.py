@@ -5,7 +5,7 @@ from player import Player
 from tiledmap import TiledMap
 from enemy import Enemy
 from collision import CollisionDetection
-
+from sounds import Sounds
 
 class Main():
 
@@ -21,6 +21,7 @@ class Main():
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
         self.time = 0
+        self.sound = None
         self.main()
 
     def on_draw(self) -> None:
@@ -139,6 +140,10 @@ class Main():
         self.tile_map = TiledMap()
         self.player_engine = CollisionDetection(self.player, self.tile_map.wall_list)
         self.create_enemies()
+
+        #add sounds
+        self.sound = Sounds()
+        self.sound.update()
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press
