@@ -3,7 +3,7 @@ import time
 import random
 from player import Player
 from tiledmap import TiledMap
-from enemy import Enemy
+from blob import Enemy
 from collision import CollisionDetection
 from sounds import Sounds
 
@@ -36,24 +36,23 @@ class Main():
 
         self.character_list.draw()
 
-    def move_player(self, delta_time) -> None:
+    def move_player(self) -> None:
         """
         Moves the player
         :param delta_time: execution time
         :return:
         """
-        output = self.player_engine.update(delta_time, self.direction)
+        output = self.player_engine.update(self.direction)
         if output is not None:
             self.on_key_release(output, None)
 
-    def move_enemy(self, delta_time) -> None:
+    def move_enemy(self) -> None:
         """
         Moves enemies based on the position of the player
-        :param delta_time:
-        :return:
+        :return: none
         """
         for enemy in self.enemies_engine:
-            enemy.update(self.player, delta_time, self.player)
+            enemy.update(self.player, self.player)
 
     def on_update(self, delta_time) -> None:
         """
@@ -64,9 +63,9 @@ class Main():
         # updates the animation state of the player sprite
         self.character_list.update_animation()
         # move player
-        self.move_player(delta_time)
+        self.move_player()
         # move enemies
-        self.move_enemy(delta_time)
+        self.move_enemy()
         self.time += 1 / 60
 
     def on_key_press(self, symbol, modifiers) -> None:
@@ -119,7 +118,7 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(5):
+        for x in range(10):
             self.enemies.append(Enemy(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT))
         for enemy in self.enemies:
             self.character_list.append(enemy)

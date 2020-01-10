@@ -2,7 +2,7 @@ import arcade
 import csv
 import math
 import sys
-from enemy import Enemy
+from blob import Enemy
 from tiledmap import TiledMap
 
 class ShortestPath():

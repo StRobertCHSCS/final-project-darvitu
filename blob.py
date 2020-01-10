@@ -15,7 +15,6 @@ class Enemy(arcade.AnimatedTimeSprite):
                           :param window_heigth: height of game window
                           """
         super().__init__()
-
         # setting speed and direction based on creation of Player object
         self.player_speed = player_speed
         self.direction = direction
@@ -23,9 +22,6 @@ class Enemy(arcade.AnimatedTimeSprite):
 
         # change animation rate
         self.texture_change_frames = 30
-
-        # spawn facing forward
-        self.face_direction(direction)
 
         # setting position of Player
         self.center_x = window_width // 2
@@ -39,6 +35,25 @@ class Enemy(arcade.AnimatedTimeSprite):
         self.hit = False
         self.time = None
 
+        # create textures for animations
+        self.textures_left = []
+        self.textures_right = []
+        self.create_textures()
+        # spawn facing forward
+        self.face_direction(direction)
+
+    # create textures
+    def create_textures(self) -> None:
+        """
+        Creates textures for enemy. By default, all entities except player will face right.
+        :return: none
+        """
+        # add textures to respective locations
+        self.textures_left.append(arcade.load_texture("images/blob_phase_1.png", mirrored=True, scale=1.1))
+        self.textures_left.append(arcade.load_texture("images/blob_phase_2.png", mirrored=True, scale=1.1))
+        self.textures_right.append(arcade.load_texture("images/blob_phase_1.png", scale=1.1))
+        self.textures_right.append(arcade.load_texture("images/blob_phase_2.png", scale=1.1))
+
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
         """
@@ -47,30 +62,11 @@ class Enemy(arcade.AnimatedTimeSprite):
         :return: None
         """
         if direction == "LEFT":
-            self.textures = []
-            for i in range(3):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=104, width=96, height=104,
-                                        scale=0.5))
+            self.textures = self.textures_left
         elif direction == "RIGHT":
-            self.textures = []
-            for i in range(3):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=312, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "UP":
-            self.textures = []
-            for i in range(1):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=208, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "DOWN":
-            self.textures = []
-            for i in range(3):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=0, width=96, height=104,
-                                        scale=0.5))
-
+            self.textures = self.textures_right
+        elif direction == "UP" or direction == "DOWN":
+            self.textures = self.textures_right
         else:
             print("Invalid direction to face")
 
@@ -81,30 +77,12 @@ class Enemy(arcade.AnimatedTimeSprite):
         :param direction: direction of player movement
         :return: None
         """
-        if direction == "DOWN":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=416, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "LEFT":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=520, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "UP":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=624, width=96, height=104,
-                                        scale=0.5))
+        if direction == "LEFT":
+            self.textures = self.textures_left
         elif direction == "RIGHT":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=728, width=96, height=104,
-                                        scale=0.5))
+            self.textures = self.textures_right
+        elif direction == "UP" or direction == "DOWN":
+            self.textures = self.textures_right
         else:
             print("Direction not valid to move")
 
@@ -116,7 +94,7 @@ class Enemy(arcade.AnimatedTimeSprite):
         :param player: the player to follow
         :return: none
         """
-        self.texture_change_frames = 2.5
+        self.texture_change_frames = 15
 
         wait = random.randint(10, 30)
         if self.movement:
@@ -164,7 +142,6 @@ class Enemy(arcade.AnimatedTimeSprite):
         else:
             # update to standing animation
             self.texture_change_frames = 30
-            self.face_direction("DOWN")
 
     def get_points(self) -> Tuple[Tuple[float, float]]:
         """
@@ -181,8 +158,8 @@ class Enemy(arcade.AnimatedTimeSprite):
                 point_list.append(point)
             self._point_list_cache = tuple(point_list)
         else:
-            x1, y1 = rotate_point(self.center_x - self.enemy_width / 3,
-                                  self.center_y - self.enemy_height / 3,
+            x1, y1 = rotate_point(self.center_x - self.enemy_width / 4,
+                                  self.center_y - self.enemy_height / 4,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
@@ -191,13 +168,13 @@ class Enemy(arcade.AnimatedTimeSprite):
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
-            x3, y3 = rotate_point(self.center_x + self.enemy_width / 3,
-                                  self.center_y + self.enemy_height / 3,
+            x3, y3 = rotate_point(self.center_x + self.enemy_width / 4,
+                                  self.center_y + self.enemy_height / 4,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
-            x4, y4 = rotate_point(self.center_x - self.enemy_width / 3,
-                                  self.center_y + self.enemy_height / 3,
+            x4, y4 = rotate_point(self.center_x - self.enemy_width / 4,
+                                  self.center_y + self.enemy_height / 4,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)

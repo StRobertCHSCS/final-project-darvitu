@@ -2,7 +2,7 @@ import arcade
 import random
 from player import Player
 from tiledmap import TiledMap
-from enemy import Enemy
+from blob import Enemy
 
 
 class Main():
@@ -189,25 +189,25 @@ class Player(arcade.AnimatedTimeSprite):
             self.textures = []
             for i in range(3):
                 self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=104, width=96, height=104,
+                    arcade.load_texture("images/player.png", x=i * 96, y=104, width=96, height=104,
                                         scale=0.5))
         elif direction == "RIGHT":
             self.textures = []
             for i in range(3):
                 self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=312, width=96, height=104,
+                    arcade.load_texture("images/player.png", x=i * 96, y=312, width=96, height=104,
                                         scale=0.5))
         elif direction == "UP":
             self.textures = []
             for i in range(1):
                 self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=208, width=96, height=104,
+                    arcade.load_texture("images/player.png", x=i * 96, y=208, width=96, height=104,
                                         scale=0.5))
         elif direction == "DOWN":
             self.textures = []
             for i in range(3):
                 self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=0, width=96, height=104, scale=0.5))
+                    arcade.load_texture("images/player.png", x=i * 96, y=0, width=96, height=104, scale=0.5))
 
         else:
             print("Invalid direction to face")
@@ -223,25 +223,25 @@ class Player(arcade.AnimatedTimeSprite):
             self.textures = []
             for i in range(10):
                 self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=416, width=96, height=104,
+                    arcade.load_texture("images/player.png", x=i * 96, y=416, width=96, height=104,
                                         scale=0.5))
         elif direction == "LEFT":
             self.textures = []
             for i in range(10):
                 self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=520, width=96, height=104,
+                    arcade.load_texture("images/player.png", x=i * 96, y=520, width=96, height=104,
                                         scale=0.5))
         elif direction == "UP":
             self.textures = []
             for i in range(10):
                 self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=624, width=96, height=104,
+                    arcade.load_texture("images/player.png", x=i * 96, y=624, width=96, height=104,
                                         scale=0.5))
         elif direction == "RIGHT":
             self.textures = []
             for i in range(10):
                 self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=728, width=96, height=104,
+                    arcade.load_texture("images/player.png", x=i * 96, y=728, width=96, height=104,
                                         scale=0.5))
         else:
             print("Direction not valid to move")

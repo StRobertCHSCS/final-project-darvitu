@@ -27,7 +27,7 @@ class myGameWindow(arcade.Window):
         self.player.textures = []
         for i in range(3):
             self.player.textures.append(
-                arcade.load_texture("images/test_sprite_sheet.png", x=i * 96, y=0, width=96, height=104))
+                arcade.load_texture("images/player.png", x=i * 96, y=0, width=96, height=104))
 
         self.player.center_x = 1280 // 2
         self.player.center_y = 720 // 2

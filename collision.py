@@ -2,7 +2,7 @@ import arcade
 from player import Player
 from tiledmap import TiledMap
 from arcade.geometry import check_for_collision_with_list
-from enemy import Enemy
+from blob import Enemy
 
 
 class CollisionDetection(arcade.PhysicsEngineSimple):
@@ -17,7 +17,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
         self.player = player
         self.walls = walls
 
-    def update(self, delta_time, direction, player_to_follow=None) -> arcade.key:
+    def update(self, direction, player_to_follow=None) -> arcade.key:
         """
         Move everything and resolve collisions
         :return: none
@@ -25,7 +25,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
         # if the player is the user
         if isinstance(self.player, Player):
             # --- Move sprite
-            self.player.move_player(delta_time, direction)
+            self.player.move_player(direction)
             # update x position
             self.player.center_x += self.player.change_x
             # Check for wall hit
@@ -77,7 +77,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
         # if it isn't the player
         elif isinstance(self.player, Enemy):
             # --- Move sprite
-            self.player.follow(player_to_follow, delta_time)
+            self.player.follow(player_to_follow)
             # update x position
             self.player.center_x += self.player.change_x
             # Check for wall hit
@@ -102,7 +102,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                         self.player.movement = not self.player.movement
                         self.player.hit = True
                 else:
-                    print("Error, collision while player wasn't moving.")
+                    print("Error, collision while enemy wasn't moving.")
 
             # update y position
             self.player.center_y += self.player.change_y
@@ -127,10 +127,9 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                         self.player.movement = not self.player.movement
                         self.player.hit = True
                 else:
-                    print("Error, collision while player wasn't moving.")
+                    print("Error, collision while enemy wasn't moving.")
 
             self.player.change_x, self.player.change_y = 0, 0
         elif isinstance(self.player, arcade.SpriteList):
-            #checks for player and other entity collisions
+            # checks for player and other entity collisions
             pass
-

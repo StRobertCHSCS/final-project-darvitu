@@ -31,37 +31,37 @@ class myGameWindow(arcade.Window):
     def face_left(self):
         self.player.textures = []
         for i in range(3):
-            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=104,width=96,height=104,scale=0.5))
+            self.player.textures.append(arcade.load_texture("images/player.png",x=i*96,y=104,width=96,height=104,scale=0.5))
     
     def face_up(self):
         self.player.textures = []
         for i in range(1):
-            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=208,width=96,height=104,scale=0.5))
+            self.player.textures.append(arcade.load_texture("images/player.png",x=i*96,y=208,width=96,height=104,scale=0.5))
     
     def face_right(self):
         self.player.textures = []
         for i in range(3):
-            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=312,width=96,height=104,scale=0.5))
+            self.player.textures.append(arcade.load_texture("images/player.png",x=i*96,y=312,width=96,height=104,scale=0.5))
     
     def move_down(self):
         self.player.textures = []
         for i in range(10):
-            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=416,width=96,height=104,scale=0.5))
+            self.player.textures.append(arcade.load_texture("images/player.png",x=i*96,y=416,width=96,height=104,scale=0.5))
     
     def move_left(self):
         self.player.textures = []
         for i in range(10):
-            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=520,width=96,height=104,scale=0.5))
+            self.player.textures.append(arcade.load_texture("images/player.png",x=i*96,y=520,width=96,height=104,scale=0.5))
     
     def move_up(self):
         self.player.textures = []
         for i in range(10):
-            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=624,width=96,height=104,scale=0.5))
+            self.player.textures.append(arcade.load_texture("images/player.png",x=i*96,y=624,width=96,height=104,scale=0.5))
     
     def move_right(self):
         self.player.textures = []
         for i in range(10):
-            self.player.textures.append(arcade.load_texture("images/test_sprite_sheet.png",x=i*96,y=728,width=96,height=104,scale=0.5))
+            self.player.textures.append(arcade.load_texture("images/player.png",x=i*96,y=728,width=96,height=104,scale=0.5))
         
     def setup(self):
         # creates an animated sprite for the player, sets animation refresh to once every 15 frames
