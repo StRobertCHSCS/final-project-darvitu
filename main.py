@@ -120,7 +120,7 @@ class Main():
         :return:
         """
         for x in range(5):
-            self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
+            self.enemies.append(Enemy(self.WINDOW_WIDTH + 100, self.WINDOW_HEIGHT + 100))
         for enemy in self.enemies:
             self.character_list.append(enemy)
         for enemy in self.enemies:
@@ -135,7 +135,7 @@ class Main():
         self.character_list = arcade.SpriteList()
         self.enemies_engine = []
         # setting up player
-        self.player = Player(self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
+        self.player = Player(self.WINDOW_WIDTH + 100, self.WINDOW_HEIGHT + 100)
 
         # add player to the list of characters
         self.character_list.append(self.player)
@@ -145,7 +145,7 @@ class Main():
 
         # add sounds
         self.sound = Sounds()
-        #self.sound.update()
+        # self.sound.update()
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press
