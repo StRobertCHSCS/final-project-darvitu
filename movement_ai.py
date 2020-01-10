@@ -14,22 +14,29 @@ class ShortestPath():
 
     def shortest_distance(self, current_x, current_y, next_x, next_y):
         # create step/distance array
-        step = [[999999 for x in range(50)] for y in range(50)]
+        self.step = [[999999 for x in range(50)] for y in range(50)]
         # create queues
         queue_x = []
         queue_x.append(current_x)
         queue_y = []
         queue_y.append(current_y)
         # add first node
-        step[current_x][current_y] = 0
+        self.step[current_x][current_y] = 0
         # add end node
-        step[next_x][next_y] = -1
+        self.step[next_x][next_y] = -1
         # perform breadth-first-search
         while len(queue_x) is not 0:
             # current location
             r = queue_x.pop(0)
             c = queue_y.pop(0)
 
-            #move up
+            # move up
+            if r - 1 >= 0:
+                if self.map[r - 1][c] is not 1:
+                    if self.step[r - 1][c] > self.step[r][c] + 1:
+                        self.step[r - 1][c] = self.step[r][c] + 1
+                        queue_x.append(r - 1)
+                        queue_y.append(c)
+
 
 ShortestPath().shortest_distance(0, 0, 0, 0)
