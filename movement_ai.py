@@ -2,7 +2,8 @@ import arcade
 import csv
 import math
 import sys
-
+from enemy import Enemy
+from tiledmap import TiledMap
 
 class ShortestPath():
     def __init__(self):
@@ -62,6 +63,8 @@ class ShortestPath():
         # setting direction of enemy
         count = 1
 
+    def avoid_wall(self, enemy: Enemy, walls: TiledMap):
+        pass
 
 
 ShortestPath().shortest_distance(0, 0, 0, 0)
