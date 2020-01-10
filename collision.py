@@ -128,4 +128,9 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                         self.player.hit = True
                 else:
                     print("Error, collision while player wasn't moving.")
+
             self.player.change_x, self.player.change_y = 0, 0
+        elif isinstance(self.player, arcade.SpriteList):
+            #checks for player and other entity collisions
+            pass
+

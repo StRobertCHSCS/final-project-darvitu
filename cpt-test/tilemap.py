@@ -10,7 +10,7 @@ class TileMap:
         self.y = y
 
     def read_map(self):
-        self.map = [line.split(' ') for line in open("../images/tilemap.txt", 'r').readlines()]
+        self.map = [line.split(' ') for line in open("../Maps/tilemap.txt", 'r').readlines()]
 
     def draw_map(self):
         for y in range(15):

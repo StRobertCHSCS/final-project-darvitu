@@ -11,7 +11,7 @@ class Sounds():
         Function to be called by on_update to play all sound needed
         :return: none
         """
-        self.sounds[0].play()
+        self.sounds[1].play()
 
     def play_sound(self, sound) -> None:
         """
