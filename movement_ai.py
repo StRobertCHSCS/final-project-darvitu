@@ -37,6 +37,13 @@ class ShortestPath():
                         self.step[r - 1][c] = self.step[r][c] + 1
                         queue_x.append(r - 1)
                         queue_y.append(c)
+            # move down
+            if r +1 < 50:
+                if self.map[r+1][c] is not 1:
+                    if self.step[r+1][c] > self.step[r][c] + 1:
+                        self.step[r+1][c] = self.step[r][c] + 1
+                        queue_x.append(r+1)
+                        queue_y.append(c)
 
 
 ShortestPath().shortest_distance(0, 0, 0, 0)
