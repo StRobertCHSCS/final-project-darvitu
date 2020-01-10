@@ -1,420 +1,207 @@
-"""
-Asteroid Smasher
-
-Shoot space rocks in this demo program created with
-Python and the Arcade library.
-
-Artwork from http://kenney.nl
-
-If Python and Arcade are installed, this example can be run from the command line with:
-python -m arcade.examples.asteroid_smasher
-"""
-import random
-import math
-import arcade
-import os
-
-from typing import cast
-
-STARTING_ASTEROID_COUNT = 3
-SCALE = 0.5
-OFFSCREEN_SPACE = 300
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Asteroid Smasher"
-LEFT_LIMIT = -OFFSCREEN_SPACE
-RIGHT_LIMIT = SCREEN_WIDTH + OFFSCREEN_SPACE
-BOTTOM_LIMIT = -OFFSCREEN_SPACE
-TOP_LIMIT = SCREEN_HEIGHT + OFFSCREEN_SPACE
+import arcade, math, random
+from player import Player
+from arcade.draw_commands import rotate_point
+from typing import Tuple
 
 
-class TurningSprite(arcade.Sprite):
-    """ Sprite that sets its angle to the direction it is traveling in. """
-    def update(self):
-        super().update()
-        self.angle = math.degrees(math.atan2(self.change_y, self.change_x))
+class Enemy(arcade.AnimatedTimeSprite):
 
+    def __init__(self, window_width: int, window_heigth: int, player_speed=250, direction="DOWN", enemy_width=32,
+                 enemy_height=48):
+        """Constructor of the Player class, that is the entity that the user will be moving controlling.
 
-class ShipSprite(arcade.Sprite):
-    """
-    Sprite that represents our space ship.
+                          :param direction: default direction of player
+                          :param player_speed: speed of player
+                          :param window_width: width of game window
+                          :param window_heigth: height of game window
+                          """
+        super().__init__()
 
-    Derives from arcade.Sprite.
-    """
-    def __init__(self, filename, scale):
-        """ Set up the space ship. """
+        # setting speed and direction based on creation of Player object
+        self.player_speed = player_speed
+        self.direction = direction
+        self.previous_direction = None
 
-        # Call the parent Sprite constructor
-        super().__init__(filename, scale)
+        # change animation rate
+        self.texture_change_frames = 30
 
-        # Info on where we are going.
-        # Angle comes in automatically from the parent class.
-        self.thrust = 0
-        self.speed = 0
-        self.max_speed = 4
-        self.drag = 0.05
-        self.respawning = 0
+        # spawn facing forward
+        self.face_direction(direction)
 
-        # Mark that we are respawning.
-        self.respawn()
+        # setting position of Player
+        self.center_x = window_width // 2
+        self.center_y = window_heigth // 2
 
-    def respawn(self):
+        # defining size of player for later use
+        self.enemy_width = enemy_width
+        self.enemy_height = enemy_height
+        self.movement = True
+        self.count = 0
+        self.hit = False
+        self.time = None
+
+    # animation for the player to face when it is not moving
+    def face_direction(self, direction) -> None:
         """
-        Called when we die and need to make a new ship.
-        'respawning' is an invulnerability timer.
+        Faces the character animation based on the direction.
+        :param direction: direction for the character to face
+        :return: None
         """
-        # If we are in the middle of respawning, this is non-zero.
-        self.respawning = 1
-        self.center_x = SCREEN_WIDTH / 2
-        self.center_y = SCREEN_HEIGHT / 2
-        self.angle = 0
-
-    def update(self):
-        """
-        Update our position and other particulars.
-        """
-        if self.respawning:
-            self.respawning += 1
-            self.alpha = self.respawning
-            if self.respawning > 250:
-                self.respawning = 0
-                self.alpha = 255
-        if self.speed > 0:
-            self.speed -= self.drag
-            if self.speed < 0:
-                self.speed = 0
-
-        if self.speed < 0:
-            self.speed += self.drag
-            if self.speed > 0:
-                self.speed = 0
-
-        self.speed += self.thrust
-        if self.speed > self.max_speed:
-            self.speed = self.max_speed
-        if self.speed < -self.max_speed:
-            self.speed = -self.max_speed
-
-        self.change_x = -math.sin(math.radians(self.angle)) * self.speed
-        self.change_y = math.cos(math.radians(self.angle)) * self.speed
-
-        self.center_x += self.change_x
-        self.center_y += self.change_y
-
-        # If the ship goes off-screen, move it to the other side of the window
-        if self.right < 0:
-            self.left = SCREEN_WIDTH
-
-        if self.left > SCREEN_WIDTH:
-            self.right = 0
-
-        if self.bottom < 0:
-            self.top = SCREEN_HEIGHT
-
-        if self.top > SCREEN_HEIGHT:
-            self.bottom = 0
-
-
-        """ Call the parent class. """
-        super().update()
-
-
-class AsteroidSprite(arcade.Sprite):
-    """ Sprite that represents an asteroid. """
-
-    def __init__(self, image_file_name, scale):
-        super().__init__(image_file_name, scale=scale)
-        self.size = 0
-
-    def update(self):
-        """ Move the asteroid around. """
-        super().update()
-        if self.center_x < LEFT_LIMIT:
-            self.center_x = RIGHT_LIMIT
-        if self.center_x > RIGHT_LIMIT:
-            self.center_x = LEFT_LIMIT
-        if self.center_y > TOP_LIMIT:
-            self.center_y = BOTTOM_LIMIT
-        if self.center_y < BOTTOM_LIMIT:
-            self.center_y = TOP_LIMIT
-
-
-class BulletSprite(TurningSprite):
-    """
-    Class that represents a bullet.
-
-    Derives from arcade.TurningSprite which is just a Sprite
-    that aligns to its direction.
-    """
-
-    def update(self):
-        super().update()
-        if self.center_x < -100 or self.center_x > 1500 or \
-                self.center_y > 1100 or self.center_y < -100:
-            self.remove_from_sprite_lists()
-
-
-class MyGame(arcade.Window):
-    """ Main application class. """
-
-    def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-
-        # Set the working directory (where we expect to find files) to the same
-        # directory this .py file is in. You can leave this out of your own
-        # code, but it is needed to easily run the examples using "python -m"
-        # as mentioned at the top of this program.
-        file_path = os.path.dirname(os.path.abspath(__file__))
-        os.chdir(file_path)
-
-        self.frame_count = 0
-
-        self.game_over = False
-
-        # Sprite lists
-        self.all_sprites_list = arcade.SpriteList()
-        self.asteroid_list = arcade.SpriteList()
-        self.bullet_list = arcade.SpriteList()
-        self.ship_life_list = arcade.SpriteList()
-
-        # Set up the player
-        self.score = 0
-        self.player_sprite = None
-        self.lives = 3
-
-        # Sounds
-        self.laser_sound = arcade.load_sound(":resources:sounds/hurt5.wav")
-        self.hit_sound1 = arcade.load_sound(":resources:sounds/explosion1.wav")
-        self.hit_sound2 = arcade.load_sound(":resources:sounds/explosion2.wav")
-        self.hit_sound3 = arcade.load_sound(":resources:sounds/hit1.wav")
-        self.hit_sound4 = arcade.load_sound(":resources:sounds/hit2.wav")
-
-    def start_new_game(self):
-        """ Set up the game and initialize the variables. """
-
-        self.frame_count = 0
-        self.game_over = False
-
-        # Sprite lists
-        self.all_sprites_list = arcade.SpriteList()
-        self.asteroid_list = arcade.SpriteList()
-        self.bullet_list = arcade.SpriteList()
-        self.ship_life_list = arcade.SpriteList()
-
-        # Set up the player
-        self.score = 0
-        self.player_sprite = ShipSprite(":resources:images/space_shooter/playerShip1_orange.png", SCALE)
-        self.all_sprites_list.append(self.player_sprite)
-        self.lives = 3
-
-        # Set up the little icons that represent the player lives.
-        cur_pos = 10
-        for i in range(self.lives):
-            life = arcade.Sprite(":resources:images/space_shooter/playerLife1_orange.png", SCALE)
-            life.center_x = cur_pos + life.width
-            life.center_y = life.height
-            cur_pos += life.width
-            self.all_sprites_list.append(life)
-            self.ship_life_list.append(life)
-
-        # Make the asteroids
-        image_list = (":resources:images/space_shooter/meteorGrey_big1.png",
-                      ":resources:images/space_shooter/meteorGrey_big2.png",
-                      ":resources:images/space_shooter/meteorGrey_big3.png",
-                      ":resources:images/space_shooter/meteorGrey_big4.png")
-        for i in range(STARTING_ASTEROID_COUNT):
-            image_no = random.randrange(4)
-            enemy_sprite = AsteroidSprite(image_list[image_no], SCALE)
-            enemy_sprite.guid = "Asteroid"
-
-            enemy_sprite.center_y = random.randrange(BOTTOM_LIMIT, TOP_LIMIT)
-            enemy_sprite.center_x = random.randrange(LEFT_LIMIT, RIGHT_LIMIT)
-
-            enemy_sprite.change_x = random.random() * 2 - 1
-            enemy_sprite.change_y = random.random() * 2 - 1
-
-            enemy_sprite.change_angle = (random.random() - 0.5) * 2
-            enemy_sprite.size = 4
-            self.all_sprites_list.append(enemy_sprite)
-            self.asteroid_list.append(enemy_sprite)
-
-    def on_draw(self):
-        """
-        Render the screen.
-        """
-
-        # This command has to happen before we start drawing
-        arcade.start_render()
-
-        # Draw all the sprites.
-        self.all_sprites_list.draw()
-
-        # Put the text on the screen.
-        output = f"Score: {self.score}"
-        arcade.draw_text(output, 10, 70, arcade.color.WHITE, 13)
-
-        output = f"Asteroid Count: {len(self.asteroid_list)}"
-        arcade.draw_text(output, 10, 50, arcade.color.WHITE, 13)
-
-    def on_key_press(self, symbol, modifiers):
-        """ Called whenever a key is pressed. """
-        # Shoot if the player hit the space bar and we aren't respawning.
-        if not self.player_sprite.respawning and symbol == arcade.key.SPACE:
-            bullet_sprite = BulletSprite(":resources:images/space_shooter/laserBlue01.png", SCALE)
-            bullet_sprite.guid = "Bullet"
-
-            bullet_speed = 13
-            bullet_sprite.change_y = \
-                math.cos(math.radians(self.player_sprite.angle)) * bullet_speed
-            bullet_sprite.change_x = \
-                -math.sin(math.radians(self.player_sprite.angle)) \
-                * bullet_speed
-
-            bullet_sprite.center_x = self.player_sprite.center_x
-            bullet_sprite.center_y = self.player_sprite.center_y
-            bullet_sprite.update()
-
-            self.all_sprites_list.append(bullet_sprite)
-            self.bullet_list.append(bullet_sprite)
-
-            arcade.play_sound(self.laser_sound)
-
-        if symbol == arcade.key.LEFT:
-            self.player_sprite.change_angle = 3
-        elif symbol == arcade.key.RIGHT:
-            self.player_sprite.change_angle = -3
-        elif symbol == arcade.key.UP:
-            self.player_sprite.thrust = 0.15
-        elif symbol == arcade.key.DOWN:
-            self.player_sprite.thrust = -.2
-
-    def on_key_release(self, symbol, modifiers):
-        """ Called whenever a key is released. """
-        if symbol == arcade.key.LEFT:
-            self.player_sprite.change_angle = 0
-        elif symbol == arcade.key.RIGHT:
-            self.player_sprite.change_angle = 0
-        elif symbol == arcade.key.UP:
-            self.player_sprite.thrust = 0
-        elif symbol == arcade.key.DOWN:
-            self.player_sprite.thrust = 0
-
-    def split_asteroid(self, asteroid: AsteroidSprite):
-        """ Split an asteroid into chunks. """
-        x = asteroid.center_x
-        y = asteroid.center_y
-        self.score += 1
-
-        if asteroid.size == 4:
+        if direction == "LEFT":
+            self.textures = []
             for i in range(3):
-                image_no = random.randrange(2)
-                image_list = [":resources:images/space_shooter/meteorGrey_med1.png",
-                              ":resources:images/space_shooter/meteorGrey_med2.png"]
-
-                enemy_sprite = AsteroidSprite(image_list[image_no],
-                                              SCALE * 1.5)
-
-                enemy_sprite.center_y = y
-                enemy_sprite.center_x = x
-
-                enemy_sprite.change_x = random.random() * 2.5 - 1.25
-                enemy_sprite.change_y = random.random() * 2.5 - 1.25
-
-                enemy_sprite.change_angle = (random.random() - 0.5) * 2
-                enemy_sprite.size = 3
-
-                self.all_sprites_list.append(enemy_sprite)
-                self.asteroid_list.append(enemy_sprite)
-                self.hit_sound1.play()
-
-        elif asteroid.size == 3:
+                self.textures.append(
+                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=104, width=96, height=104,
+                                        scale=0.5))
+        elif direction == "RIGHT":
+            self.textures = []
             for i in range(3):
-                image_no = random.randrange(2)
-                image_list = [":resources:images/space_shooter/meteorGrey_small1.png",
-                              ":resources:images/space_shooter/meteorGrey_small2.png"]
-
-                enemy_sprite = AsteroidSprite(image_list[image_no],
-                                              SCALE * 1.5)
-
-                enemy_sprite.center_y = y
-                enemy_sprite.center_x = x
-
-                enemy_sprite.change_x = random.random() * 3 - 1.5
-                enemy_sprite.change_y = random.random() * 3 - 1.5
-
-                enemy_sprite.change_angle = (random.random() - 0.5) * 2
-                enemy_sprite.size = 2
-
-                self.all_sprites_list.append(enemy_sprite)
-                self.asteroid_list.append(enemy_sprite)
-                self.hit_sound2.play()
-
-        elif asteroid.size == 2:
+                self.textures.append(
+                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=312, width=96, height=104,
+                                        scale=0.5))
+        elif direction == "UP":
+            self.textures = []
+            for i in range(1):
+                self.textures.append(
+                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=208, width=96, height=104,
+                                        scale=0.5))
+        elif direction == "DOWN":
+            self.textures = []
             for i in range(3):
-                image_no = random.randrange(2)
-                image_list = [":resources:images/space_shooter/meteorGrey_tiny1.png",
-                              ":resources:images/space_shooter/meteorGrey_tiny2.png"]
+                self.textures.append(
+                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=0, width=96, height=104, scale=0.5))
 
-                enemy_sprite = AsteroidSprite(image_list[image_no],
-                                              SCALE * 1.5)
+        else:
+            print("Invalid direction to face")
 
-                enemy_sprite.center_y = y
-                enemy_sprite.center_x = x
+    # animation for moving
+    def move_direction(self, direction) -> None:
+        """
+        Sets animation to the direction of the player movement
+        :param direction: direction of player movement
+        :return: None
+        """
+        if direction == "DOWN":
+            self.textures = []
+            for i in range(10):
+                self.textures.append(
+                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=416, width=96, height=104,
+                                        scale=0.5))
+        elif direction == "LEFT":
+            self.textures = []
+            for i in range(10):
+                self.textures.append(
+                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=520, width=96, height=104,
+                                        scale=0.5))
+        elif direction == "UP":
+            self.textures = []
+            for i in range(10):
+                self.textures.append(
+                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=624, width=96, height=104,
+                                        scale=0.5))
+        elif direction == "RIGHT":
+            self.textures = []
+            for i in range(10):
+                self.textures.append(
+                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=728, width=96, height=104,
+                                        scale=0.5))
+        else:
+            print("Direction not valid to move")
 
-                enemy_sprite.change_x = random.random() * 3.5 - 1.75
-                enemy_sprite.change_y = random.random() * 3.5 - 1.75
+    def follow(self, player: Player, delta_time=1 / 60) -> None:
+        """
+        Makes enemy follow the player, engine that will run all moving sprites
+        Method that is called in the main.py file on_update()
+        :param delta_time: time of rate of execution
+        :param player: the player to follow
+        :return: none
+        """
+        self.texture_change_frames = 2.5
 
-                enemy_sprite.change_angle = (random.random() - 0.5) * 2
-                enemy_sprite.size = 1
+        wait = random.randint(10, 30)
+        if self.movement:
+            self.count += 1
+            if abs(self.center_x - player.center_x) > 5:
+                if self.center_x < player.center_x:
+                    self.direction = "RIGHT"
+                if self.center_x > player.center_x:
+                    self.direction = "LEFT"
+            else:
+                self.count = wait
+        else:
+            self.count += 1
+            if abs(self.center_y - player.center_y) > 5:
+                if self.center_y < player.center_y:
+                    self.direction = "UP"
+                if self.center_y > player.center_y:
+                    self.direction = "DOWN"
+            else:
+                self.count = wait
 
-                self.all_sprites_list.append(enemy_sprite)
-                self.asteroid_list.append(enemy_sprite)
-                self.hit_sound3.play()
+        # changing the direction (up/down to left/right) every 25 loops
+        if self.count == wait:
+            self.movement = not self.movement
+            self.count = 0
+        if self.hit:
+            if self.previous_direction is not None and self.previous_direction is not self.direction:
+                self.hit = False
+            self.previous_direction = self.direction
+            self.direction = None
 
-        elif asteroid.size == 1:
-            self.hit_sound4.play()
+        if self.direction is not None:
+            if self.direction == "RIGHT":
+                self.change_x = 4
+            if self.direction == "LEFT":
+                self.change_x = -4
+            if self.direction == "UP":
+                self.change_y = 4
+            if self.direction == "DOWN":
+                self.change_y = -4
 
-    def on_update(self, x):
-        """ Move everything """
+            # update direction of sprite
+            self.move_direction(self.direction)
+        else:
+            # update to standing animation
+            self.texture_change_frames = 30
+            self.face_direction("DOWN")
 
-        self.frame_count += 1
+    def get_points(self) -> Tuple[Tuple[float, float]]:
+        """
+        Get the corner points for the rect that makes up the sprite.
+        """
+        if self._point_list_cache is not None:
+            return self._point_list_cache
 
-        if not self.game_over:
-            self.all_sprites_list.update()
+        if self._points is not None:
+            point_list = []
+            for point in range(len(self._points)):
+                point = (self._points[point][0] + self.center_x,
+                         self._points[point][1] + self.center_y)
+                point_list.append(point)
+            self._point_list_cache = tuple(point_list)
+        else:
+            x1, y1 = rotate_point(self.center_x - self.enemy_width / 3,
+                                  self.center_y - self.enemy_height / 3,
+                                  self.center_x,
+                                  self.center_y,
+                                  self.angle)
+            x2, y2 = rotate_point(self.center_x + self.enemy_width / 4,
+                                  self.center_y - self.enemy_height / 4,
+                                  self.center_x,
+                                  self.center_y,
+                                  self.angle)
+            x3, y3 = rotate_point(self.center_x + self.enemy_width / 3,
+                                  self.center_y + self.enemy_height / 3,
+                                  self.center_x,
+                                  self.center_y,
+                                  self.angle)
+            x4, y4 = rotate_point(self.center_x - self.enemy_width / 3,
+                                  self.center_y + self.enemy_height / 3,
+                                  self.center_x,
+                                  self.center_y,
+                                  self.angle)
 
-            for bullet in self.bullet_list:
-                asteroids_plain = arcade.check_for_collision_with_list(bullet, self.asteroid_list)
-                asteroids_spatial = arcade.check_for_collision_with_list(bullet, self.asteroid_list)
-                if len(asteroids_plain) != len(asteroids_spatial):
-                    print("ERROR")
+            self._point_list_cache = ((x1, y1), (x2, y2), (x3, y3), (x4, y4))
+        return self._point_list_cache
 
-                asteroids = asteroids_spatial
-
-                for asteroid in asteroids:
-                    self.split_asteroid(cast(AsteroidSprite, asteroid))  # expected AsteroidSprite, got Sprite instead
-                    asteroid.remove_from_sprite_lists()
-                    bullet.remove_from_sprite_lists()
-
-            if not self.player_sprite.respawning:
-                asteroids = arcade.check_for_collision_with_list(self.player_sprite, self.asteroid_list)
-                if len(asteroids) > 0:
-                    if self.lives > 0:
-                        self.lives -= 1
-                        self.player_sprite.respawn()
-                        self.split_asteroid(cast(AsteroidSprite, asteroids[0]))
-                        asteroids[0].remove_from_sprite_lists()
-                        self.ship_life_list.pop().remove_from_sprite_lists()
-                        print("Crash")
-                    else:
-                        self.game_over = True
-                        print("Game over")
-
-
-def main():
-    window = MyGame()
-    window.start_new_game()
-    arcade.run()
-
-
-if __name__ == "__main__":
-    main()
+    points = property(get_points, arcade.Sprite.set_points)

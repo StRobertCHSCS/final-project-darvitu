@@ -12,6 +12,8 @@ class Player(arcade.AnimatedTimeSprite):
                 :param player_speed: speed of player
                 :param window_width: width of game window
                 :param window_heigth: height of game window
+                :param player_width: width of the player
+                :param player_height: height of the player
                 """
         super().__init__()
 
@@ -36,7 +38,6 @@ class Player(arcade.AnimatedTimeSprite):
         # size of player
         self.player_width = player_width
         self.player_height = player_height
-
 
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:

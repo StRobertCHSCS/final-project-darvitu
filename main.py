@@ -7,6 +7,7 @@ from enemy import Enemy
 from collision import CollisionDetection
 from sounds import Sounds
 
+
 class Main():
 
     def __init__(self):
@@ -32,6 +33,7 @@ class Main():
         arcade.start_render()
         self.tile_map.ground_list.draw()
         self.tile_map.wall_list.draw()
+
         self.character_list.draw()
 
     def move_player(self, delta_time) -> None:
@@ -65,7 +67,7 @@ class Main():
         self.move_player(delta_time)
         # move enemies
         self.move_enemy(delta_time)
-        self.time += 1/60
+        self.time += 1 / 60
 
     def on_key_press(self, symbol, modifiers) -> None:
         '''
@@ -117,7 +119,7 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(10):
+        for x in range(5):
             self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
         for enemy in self.enemies:
             self.character_list.append(enemy)
@@ -141,9 +143,9 @@ class Main():
         self.player_engine = CollisionDetection(self.player, self.tile_map.wall_list)
         self.create_enemies()
 
-        #add sounds
+        # add sounds
         self.sound = Sounds()
-        self.sound.update()
+        #self.sound.update()
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press
