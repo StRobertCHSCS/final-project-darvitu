@@ -13,7 +13,15 @@ class ShortestPath():
             for row in reader:
                 self.map.append(row)
 
-    def shortest_distance(self, current_x, current_y, next_x, next_y):
+    def shortest_distance(self, current_x, current_y, next_x, next_y)-> None:
+        """
+        Finds the shortest distance from a start and end points, utilizes a csv file of obstacles
+        :param current_x: start x
+        :param current_y: start y
+        :param next_x: end x
+        :param next_y: end y
+        :return: none
+        """
         # create step/distance array
         self.step = [[999999 for x in range(50)] for y in range(50)]
         # create queues
@@ -63,7 +71,13 @@ class ShortestPath():
         # setting direction of enemy
         count = 1
 
-    def avoid_wall(self, enemy: Enemy, walls: TiledMap):
+    def avoid_wall(self, enemy: Enemy, walls: TiledMap)-> None:
+        """
+        Causes enemy to go around a wall should it hit one
+        :param enemy: enemy
+        :param walls: spritelist of walls
+        :return: none
+        """
         pass
 
 
