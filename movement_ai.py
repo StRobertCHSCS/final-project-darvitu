@@ -2,7 +2,7 @@ import arcade
 import csv
 import math
 import sys
-from blob import Enemy
+from blob import Blob
 from tiledmap import TiledMap
 
 class ShortestPath():
@@ -71,7 +71,7 @@ class ShortestPath():
         # setting direction of enemy
         count = 1
 
-    def avoid_wall(self, enemy: Enemy, walls: TiledMap)-> None:
+    def avoid_wall(self, enemy: Blob, walls: TiledMap)-> None:
         """
         Causes enemy to go around a wall should it hit one
         :param enemy: enemy

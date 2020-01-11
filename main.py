@@ -3,7 +3,7 @@ import time
 import random
 from player import Player
 from tiledmap import TiledMap
-from blob import Enemy
+from blob import Blob
 from collision import CollisionDetection
 from sounds import Sounds
 
@@ -119,7 +119,7 @@ class Main():
         :return:
         """
         for x in range(10):
-            self.enemies.append(Enemy(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT))
+            self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT))
         for enemy in self.enemies:
             self.character_list.append(enemy)
         for enemy in self.enemies:

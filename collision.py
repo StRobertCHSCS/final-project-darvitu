@@ -2,7 +2,7 @@ import arcade
 from player import Player
 from tiledmap import TiledMap
 from arcade.geometry import check_for_collision_with_list
-from blob import Enemy
+from blob import Blob
 
 
 class CollisionDetection(arcade.PhysicsEngineSimple):
@@ -75,7 +75,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                     print("Error, collision while player wasn't moving.")
             self.player.change_x, self.player.change_y = 0, 0
         # if it isn't the player
-        elif isinstance(self.player, Enemy):
+        elif isinstance(self.player, Blob):
             # --- Move sprite
             self.player.follow(player_to_follow)
             # update x position

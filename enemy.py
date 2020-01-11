@@ -4,7 +4,7 @@ from arcade.draw_commands import rotate_point
 from typing import Tuple
 
 
-class Blob(arcade.AnimatedTimeSprite):
+class Enemy(arcade.AnimatedTimeSprite):
     def __init__(self, window_width: int, window_heigth: int, player_speed=250, direction="DOWN", enemy_width=32,
                  enemy_height=48):
         """Constructor of the Player class, that is the entity that the user will be moving controlling.
@@ -129,13 +129,13 @@ class Blob(arcade.AnimatedTimeSprite):
 
         if self.direction is not None:
             if self.direction == "RIGHT":
-                self.change_x = 1
+                self.change_x = 4
             if self.direction == "LEFT":
-                self.change_x = -1
+                self.change_x = -4
             if self.direction == "UP":
-                self.change_y = 1
+                self.change_y = 4
             if self.direction == "DOWN":
-                self.change_y = -1
+                self.change_y = -4
 
             # update direction of sprite
             self.move_direction(self.direction)

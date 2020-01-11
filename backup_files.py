@@ -2,7 +2,7 @@ import arcade
 import random
 from player import Player
 from tiledmap import TiledMap
-from blob import Enemy
+from blob import Blob
 
 
 class Main():
@@ -114,7 +114,7 @@ class Main():
         :return:
         """
         for x in range(10):
-            self.enemies.append(Enemy(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, random.randint(75, 150)))
+            self.enemies.append(Blob(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, random.randint(75, 150)))
         for enemy in self.enemies:
             self.character_list.append(enemy)
 
