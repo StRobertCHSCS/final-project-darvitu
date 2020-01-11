@@ -38,6 +38,8 @@ class Goblin(arcade.AnimatedTimeSprite):
         # create textures for animations
         self.textures_left = []
         self.textures_right = []
+        self.textures_attack_left = []
+        self.textures_attack_right = []
         self.create_textures()
         # spawn facing forward
         self.face_direction(direction)
@@ -53,6 +55,10 @@ class Goblin(arcade.AnimatedTimeSprite):
         self.textures_left.append(arcade.load_texture("images/goblin_phase_2.png", mirrored=True, scale=1))
         self.textures_right.append(arcade.load_texture("images/goblin_phase_1.png", scale=1))
         self.textures_right.append(arcade.load_texture("images/goblin_phase_2.png", scale=1))
+        self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_1.png", scale=1))
+        self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_2.png", scale=1))
+        self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_1.png", mirrored=True, scale=1))
+        self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_2.png", mirrored=True, scale=1))
 
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
@@ -69,6 +75,14 @@ class Goblin(arcade.AnimatedTimeSprite):
             self.textures = self.textures_right
         else:
             print("Invalid direction to face")
+
+    def attack(self) -> None:
+        """
+        Loads the current animation to the attack frames
+        :return:none
+        """
+        if self.direction == "RIGHT"
+
 
     # animation for moving
     def move_direction(self, direction) -> None:
