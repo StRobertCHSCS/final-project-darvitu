@@ -6,6 +6,7 @@ from tiledmap import TiledMap
 from blob import Blob
 from collision import CollisionDetection
 from sounds import Sounds
+from goblin import Goblin
 
 
 class Main():
@@ -52,7 +53,7 @@ class Main():
         :return: none
         """
         for enemy in self.enemies_engine:
-            enemy.update(self.player, self.player)
+            enemy.update(enemy, self.player)
 
     def on_update(self, delta_time) -> None:
         """
@@ -118,11 +119,11 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(10):
+        for x in range(1):
             self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT))
+            self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT+100))
         for enemy in self.enemies:
             self.character_list.append(enemy)
-        for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
 
     def main(self):
