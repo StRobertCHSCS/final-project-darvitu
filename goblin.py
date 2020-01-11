@@ -81,8 +81,10 @@ class Goblin(arcade.AnimatedTimeSprite):
         Loads the current animation to the attack frames
         :return:none
         """
-        if self.direction == "RIGHT"
-
+        if self.direction == "RIGHT" or self.direction == "UP" or self.direction == "DOWN":
+            self.textures = self.textures_attack_right
+        else:
+            self.textures = self.textures_attack_left
 
     # animation for moving
     def move_direction(self, direction) -> None:
@@ -142,19 +144,21 @@ class Goblin(arcade.AnimatedTimeSprite):
 
         if self.direction is not None:
             if self.direction == "RIGHT":
-                self.change_x = 4.5
+                self.change_x = 2
             if self.direction == "LEFT":
-                self.change_x = -4.5
+                self.change_x = -2
             if self.direction == "UP":
-                self.change_y = 4.5
+                self.change_y = 2
             if self.direction == "DOWN":
-                self.change_y = -4.5
+                self.change_y = -2
 
             # update direction of sprite
-            self.move_direction(self.direction)
+            if self.textures is not self.textures_attack_right or self.textures is not self.textures_attack_left:
+                self.move_direction(self.direction)
         else:
             # update to standing animation
             self.texture_change_frames = 30
+
 
     def get_points(self) -> Tuple[Tuple[float, float]]:
         """
