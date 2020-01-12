@@ -147,7 +147,7 @@ class Main():
 
         # add sounds
         self.sound = Sounds()
-        self.sound.update()
+        self.sound.update(0)
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press

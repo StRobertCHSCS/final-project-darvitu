@@ -6,12 +6,13 @@ class Sounds():
         self.sounds = []
         self.add_sounds()
 
-    def update(self) -> None:
+    def update(self, song: int) -> None:
         """
         Function to be called by on_update to play all sound needed
         :return: none
         """
-        self.sounds[1].play()
+        if 0 <= song < len(self.sounds):
+            self.sounds[song].play()
 
     def play_sound(self, sound) -> None:
         """
