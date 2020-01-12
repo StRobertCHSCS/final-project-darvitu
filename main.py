@@ -123,8 +123,8 @@ class Main():
         :return:
         """
         for x in range(10):
-            self.enemies.append(Blob(self.WINDOW_WIDTH+400, self.WINDOW_HEIGHT+300))
-            self.enemies.append(Goblin(self.WINDOW_WIDTH+400, self.WINDOW_HEIGHT+300, 3))
+            self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300))
+            self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
 
@@ -147,7 +147,7 @@ class Main():
 
         # add sounds
         self.sound = Sounds()
-        # self.sound.update()
+        self.sound.update()
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press

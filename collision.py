@@ -1,5 +1,5 @@
 import arcade
-
+import time
 from goblin import Goblin
 from player import Player
 from tiledmap import TiledMap
@@ -37,7 +37,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                     if isinstance(item, Blob):
                         item.is_player_hit = True
         # if the player is the user
-        if isinstance(self.player, Player):
+        elif isinstance(self.player, Player):
             if self.player.health < 1:
                 self.player.game_over()
             # --- Move sprite
