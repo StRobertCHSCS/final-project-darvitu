@@ -33,10 +33,11 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
             if len(hit_list) > 0:
                 for item in hit_list:
                     if isinstance(item, Goblin):
-                        item.attack()
-                        print("hit")
+                        item.is_player_hit = True
         # if the player is the user
         if isinstance(self.player, Player):
+            if self.player.health < 1:
+                self.player.game_over()
             # --- Move sprite
             self.player.move_player(direction)
             # update x position

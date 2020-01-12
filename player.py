@@ -39,6 +39,9 @@ class Player(arcade.AnimatedTimeSprite):
         self.player_width = player_width
         self.player_height = player_height
 
+        # player health - if it reaches 0 then game over
+        self.health = 3
+
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
         """
@@ -162,3 +165,13 @@ class Player(arcade.AnimatedTimeSprite):
         return self._point_list_cache
 
     points = property(get_points, arcade.Sprite.set_points)
+
+    def game_over(self) -> None:
+        """
+        Displays game over state of player
+        :return: none
+        """
+        self.face_direction("DOWN")
+        self.direction = None
+        self.change_x = 0
+        self.change_y = 0

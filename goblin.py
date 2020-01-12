@@ -5,7 +5,8 @@ from typing import Tuple
 
 
 class Goblin(arcade.AnimatedTimeSprite):
-    def __init__(self, window_width: int, window_heigth: int, player_speed=250, direction="DOWN", enemy_width=32,
+    def __init__(self, window_width: int, window_heigth: int, health: int, player_speed=250, direction="DOWN",
+                 enemy_width=32,
                  enemy_height=48):
         """Constructor of the Player class, that is the entity that the user will be moving controlling.
 
@@ -34,6 +35,7 @@ class Goblin(arcade.AnimatedTimeSprite):
         self.count = 0
         self.hit = False
         self.time = None
+        self.is_player_hit_already = True
 
         # create textures for animations
         self.textures_left = []
@@ -43,6 +45,10 @@ class Goblin(arcade.AnimatedTimeSprite):
         self.create_textures()
         # spawn facing forward
         self.face_direction(direction)
+        # goblin health
+        self.height = health
+        # if goblin hits player
+        self.is_player_hit = False
 
     # create textures
     def create_textures(self) -> None:
@@ -59,6 +65,7 @@ class Goblin(arcade.AnimatedTimeSprite):
         self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_2.png", scale=1))
         self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_1.png", mirrored=True, scale=1))
         self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_2.png", mirrored=True, scale=1))
+
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
         """
@@ -152,12 +159,15 @@ class Goblin(arcade.AnimatedTimeSprite):
                 self.change_y = -2
 
             # update direction of sprite
-            if self.textures is not self.textures_attack_right or self.textures is not self.textures_attack_left:
+            if self.is_player_hit:
+                self.attack()
+                self.is_player_hit = False
+                self.is_player_hit_already = False
+            else:
                 self.move_direction(self.direction)
         else:
             # update to standing animation
             self.texture_change_frames = 30
-
 
     def get_points(self) -> Tuple[Tuple[float, float]]:
         """
@@ -199,3 +209,19 @@ class Goblin(arcade.AnimatedTimeSprite):
         return self._point_list_cache
 
     points = property(get_points, arcade.Sprite.set_points)
+
+    def update_animation(self, player: Player):
+        """
+        Logic for selecting the proper texture to use.
+        """
+
+        if self.frame % self.texture_change_frames == 0:
+            if self.textures == self.textures_attack_left or self.textures == self.textures_attack_right:
+                if not self.is_player_hit_already:
+                    player.health -= 1
+                    self.is_player_hit_already = True
+            self.cur_texture_index += 1
+            if self.cur_texture_index >= len(self.textures):
+                self.cur_texture_index = 0
+            self.set_texture(self.cur_texture_index)
+        self.frame += 1

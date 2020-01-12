@@ -183,3 +183,14 @@ class Blob(arcade.AnimatedTimeSprite):
         return self._point_list_cache
 
     points = property(get_points, arcade.Sprite.set_points)
+
+    def update_animation(self, player: Player):
+        """
+        Logic for selecting the proper texture to use.
+        """
+        if self.frame % self.texture_change_frames == 0:
+            self.cur_texture_index += 1
+            if self.cur_texture_index >= len(self.textures):
+                self.cur_texture_index = 0
+            self.set_texture(self.cur_texture_index)
+        self.frame += 1

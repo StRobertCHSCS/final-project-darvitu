@@ -7,6 +7,7 @@ from blob import Blob
 from collision import CollisionDetection
 from sounds import Sounds
 from goblin import Goblin
+from spritelist import Sprites
 
 
 class Main():
@@ -15,8 +16,7 @@ class Main():
 
         self.direction = None
         self.player = None
-        self.enemies = []
-        self.character_list = None
+        self.enemies = None
         self.player_engine = None
         self.enemies_engine = None
         self.tile_map = None
@@ -35,7 +35,8 @@ class Main():
         self.tile_map.ground_list.draw()
         self.tile_map.wall_list.draw()
 
-        self.character_list.draw()
+        self.enemies.draw()
+        self.player.draw()
 
     def move_player(self) -> None:
         """
@@ -62,14 +63,16 @@ class Main():
         :return: none
         """
         # updates the animation state of the player sprite
-        self.character_list.update_animation()
+        self.enemies.update_animation(self.player)
+        self.player.update_animation()
         # move player
         self.move_player()
         # move enemies
         self.move_enemy()
         # check player and enemy collision
-        self.player_engine.update(player_to_follow = self.enemies)
+        self.player_engine.update(player_to_follow=self.enemies)
         self.time += 1 / 60
+        print(self.player.health)
 
     def on_key_press(self, symbol, modifiers) -> None:
         '''
@@ -123,9 +126,8 @@ class Main():
         """
         for x in range(1):
             self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT))
-            self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 100))
+            self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 100, 3))
         for enemy in self.enemies:
-            self.character_list.append(enemy)
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
 
     def main(self):
@@ -134,14 +136,13 @@ class Main():
         arcade.schedule(self.on_update, 1 / 60)
         arcade.set_background_color(arcade.color.BLACK)
         # create character list
-        self.character_list = arcade.SpriteList()
         self.enemies_engine = []
-        self.enemies = arcade.SpriteList()
+        self.enemies = Sprites()
         # setting up player
         self.player = Player(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT)
 
         # add player to the list of characters
-        self.character_list.append(self.player)
+        # self.character_list.append(self.player)
         self.tile_map = TiledMap()
         self.player_engine = CollisionDetection(self.player, self.tile_map.wall_list)
         self.create_enemies()
