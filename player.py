@@ -112,7 +112,7 @@ class Player(arcade.AnimatedTimeSprite):
 
     def move_player(self, direction):
         self.direction = direction
-        if self.direction is not None:
+        if self.direction is not None and self.health > 0:
             self.texture_change_frames = 2.5
             if self.direction == "RIGHT":
                 self.change_x = 5
@@ -171,7 +171,7 @@ class Player(arcade.AnimatedTimeSprite):
         Displays game over state of player
         :return: none
         """
-        self.face_direction("DOWN")
         self.direction = None
         self.change_x = 0
         self.change_y = 0
+        self.texture = arcade.load_texture("images/game_over.png", scale=0.1, mirrored=True)

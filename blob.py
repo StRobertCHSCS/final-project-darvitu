@@ -41,6 +41,8 @@ class Blob(arcade.AnimatedTimeSprite):
         self.create_textures()
         # spawn facing forward
         self.face_direction(direction)
+        self.is_player_hit_already = False
+        self.is_player_hit = False
 
     # create textures
     def create_textures(self) -> None:
@@ -127,6 +129,10 @@ class Blob(arcade.AnimatedTimeSprite):
             self.previous_direction = self.direction
             self.direction = None
 
+        if player.health <1:
+            self.direction = None
+            self.move_direction("RIGHT")
+
         if self.direction is not None:
             if self.direction == "RIGHT":
                 self.change_x = 1
@@ -138,7 +144,11 @@ class Blob(arcade.AnimatedTimeSprite):
                 self.change_y = -1
 
             # update direction of sprite
-            self.move_direction(self.direction)
+                # update direction of sprite
+                if self.is_player_hit:
+                    self.is_player_hit_already = False
+                else:
+                    self.move_direction(self.direction)
         else:
             # update to standing animation
             self.texture_change_frames = 30
@@ -189,6 +199,11 @@ class Blob(arcade.AnimatedTimeSprite):
         Logic for selecting the proper texture to use.
         """
         if self.frame % self.texture_change_frames == 0:
+            if self.is_player_hit:
+                if not self.is_player_hit_already:
+                    player.health -= 1
+                    self.is_player_hit_already = True
+                    self.is_player_hit = False
             self.cur_texture_index += 1
             if self.cur_texture_index >= len(self.textures):
                 self.cur_texture_index = 0

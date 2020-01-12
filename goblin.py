@@ -147,7 +147,9 @@ class Goblin(arcade.AnimatedTimeSprite):
                 self.hit = False
             self.previous_direction = self.direction
             self.direction = None
-
+        if player.health <1:
+            self.direction = None
+            self.move_direction("RIGHT")
         if self.direction is not None:
             if self.direction == "RIGHT":
                 self.change_x = 2

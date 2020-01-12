@@ -34,6 +34,8 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                 for item in hit_list:
                     if isinstance(item, Goblin):
                         item.is_player_hit = True
+                    if isinstance(item, Blob):
+                        item.is_player_hit = True
         # if the player is the user
         if isinstance(self.player, Player):
             if self.player.health < 1:

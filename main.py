@@ -34,9 +34,8 @@ class Main():
         arcade.start_render()
         self.tile_map.ground_list.draw()
         self.tile_map.wall_list.draw()
-
-        self.enemies.draw()
         self.player.draw()
+        self.enemies.draw()
 
     def move_player(self) -> None:
         """
@@ -72,7 +71,6 @@ class Main():
         # check player and enemy collision
         self.player_engine.update(player_to_follow=self.enemies)
         self.time += 1 / 60
-        print(self.player.health)
 
     def on_key_press(self, symbol, modifiers) -> None:
         '''
@@ -124,9 +122,9 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(1):
-            self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT))
-            self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 100, 3))
+        for x in range(10):
+            self.enemies.append(Blob(self.WINDOW_WIDTH+400, self.WINDOW_HEIGHT+300))
+            self.enemies.append(Goblin(self.WINDOW_WIDTH+400, self.WINDOW_HEIGHT+300, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
 
@@ -139,7 +137,7 @@ class Main():
         self.enemies_engine = []
         self.enemies = Sprites()
         # setting up player
-        self.player = Player(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT)
+        self.player = Player(100, 100)
 
         # add player to the list of characters
         # self.character_list.append(self.player)
