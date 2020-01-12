@@ -152,13 +152,13 @@ class Goblin(arcade.AnimatedTimeSprite):
             self.move_direction("RIGHT")
         if self.direction is not None:
             if self.direction == "RIGHT":
-                self.change_x = 2
+                self.change_x = 4
             if self.direction == "LEFT":
-                self.change_x = -2
+                self.change_x = -4
             if self.direction == "UP":
-                self.change_y = 2
+                self.change_y = 4
             if self.direction == "DOWN":
-                self.change_y = -2
+                self.change_y = -4
 
             # update direction of sprite
             if self.is_player_hit:

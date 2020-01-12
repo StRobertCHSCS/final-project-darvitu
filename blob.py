@@ -129,26 +129,27 @@ class Blob(arcade.AnimatedTimeSprite):
             self.previous_direction = self.direction
             self.direction = None
 
-        if player.health <1:
+        if player.health < 1:
             self.direction = None
             self.move_direction("RIGHT")
 
         if self.direction is not None:
             if self.direction == "RIGHT":
-                self.change_x = 1
+                self.change_x = 2
             if self.direction == "LEFT":
-                self.change_x = -1
+                self.change_x = -2
             if self.direction == "UP":
-                self.change_y = 1
+                self.change_y = 2
             if self.direction == "DOWN":
-                self.change_y = -1
+                self.change_y = -2
 
             # update direction of sprite
-                # update direction of sprite
-                if self.is_player_hit:
-                    self.is_player_hit_already = False
-                else:
-                    self.move_direction(self.direction)
+            if self.is_player_hit:
+                self.is_player_hit_already = False
+
+            self.move_direction(self.direction)
+
+
         else:
             # update to standing animation
             self.texture_change_frames = 30
