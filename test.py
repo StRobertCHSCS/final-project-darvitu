@@ -1,207 +1,282 @@
-import arcade, math, random
-from player import Player
-from arcade.draw_commands import rotate_point
-from typing import Tuple
+"""
+Tetris
+
+Tetris clone, with some ideas from silvasur's code:
+https://gist.github.com/silvasur/565419/d9de6a84e7da000797ac681976442073045c74a4
+
+If Python and Arcade are installed, this example can be run from the command line with:
+python -m arcade.examples.tetris
+"""
+import arcade
+import random
+import PIL
+
+# Set how many rows and columns we will have
+ROW_COUNT = 24
+COLUMN_COUNT = 10
+
+# This sets the WIDTH and HEIGHT of each grid location
+WIDTH = 30
+HEIGHT = 30
+
+# This sets the margin between each cell
+# and on the edges of the screen.
+MARGIN = 5
+
+# Do the math to figure out our screen dimensions
+SCREEN_WIDTH = (WIDTH + MARGIN) * COLUMN_COUNT + MARGIN
+SCREEN_HEIGHT = (HEIGHT + MARGIN) * ROW_COUNT + MARGIN
+SCREEN_TITLE = "Tetris"
+
+colors = [
+          (0,   0,   0),
+          (255, 0,   0),
+          (0,   150, 0),
+          (0,   0,   255),
+          (255, 120, 0),
+          (255, 255, 0),
+          (180, 0,   255),
+          (0,   220, 220)
+          ]
+
+# Define the shapes of the single parts
+tetris_shapes = [
+    [[1, 1, 1],
+     [0, 1, 0]],
+
+    [[0, 2, 2],
+     [2, 2, 0]],
+
+    [[3, 3, 0],
+     [0, 3, 3]],
+
+    [[4, 0, 0],
+     [4, 4, 4]],
+
+    [[0, 0, 5],
+     [5, 5, 5]],
+
+    [[6, 6, 6, 6]],
+
+    [[7, 7],
+     [7, 7]]
+]
 
 
-class Enemy(arcade.AnimatedTimeSprite):
+def create_textures():
+    """ Create a list of images for sprites based on the global colors. """
+    new_textures = []
+    for color in colors:
+        # noinspection PyUnresolvedReferences
+        image = PIL.Image.new('RGB', (WIDTH, HEIGHT), color)
+        new_textures.append(arcade.Texture(str(color), image=image))
+    return new_textures
 
-    def __init__(self, window_width: int, window_heigth: int, player_speed=250, direction="DOWN", enemy_width=32,
-                 enemy_height=48):
-        """Constructor of the Player class, that is the entity that the user will be moving controlling.
 
-                          :param direction: default direction of player
-                          :param player_speed: speed of player
-                          :param window_width: width of game window
-                          :param window_heigth: height of game window
-                          """
-        super().__init__()
+texture_list = create_textures()
 
-        # setting speed and direction based on creation of Player object
-        self.player_speed = player_speed
-        self.direction = direction
-        self.previous_direction = None
 
-        # change animation rate
-        self.texture_change_frames = 30
+def rotate_clockwise(shape):
+    """ Rotates a matrix clockwise """
+    return [[shape[y][x] for y in range(len(shape))] for x in range(len(shape[0]) - 1, -1, -1)]
 
-        # spawn facing forward
-        self.face_direction(direction)
 
-        # setting position of Player
-        self.center_x = window_width // 2
-        self.center_y = window_heigth // 2
+def check_collision(board, shape, offset):
+    """
+    See if the matrix stored in the shape will intersect anything
+    on the board based on the offset. Offset is an (x, y) coordinate.
+    """
+    off_x, off_y = offset
+    for cy, row in enumerate(shape):
+        for cx, cell in enumerate(row):
+            if cell and board[cy + off_y][cx + off_x]:
+                return True
+    return False
 
-        # defining size of player for later use
-        self.enemy_width = enemy_width
-        self.enemy_height = enemy_height
-        self.movement = True
-        self.count = 0
-        self.hit = False
-        self.time = None
 
-    # animation for the player to face when it is not moving
-    def face_direction(self, direction) -> None:
+def remove_row(board, row):
+    """ Remove a row from the board, add a blank row on top. """
+    del board[row]
+    return [[0 for _ in range(COLUMN_COUNT)]] + board
+
+
+def join_matrixes(matrix_1, matrix_2, matrix_2_offset):
+    """ Copy matrix 2 onto matrix 1 based on the passed in x, y offset coordinate """
+    offset_x, offset_y = matrix_2_offset
+    for cy, row in enumerate(matrix_2):
+        for cx, val in enumerate(row):
+            matrix_1[cy + offset_y - 1][cx + offset_x] += val
+    return matrix_1
+
+
+def new_board():
+    """ Create a grid of 0's. Add 1's to the bottom for easier collision detection. """
+    # Create the main board of 0's
+    board = [[0 for _x in range(COLUMN_COUNT)] for _y in range(ROW_COUNT)]
+    # Add a bottom border of 1's
+    board += [[1 for _x in range(COLUMN_COUNT)]]
+    return board
+
+
+class MyGame(arcade.Window):
+    """ Main application class. """
+
+    def __init__(self, width, height, title):
+        """ Set up the application. """
+
+        super().__init__(width, height, title)
+
+        arcade.set_background_color(arcade.color.WHITE)
+
+        self.board = None
+        self.frame_count = 0
+        self.game_over = False
+        self.paused = False
+        self.board_sprite_list = None
+
+        self.stone = None
+        self.stone_x = 0
+        self.stone_y = 0
+
+    def new_stone(self):
         """
-        Faces the character animation based on the direction.
-        :param direction: direction for the character to face
-        :return: None
+        Randomly grab a new stone and set the stone location to the top.
+        If we immediately collide, then game-over.
         """
-        if direction == "LEFT":
-            self.textures = []
-            for i in range(3):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=104, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "RIGHT":
-            self.textures = []
-            for i in range(3):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=312, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "UP":
-            self.textures = []
-            for i in range(1):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=208, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "DOWN":
-            self.textures = []
-            for i in range(3):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=0, width=96, height=104, scale=0.5))
+        self.stone = random.choice(tetris_shapes)
+        self.stone_x = int(COLUMN_COUNT / 2 - len(self.stone[0]) / 2)
+        self.stone_y = 0
 
-        else:
-            print("Invalid direction to face")
+        if check_collision(self.board, self.stone, (self.stone_x, self.stone_y)):
+            self.game_over = True
 
-    # animation for moving
-    def move_direction(self, direction) -> None:
+    def setup(self):
+        self.board = new_board()
+
+        self.board_sprite_list = arcade.SpriteList()
+        for row in range(len(self.board)):
+            for column in range(len(self.board[0])):
+                sprite = arcade.Sprite()
+                for texture in texture_list:
+                    sprite.append_texture(texture)
+                sprite.set_texture(0)
+                sprite.center_x = (MARGIN + WIDTH) * column + MARGIN + WIDTH // 2
+                sprite.center_y = SCREEN_HEIGHT - (MARGIN + HEIGHT) * row + MARGIN + HEIGHT // 2
+
+                self.board_sprite_list.append(sprite)
+
+        self.new_stone()
+        self.update_board()
+
+    def drop(self):
         """
-        Sets animation to the direction of the player movement
-        :param direction: direction of player movement
-        :return: None
+        Drop the stone down one place.
+        Check for collision.
+        If collided, then
+          join matrixes
+          Check for rows we can remove
+          Update sprite list with stones
+          Create a new stone
         """
-        if direction == "DOWN":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=416, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "LEFT":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=520, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "UP":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=624, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "RIGHT":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/test_sprite_sheet_2.png", x=i * 96, y=728, width=96, height=104,
-                                        scale=0.5))
-        else:
-            print("Direction not valid to move")
+        if not self.game_over and not self.paused:
+            self.stone_y += 1
+            if check_collision(self.board, self.stone, (self.stone_x, self.stone_y)):
+                self.board = join_matrixes(self.board, self.stone, (self.stone_x, self.stone_y))
+                while True:
+                    for i, row in enumerate(self.board[:-1]):
+                        if 0 not in row:
+                            self.board = remove_row(self.board, i)
+                            break
+                    else:
+                        break
+                self.update_board()
+                self.new_stone()
 
-    def follow(self, player: Player, delta_time=1 / 60) -> None:
+    def rotate_stone(self):
+        """ Rotate the stone, check collision. """
+        if not self.game_over and not self.paused:
+            new_stone = rotate_clockwise(self.stone)
+            if not check_collision(self.board, new_stone, (self.stone_x, self.stone_y)):
+                self.stone = new_stone
+
+    def on_update(self, dt):
+        """ Update, drop stone if warrented """
+        self.frame_count += 1
+        if self.frame_count % 10 == 0:
+            self.drop()
+
+    def move(self, delta_x):
+        """ Move the stone back and forth based on delta x. """
+        if not self.game_over and not self.paused:
+            new_x = self.stone_x + delta_x
+            if new_x < 0:
+                new_x = 0
+            if new_x > COLUMN_COUNT - len(self.stone[0]):
+                new_x = COLUMN_COUNT - len(self.stone[0])
+            if not check_collision(self.board, self.stone, (new_x, self.stone_y)):
+                self.stone_x = new_x
+
+    def on_key_press(self, key, modifiers):
         """
-        Makes enemy follow the player, engine that will run all moving sprites
-        Method that is called in the main.py file on_update()
-        :param delta_time: time of rate of execution
-        :param player: the player to follow
-        :return: none
+        Handle user key presses
+        User goes left, move -1
+        User goes right, move 1
+        Rotate stone,
+        or drop down
         """
-        self.texture_change_frames = 2.5
+        if key == arcade.key.LEFT:
+            self.move(-1)
+        elif key == arcade.key.RIGHT:
+            self.move(1)
+        elif key == arcade.key.UP:
+            self.rotate_stone()
+        elif key == arcade.key.DOWN:
+            self.drop()
 
-        wait = random.randint(10, 30)
-        if self.movement:
-            self.count += 1
-            if abs(self.center_x - player.center_x) > 5:
-                if self.center_x < player.center_x:
-                    self.direction = "RIGHT"
-                if self.center_x > player.center_x:
-                    self.direction = "LEFT"
-            else:
-                self.count = wait
-        else:
-            self.count += 1
-            if abs(self.center_y - player.center_y) > 5:
-                if self.center_y < player.center_y:
-                    self.direction = "UP"
-                if self.center_y > player.center_y:
-                    self.direction = "DOWN"
-            else:
-                self.count = wait
-
-        # changing the direction (up/down to left/right) every 25 loops
-        if self.count == wait:
-            self.movement = not self.movement
-            self.count = 0
-        if self.hit:
-            if self.previous_direction is not None and self.previous_direction is not self.direction:
-                self.hit = False
-            self.previous_direction = self.direction
-            self.direction = None
-
-        if self.direction is not None:
-            if self.direction == "RIGHT":
-                self.change_x = 4
-            if self.direction == "LEFT":
-                self.change_x = -4
-            if self.direction == "UP":
-                self.change_y = 4
-            if self.direction == "DOWN":
-                self.change_y = -4
-
-            # update direction of sprite
-            self.move_direction(self.direction)
-        else:
-            # update to standing animation
-            self.texture_change_frames = 30
-            self.face_direction("DOWN")
-
-    def get_points(self) -> Tuple[Tuple[float, float]]:
+    # noinspection PyMethodMayBeStatic
+    def draw_grid(self, grid, offset_x, offset_y):
         """
-        Get the corner points for the rect that makes up the sprite.
+        Draw the grid. Used to draw the falling stones. The board is drawn
+        by the sprite list.
         """
-        if self._point_list_cache is not None:
-            return self._point_list_cache
+        # Draw the grid
+        for row in range(len(grid)):
+            for column in range(len(grid[0])):
+                # Figure out what color to draw the box
+                if grid[row][column]:
+                    color = colors[grid[row][column]]
+                    # Do the math to figure out where the box is
+                    x = (MARGIN + WIDTH) * (column + offset_x) + MARGIN + WIDTH // 2
+                    y = SCREEN_HEIGHT - (MARGIN + HEIGHT) * (row + offset_y) + MARGIN + HEIGHT // 2
 
-        if self._points is not None:
-            point_list = []
-            for point in range(len(self._points)):
-                point = (self._points[point][0] + self.center_x,
-                         self._points[point][1] + self.center_y)
-                point_list.append(point)
-            self._point_list_cache = tuple(point_list)
-        else:
-            x1, y1 = rotate_point(self.center_x - self.enemy_width / 3,
-                                  self.center_y - self.enemy_height / 3,
-                                  self.center_x,
-                                  self.center_y,
-                                  self.angle)
-            x2, y2 = rotate_point(self.center_x + self.enemy_width / 4,
-                                  self.center_y - self.enemy_height / 4,
-                                  self.center_x,
-                                  self.center_y,
-                                  self.angle)
-            x3, y3 = rotate_point(self.center_x + self.enemy_width / 3,
-                                  self.center_y + self.enemy_height / 3,
-                                  self.center_x,
-                                  self.center_y,
-                                  self.angle)
-            x4, y4 = rotate_point(self.center_x - self.enemy_width / 3,
-                                  self.center_y + self.enemy_height / 3,
-                                  self.center_x,
-                                  self.center_y,
-                                  self.angle)
+                    # Draw the box
+                    arcade.draw_rectangle_filled(x, y, WIDTH, HEIGHT, color)
 
-            self._point_list_cache = ((x1, y1), (x2, y2), (x3, y3), (x4, y4))
-        return self._point_list_cache
+    def update_board(self):
+        """
+        Update the sprite list to reflect the contents of the 2d grid
+        """
+        for row in range(len(self.board)):
+            for column in range(len(self.board[0])):
+                v = self.board[row][column]
+                i = row * COLUMN_COUNT + column
+                self.board_sprite_list[i].set_texture(v)
 
-    points = property(get_points, arcade.Sprite.set_points)
+    def on_draw(self):
+        """ Render the screen. """
+
+        # This command has to happen before we start drawing
+        arcade.start_render()
+        self.board_sprite_list.draw()
+        self.draw_grid(self.stone, self.stone_x, self.stone_y)
+
+
+def main():
+    """ Create the game window, setup, run """
+    my_game = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    my_game.setup()
+    arcade.run()
+
+
+if __name__ == "__main__":
+    main()

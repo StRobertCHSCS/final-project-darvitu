@@ -19,7 +19,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
         self.player = player
         self.walls = walls
 
-    def update(self, direction, player_to_follow=None) -> None:
+    def update(self, direction=None, player_to_follow=None) -> None:
         """
         Move everything and resolve collisions
         :return: none
@@ -34,6 +34,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                 for item in hit_list:
                     if isinstance(item, Goblin):
                         item.attack()
+                        print("hit")
         # if the player is the user
         if isinstance(self.player, Player):
             # --- Move sprite

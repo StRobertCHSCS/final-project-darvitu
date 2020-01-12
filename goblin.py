@@ -59,7 +59,6 @@ class Goblin(arcade.AnimatedTimeSprite):
         self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_2.png", scale=1))
         self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_1.png", mirrored=True, scale=1))
         self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_2.png", mirrored=True, scale=1))
-
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
         """

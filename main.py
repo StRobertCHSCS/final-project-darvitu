@@ -47,7 +47,6 @@ class Main():
         if output is not None:
             self.on_key_release(output, None)
 
-
     def move_enemy(self) -> None:
         """
         Moves enemies based on the position of the player
@@ -68,6 +67,8 @@ class Main():
         self.move_player()
         # move enemies
         self.move_enemy()
+        # check player and enemy collision
+        self.player_engine.update(player_to_follow = self.enemies)
         self.time += 1 / 60
 
     def on_key_press(self, symbol, modifiers) -> None:
@@ -122,7 +123,7 @@ class Main():
         """
         for x in range(1):
             self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT))
-            self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT+100))
+            self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 100))
         for enemy in self.enemies:
             self.character_list.append(enemy)
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
@@ -135,6 +136,7 @@ class Main():
         # create character list
         self.character_list = arcade.SpriteList()
         self.enemies_engine = []
+        self.enemies = arcade.SpriteList()
         # setting up player
         self.player = Player(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT)
 
@@ -146,7 +148,7 @@ class Main():
 
         # add sounds
         self.sound = Sounds()
-        #self.sound.update()
+        # self.sound.update()
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press
