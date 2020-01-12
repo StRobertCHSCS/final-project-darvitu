@@ -46,7 +46,6 @@ class Main():
         output = self.player_engine.update(self.direction)
         if output is not None:
             self.on_key_release(output, None)
-        self.player_engine.update(None,player_to_follow = self.character_list)
 
 
     def move_enemy(self) -> None:
@@ -147,7 +146,7 @@ class Main():
 
         # add sounds
         self.sound = Sounds()
-        # self.sound.update()
+        #self.sound.update()
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press

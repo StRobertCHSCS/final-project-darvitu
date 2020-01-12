@@ -102,7 +102,7 @@ class Goblin(arcade.AnimatedTimeSprite):
         else:
             print("Direction not valid to move")
 
-    def follow(self, player: Player, delta_time=1 / 60) -> None:
+    def follow(self, player: Player) -> None:
         """
         Makes enemy follow the player, engine that will run all moving sprites
         Method that is called in the main.py file on_update()
