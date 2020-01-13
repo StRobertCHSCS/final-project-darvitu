@@ -8,6 +8,7 @@ from collision import CollisionDetection
 from sounds import Sounds
 from goblin import Goblin
 from spritelist import Sprites
+from wizard import WizardTower
 
 
 class Main():
@@ -19,6 +20,7 @@ class Main():
         self.enemies = None
         self.player_engine = None
         self.enemies_engine = None
+        self.towers = None
         self.tile_map = None
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
@@ -38,7 +40,7 @@ class Main():
         self.player.draw()
         self.enemies.draw()
         arcade.draw_texture_rectangle(texture=arcade.load_texture("images/fireball.png"), center_x=200, center_y=200,
-                                      width=50, height=50,)
+                                      width=50, height=50, )
 
     def move_player(self) -> None:
         """
@@ -130,6 +132,7 @@ class Main():
             self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
+        self.towers.append(WizardTower(200, 200, 48, 52))
 
     def main(self):
         # open window
@@ -143,10 +146,11 @@ class Main():
         self.player = Player(100, 100)
 
         # add player to the list of characters
-        # self.character_list.append(self.player)
         self.tile_map = TiledMap()
         self.tile_map.tutorial_world()
+        # create player engine
         self.player_engine = CollisionDetection(self.player, self.tile_map.wall_list)
+        self.towers = Sprites()
         self.create_enemies()
 
         # add sounds
