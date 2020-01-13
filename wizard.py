@@ -1,6 +1,7 @@
 import arcade
 from player import Player
 
+
 class WizardTower(arcade.Sprite):
     def __init__(self, center_x, center_y, width, height):
         """
@@ -14,9 +15,10 @@ class WizardTower(arcade.Sprite):
         # initiate width and height variables
         self.width = width
         self.height = height
-        #load fireball
+        # load fireball
         self.fireball = Fireball()
-    def point_towards(self, player:Player)->None:
+
+    def point_towards(self, player: Player) -> None:
         """
         Points wizard towards the player
         :return: none
@@ -25,11 +27,23 @@ class WizardTower(arcade.Sprite):
             self.texture = arcade.load_texture("images/wizard_tower.png", mirrored=True)
         else:
             self.texture = arcade.load_texture("images/wizard_tower.png")
-    def shoot_fireball(self)-> None:
+
+
+class Fireball(arcade.Sprite):
+    def __init__(self, center_x, center_y):
+        """
+        Creates a fireball
+        :param center_x: center x of the fireball start point
+        :param center_y: center y of the fireball start point
+        """
+        self.center_x = center_x
+        self.center_y = center_y
+        self.texture = arcade.load_texture("images/fireball.png")
+
+    def shoot_fireball(self, player: Player) -> None:
         """
         Draws a fireball
+        :param player: player to shoot at
         :return:
         """
-        self.texture = None
-class Fireball(arcade.Sprite):
-    pass
+        delta_x = abs(self.center_x - player.center_x)
