@@ -14,7 +14,8 @@ class WizardTower(arcade.Sprite):
         # initiate width and height variables
         self.width = width
         self.height = height
-
+        #load fireball
+        self.fireball = Fireball()
     def point_towards(self, player:Player)->None:
         """
         Points wizard towards the player
@@ -29,3 +30,6 @@ class WizardTower(arcade.Sprite):
         Draws a fireball
         :return:
         """
+        self.texture = None
+class Fireball(arcade.Sprite):
+    pass
