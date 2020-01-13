@@ -34,6 +34,7 @@ class Main():
         arcade.start_render()
         self.tile_map.ground_list.draw()
         self.tile_map.wall_list.draw()
+        self.tile_map.traps_list.draw()
         self.player.draw()
         self.enemies.draw()
         arcade.draw_texture_rectangle(texture=arcade.load_texture("images/fireball.png"), center_x=200, center_y=200,
@@ -144,6 +145,7 @@ class Main():
         # add player to the list of characters
         # self.character_list.append(self.player)
         self.tile_map = TiledMap()
+        self.tile_map.tutorial_world()
         self.player_engine = CollisionDetection(self.player, self.tile_map.wall_list)
         self.create_enemies()
 
