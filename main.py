@@ -36,6 +36,8 @@ class Main():
         self.tile_map.wall_list.draw()
         self.player.draw()
         self.enemies.draw()
+        arcade.draw_texture_rectangle(texture=arcade.load_texture("images/fireball.png"), center_x=200, center_y=200,
+                                      width=50, height=50,)
 
     def move_player(self) -> None:
         """
@@ -122,7 +124,7 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(10):
+        for x in range(0):
             self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300))
             self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300, 3))
         for enemy in self.enemies:
@@ -147,7 +149,7 @@ class Main():
 
         # add sounds
         self.sound = Sounds()
-        self.sound.update(0)
+        # self.sound.update(0)
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press
