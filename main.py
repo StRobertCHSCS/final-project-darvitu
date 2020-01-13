@@ -124,7 +124,7 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(0):
+        for x in range(10):
             self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300))
             self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300, 3))
         for enemy in self.enemies:
