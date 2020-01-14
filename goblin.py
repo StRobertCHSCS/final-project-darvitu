@@ -5,7 +5,7 @@ from typing import Tuple
 
 
 class Goblin(arcade.AnimatedTimeSprite):
-    def __init__(self, window_width: int, window_heigth: int, health: int, direction="DOWN",
+    def __init__(self, center_x: int, center_y: int, health: int, direction="DOWN",
                  enemy_width=32,
                  enemy_height=48):
         """Constructor of the Player class, that is the entity that the user will be moving controlling.
@@ -24,8 +24,8 @@ class Goblin(arcade.AnimatedTimeSprite):
         self.texture_change_frames = 30
 
         # setting position of Player
-        self.center_x = window_width // 2
-        self.center_y = window_heigth // 2
+        self.center_x = center_x
+        self.center_y = center_y
 
         # defining size of player for later use
         self.enemy_width = enemy_width

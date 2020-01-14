@@ -5,7 +5,7 @@ from typing import Tuple
 
 
 class Blob(arcade.AnimatedTimeSprite):
-    def __init__(self, window_width: int, window_heigth: int, direction="DOWN", enemy_width=32,
+    def __init__(self, center_x: int, center_y: int, direction="DOWN", enemy_width=32,
                  enemy_height=48):
         """Constructor of the Player class, that is the entity that the user will be moving controlling.
 
@@ -23,8 +23,8 @@ class Blob(arcade.AnimatedTimeSprite):
         self.texture_change_frames = 30
 
         # setting position of Player
-        self.center_x = window_width // 2
-        self.center_y = window_heigth // 2
+        self.center_x = center_x
+        self.center_y = center_y
 
         # defining size of player for later use
         self.enemy_width = enemy_width
