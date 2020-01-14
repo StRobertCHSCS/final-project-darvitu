@@ -21,6 +21,7 @@ class WizardTower(arcade.Sprite):
         self.direction = None
         # load fireball
         self.fireball = self.create_fireball()
+        self.can_shoot = True
 
     def point_towards(self, player: Player) -> None:
         """
@@ -33,7 +34,8 @@ class WizardTower(arcade.Sprite):
         else:
             self.texture = arcade.load_texture("images/wizard_tower.png", mirrored=True, scale=1.5)
             self.direction = "LEFT"
-
+        if self.fireball.reset:
+            self.reset_fireball()
     def create_fireball(self) -> arcade.Sprite:
         """
         Creates a fireball
@@ -48,7 +50,17 @@ class WizardTower(arcade.Sprite):
         :return: none
         """
         self.fireball.shoot_fireball(player)
-
+        self.can_shoot = False
+    def reset_fireball(self)-> None:
+        """
+        resets fireball after hitting a wall
+        :return: none
+        """
+        self.fireball.is_wall_hit = False
+        self.fireball.center_x = self.center_x
+        self.fireball.center_y = self.center_y
+        self.can_shoot = True
+        self.fireball.reset = False
 
 class Fireball(arcade.Sprite):
     def __init__(self, center_x, center_y):
@@ -61,7 +73,9 @@ class Fireball(arcade.Sprite):
         super().__init__(center_x=center_x, center_y=center_y)
         self.center_x = center_x
         self.center_y = center_y
-        self.texture = arcade.load_texture("images/fireball.png")
+        self.is_wall_hit = False
+        self.texture = arcade.load_texture("images/fireball.png", scale=0.3)
+        self.reset = False
 
     def shoot_fireball(self, player: Player) -> None:
         """
@@ -99,8 +113,15 @@ class Fireball(arcade.Sprite):
         if player.direction == "RIGHT":
             end_x = player.center_x + 25
 
-
         # move fireball
-        self.change_x = (end_x - self.center_x) / 10
-        self.change_y = (end_y - self.change_y) / 10
-        print(self.change_x, self.change_y)
+        self.change_x = (end_x - self.center_x) / 100
+        self.change_y = (end_y - self.center_y) / 100
+
+    def draw(self):
+        """ Draw the sprite. """
+        if not self.is_wall_hit:
+            arcade.draw_texture_rectangle(self.center_x, self.center_y,
+                                          self.width, self.height,
+                                          self._texture, self.angle, self.alpha,  # TODO: review this function
+                                          repeat_count_x=self.repeat_count_x,
+                                          repeat_count_y=self.repeat_count_y)

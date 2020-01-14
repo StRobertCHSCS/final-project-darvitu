@@ -5,6 +5,7 @@ from player import Player
 from tiledmap import TiledMap
 from arcade.geometry import check_for_collision_with_list
 from blob import Blob
+from wizard import Fireball
 
 
 class CollisionDetection(arcade.PhysicsEngineSimple):
@@ -200,3 +201,46 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                     print("Error, collision while enemy wasn't moving.")
 
             self.player.change_x, self.player.change_y = 0, 0
+        elif isinstance(self.player, Fireball):
+            # --- Move sprite
+            # update x position
+            self.player.center_x += self.player.change_x
+            # Check for wall hit
+            hit_list = \
+                check_for_collision_with_list(self.player,
+                                              self.walls)
+
+            # If we hit a wall, move so the edges are at the same point
+            if len(hit_list) > 0:
+                if self.player.change_x > 0:
+                    for item in hit_list:
+                        self.player.right = min(item.left,
+                                                self.player.right) - 5
+                elif self.player.change_x < 0:
+                    for item in hit_list:
+                        self.player.left = max(item.right,
+                                               self.player.left) + 5
+                else:
+                    print("Error, collision while enemy wasn't moving.")
+                self.player.is_wall_hit = True
+                self.player.reset = True
+            # update y position
+            self.player.center_y += self.player.change_y
+            # Check for wall hit
+            hit_list = \
+                check_for_collision_with_list(self.player,
+                                              self.walls)
+            # If we hit a wall, move so the edges are at the same point
+            if len(hit_list) > 0:
+                if self.player.change_y > 0:
+                    for item in hit_list:
+                        self.player.top = min(item.bottom,
+                                              self.player.top) - 5
+                elif self.player.change_y < 0:
+                    for item in hit_list:
+                        self.player.bottom = max(item.top,
+                                                 self.player.bottom) + 5
+                else:
+                    print("Error, collision while enemy wasn't moving.")
+                self.player.is_wall_hit = True
+                self.player.reset = True
