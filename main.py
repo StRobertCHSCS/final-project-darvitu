@@ -41,7 +41,7 @@ class Main():
         self.player.draw()
         self.enemies.draw()
         self.towers.draw()
-        self.towers[0].fireball.draw()
+        self.towers[0].fireball.draw(self.player.health)
 
     def move_player(self) -> None:
         """
@@ -134,9 +134,9 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(10):
-            self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300))
-            self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300, 3))
+        for x in range(5):
+            self.enemies.append(Blob(400, 400))
+            self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
         for x in range(1):

@@ -36,6 +36,7 @@ class WizardTower(arcade.Sprite):
             self.direction = "LEFT"
         if self.fireball.reset:
             self.reset_fireball()
+
     def create_fireball(self) -> arcade.Sprite:
         """
         Creates a fireball
@@ -51,7 +52,8 @@ class WizardTower(arcade.Sprite):
         """
         self.fireball.shoot_fireball(player)
         self.can_shoot = False
-    def reset_fireball(self)-> None:
+
+    def reset_fireball(self) -> None:
         """
         resets fireball after hitting a wall
         :return: none
@@ -61,6 +63,7 @@ class WizardTower(arcade.Sprite):
         self.fireball.center_y = self.center_y
         self.can_shoot = True
         self.fireball.reset = False
+
 
 class Fireball(arcade.Sprite):
     def __init__(self, center_x, center_y):
@@ -117,11 +120,11 @@ class Fireball(arcade.Sprite):
         self.change_x = (end_x - self.center_x) / 100
         self.change_y = (end_y - self.center_y) / 100
 
-    def draw(self):
+    def draw(self, health):
         """ Draw the sprite. """
-        if not self.is_wall_hit:
+        if not self.is_wall_hit and health > 0:
             arcade.draw_texture_rectangle(self.center_x, self.center_y,
                                           self.width, self.height,
-                                          self._texture, self.angle, self.alpha,  # TODO: review this function
+                                          self._texture, self.angle, self.alpha,
                                           repeat_count_x=self.repeat_count_x,
                                           repeat_count_y=self.repeat_count_y)
