@@ -39,8 +39,8 @@ class Main():
         self.tile_map.traps_list.draw()
         self.player.draw()
         self.enemies.draw()
-        arcade.draw_texture_rectangle(texture=arcade.load_texture("images/fireball.png"), center_x=200, center_y=200,
-                                      width=50, height=50, )
+        self.towers.draw()
+        self.towers.fireball.draw()
 
     def move_player(self) -> None:
         """
@@ -59,6 +59,9 @@ class Main():
         """
         for enemy in self.enemies_engine:
             enemy.update(enemy, self.player)
+        for tower in self.towers:
+            tower.point_towards(self.player)
+            tower.shoot(self.player)
 
     def on_update(self, delta_time) -> None:
         """

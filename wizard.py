@@ -16,10 +16,11 @@ class WizardTower(arcade.Sprite):
         # initiate width and height variables
         self.width = width
         self.height = height
-        # load fireball
-        self.fireball = Fireball(self.center_x, self.center_y)
-        # set direction facing for fireball
+
+        # set direction facing for statue
         self.direction = None
+        # load fireball
+        self.fireball = self.create_fireball()
 
     def point_towards(self, player: Player) -> None:
         """
@@ -27,11 +28,26 @@ class WizardTower(arcade.Sprite):
         :return: none
         """
         if self.center_x < player.center_x:
-            self.texture = arcade.load_texture("images/wizard_tower.png", mirrored=True)
-            self.direction = "LEFT"
-        else:
-            self.texture = arcade.load_texture("images/wizard_tower.png")
+            self.texture = arcade.load_texture("images/wizard_tower.png", scale=1.5)
             self.direction = "RIGHT"
+        else:
+            self.texture = arcade.load_texture("images/wizard_tower.png", mirrored=True, scale=1.5)
+            self.direction = "LEFT"
+
+    def create_fireball(self) -> arcade.Sprite:
+        """
+        Creates a fireball
+        :return: a fireball
+        """
+        return Fireball(self.center_x, self.center_y)
+
+    def shoot(self, player: Player) -> None:
+        """
+        Shoots fireball, calls fireball.shoot_fireball()
+        :param player: player to shoot at
+        :return: none
+        """
+        self.fireball.shoot_fireball(player)
 
 
 class Fireball(arcade.Sprite):
@@ -41,6 +57,8 @@ class Fireball(arcade.Sprite):
         :param center_x: center x of the fireball start point
         :param center_y: center y of the fireball start point
         """
+        # call parent
+        super().__init__(center_x=center_x, center_y=center_y)
         self.center_x = center_x
         self.center_y = center_y
         self.texture = arcade.load_texture("images/fireball.png")
@@ -58,7 +76,7 @@ class Fireball(arcade.Sprite):
         delta_x = abs(self.center_x - player.center_x)
         delta_y = abs(self.center_y - player.center_y)
         # finding the related acute angle
-        theta = math.tan(delta_y, delta_x)
+        theta = math.tan(delta_y / delta_x)
         # find where the player is in relation to the fireball
         if self.center_x + 10 < player.center_x:
             if self.center_y <= player.center_y:
@@ -71,6 +89,7 @@ class Fireball(arcade.Sprite):
             else:
                 self.angle = 180 + theta
         # determine end points of fireball
+        end_x, end_y = player.center_x, player.center_y
         if player.direction == "UP":
             end_y = player.center_y + 25
         if player.direction == "DOWN":
@@ -79,10 +98,9 @@ class Fireball(arcade.Sprite):
             end_x = player.center_x - 25
         if player.direction == "RIGHT":
             end_x = player.center_x + 25
-        else:
-            end_x, end_y = player.center_x, player.center_y
+
 
         # move fireball
         self.change_x = (end_x - self.center_x) / 10
         self.change_y = (end_y - self.change_y) / 10
-
+        print(self.change_x, self.change_y)
