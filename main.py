@@ -8,7 +8,7 @@ from collision import CollisionDetection
 from sounds import Sounds
 from goblin import Goblin
 from spritelist import Sprites
-from wizard import WizardTower
+from wizard import WizardTower, Fireball
 
 
 class Main():
@@ -20,6 +20,7 @@ class Main():
         self.enemies = None
         self.player_engine = None
         self.enemies_engine = None
+        self.towers_engine = None
         self.towers = None
         self.tile_map = None
         self.WINDOW_WIDTH = 800
@@ -39,8 +40,8 @@ class Main():
         self.tile_map.traps_list.draw()
         self.player.draw()
         self.enemies.draw()
-        arcade.draw_texture_rectangle(texture=arcade.load_texture("images/fireball.png"), center_x=200, center_y=200,
-                                      width=50, height=50, )
+        self.towers.draw()
+        self.towers[0].fireball.draw()
 
     def move_player(self) -> None:
         """
@@ -59,6 +60,12 @@ class Main():
         """
         for enemy in self.enemies_engine:
             enemy.update(enemy, self.player)
+        for tower in self.towers:
+            if tower.can_shoot:
+                tower.shoot(self.player)
+            tower.point_towards(self.player)
+        for tower in self.towers_engine:
+            tower.update()
 
     def on_update(self, delta_time) -> None:
         """
@@ -127,12 +134,15 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(0):
+        for x in range(10):
             self.enemies.append(Blob(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300))
             self.enemies.append(Goblin(self.WINDOW_WIDTH + 400, self.WINDOW_HEIGHT + 300, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
-        self.towers.append(WizardTower(200, 200, 48, 52))
+        for x in range(1):
+            self.towers.append(WizardTower(200, 200, 48, 52))
+        for tower in self.towers:
+            self.towers_engine.append(CollisionDetection(tower.fireball, self.tile_map.wall_list))
 
     def main(self):
         # open window
@@ -141,6 +151,7 @@ class Main():
         arcade.set_background_color(arcade.color.BLACK)
         # create character list
         self.enemies_engine = []
+        self.towers_engine = []
         self.enemies = Sprites()
         # setting up player
         self.player = Player(100, 100)
@@ -148,7 +159,7 @@ class Main():
         # add player to the list of characters
         self.tile_map = TiledMap()
         self.tile_map.tutorial_world()
-        # create player engine
+        # create engines
         self.player_engine = CollisionDetection(self.player, self.tile_map.wall_list)
         self.towers = Sprites()
         self.create_enemies()
