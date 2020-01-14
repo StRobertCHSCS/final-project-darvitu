@@ -12,6 +12,6 @@ class Sprites(arcade.SpriteList):
         """
         super().__init__()
 
-    def update_animation(self, player: Player, delta_time=1 / 60):
+    def update_animation(self, player: Player):
         for sprite in self.sprite_list:
             sprite.update_animation(player)

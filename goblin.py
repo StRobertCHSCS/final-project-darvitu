@@ -45,7 +45,7 @@ class Goblin(arcade.AnimatedTimeSprite):
         # spawn facing forward
         self.face_direction(direction)
         # goblin health
-        self.height = health
+        self.health = health
         # if goblin hits player
         self.is_player_hit = False
 
@@ -151,13 +151,13 @@ class Goblin(arcade.AnimatedTimeSprite):
             self.move_direction("RIGHT")
         if self.direction is not None:
             if self.direction == "RIGHT":
-                self.change_x = 4
+                self.change_x = 1.5
             if self.direction == "LEFT":
-                self.change_x = -4
+                self.change_x = -1.5
             if self.direction == "UP":
-                self.change_y = 4
+                self.change_y = 1.5
             if self.direction == "DOWN":
-                self.change_y = -4
+                self.change_y = -1.5
 
             # update direction of sprite
             if self.is_player_hit:

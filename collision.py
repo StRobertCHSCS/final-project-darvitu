@@ -5,7 +5,7 @@ from player import Player
 from tiledmap import TiledMap
 from arcade.geometry import check_for_collision_with_list
 from blob import Blob
-from wizard import Fireball
+from wizard import Fireball, WizardTower
 
 
 class CollisionDetection(arcade.PhysicsEngineSimple):
@@ -37,6 +37,9 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                         item.is_player_hit = True
                     if isinstance(item, Blob):
                         item.is_player_hit = True
+                    if isinstance(item, Fireball):
+                        item.is_wall_hit = True
+                        item.is_player_hit =True
         # if the player is the user
         elif isinstance(self.player, Player):
             if self.player.health < 1:
@@ -244,3 +247,4 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                     print("Error, collision while enemy wasn't moving.")
                 self.player.is_wall_hit = True
                 self.player.reset = True
+
