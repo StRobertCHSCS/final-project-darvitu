@@ -84,7 +84,6 @@ class Main():
         # check player and fireball collision
         self.towers_engine[0].update(direction=self.player)
         self.time += 1 / 60
-        print(self.player.health)
 
     def on_key_press(self, symbol, modifiers) -> None:
         '''
