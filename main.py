@@ -27,7 +27,7 @@ class Main():
         self.WINDOW_HEIGHT = 800
         self.time = 0
         self.sound = None
-        self.main()
+        self.setup()
 
     def on_draw(self) -> None:
         """
@@ -138,18 +138,22 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(0):
+        for x in range(5):
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
-        for x in range(0):
-            self.towers.append(WizardTower(400, 400 , 48, 52))
+        for x in range(10):
+            self.towers.append(WizardTower(400, 50+75*x , 48, 52))
         for tower in self.towers:
             self.towers_engine.append(CollisionDetection(tower.fireball, self.tile_map.wall_list))
             self.enemies.append(tower.fireball)
 
-    def main(self):
+    def setup(self):
+        """
+        Called once at the start
+        :return: none
+        """
         # open window
         arcade.open_window(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, "Main")
         arcade.schedule(self.on_update, 1 / 60)
