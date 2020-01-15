@@ -26,6 +26,7 @@ class Main():
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
         self.time = 0
+        self.world = 0
         self.sound = None
         self.main()
 
