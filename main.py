@@ -26,7 +26,7 @@ class Main():
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
         self.time = 0
-        self.world = 1
+        self.world = 3
         self.sound = None
         self.setup()
 
@@ -141,13 +141,13 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(0):
+        for x in range(5):
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.rooms[self.world].wall_list))
-        for x in range(0):
-            self.towers.append(WizardTower(400, 50 + 75 * x, 48, 52))
+        for x in range(1):
+            self.towers.append(WizardTower(400, 400, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
             self.enemies.append(tower.fireball)
