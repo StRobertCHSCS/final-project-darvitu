@@ -75,8 +75,7 @@ class Player(arcade.AnimatedTimeSprite):
             self.textures = self.textures_attack_right
         elif self.direction == "LEFT":
             self.textures = self.textures_attack_left
-        else:
-            self.textures = self.textures_attack_right
+
 
     # animation for moving
     def move_direction(self, direction) -> None:
