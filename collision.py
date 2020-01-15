@@ -33,13 +33,15 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                                               player_to_follow)
             if len(hit_list) > 0:
                 for item in hit_list:
+                    if self.player.is_attack_state:
+                        item.stop = True
                     if isinstance(item, Goblin):
                         item.is_player_hit = True
                     if isinstance(item, Blob):
                         item.is_player_hit = True
                     if isinstance(item, Fireball):
                         item.is_wall_hit = True
-                        item.is_player_hit =True
+                        item.is_player_hit = True
         # if the player is the user
         elif isinstance(self.player, Player):
             if self.player.health < 1:
@@ -67,8 +69,6 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                                                self.player.left) + 5
                         self.player.direction = None
                         return arcade.key.LEFT
-                else:
-                    print("Error, collision while player wasn't moving.")
 
             # update y position
             self.player.center_y += self.player.change_y
@@ -91,8 +91,6 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                                                  self.player.bottom) + 5
                         self.player.direction = None
                         return arcade.key.DOWN
-                else:
-                    print("Error, collision while player wasn't moving.")
             self.player.change_x, self.player.change_y = 0, 0
         # if it isn't the player
         elif isinstance(self.player, Blob):
@@ -121,8 +119,6 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                         self.player.direction = None
                         self.player.movement = not self.player.movement
                         self.player.hit = True
-                else:
-                    print("Error, collision while enemy wasn't moving.")
 
             # update y position
             self.player.center_y += self.player.change_y
@@ -247,4 +243,3 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                     print("Error, collision while enemy wasn't moving.")
                 self.player.is_wall_hit = True
                 self.player.reset = True
-

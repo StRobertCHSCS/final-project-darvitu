@@ -29,6 +29,9 @@ class Player(arcade.AnimatedTimeSprite):
         self.textures_attack_left = []
         self.textures_attack_right = []
         self.create_textures()
+        # if it is hitting an enemy
+        self.is_attack_state = False
+
         # spawn facing forward
         self.move_direction(direction)
 
@@ -75,7 +78,8 @@ class Player(arcade.AnimatedTimeSprite):
             self.textures = self.textures_attack_right
         elif self.direction == "LEFT":
             self.textures = self.textures_attack_left
-
+        self.is_attack_state = True
+        self.texture_change_frames = 10
 
     # animation for moving
     def move_direction(self, direction) -> None:
@@ -85,9 +89,11 @@ class Player(arcade.AnimatedTimeSprite):
         :return: None
         """
         if direction == "DOWN" or direction == "RIGHT" or direction == "UP":
-            self.textures = self.textures_right
+            if not self.is_attack_state:
+                self.textures = self.textures_right
         elif direction == "LEFT":
-            self.textures = self.textures_left
+            if not self.is_attack_state:
+                self.textures = self.textures_left
 
     def move_player(self, direction):
         self.direction = direction
@@ -151,3 +157,22 @@ class Player(arcade.AnimatedTimeSprite):
         self.change_x = 0
         self.change_y = 0
         self.texture = arcade.load_texture("images/game_over.png", scale=0.1, mirrored=True)
+
+    def update_animation(self):
+        """
+        Logic for selecting the proper texture to use.
+        """
+        if self.is_attack_state:
+            self.frame = 0
+            if self.direction == "LEFT":
+                self.textures = self.textures_attack_left
+            else:
+                self.textures = self.textures_attack_right
+        if self.frame % self.texture_change_frames == 0:
+            self.cur_texture_index += 1
+            if self.cur_texture_index >= len(self.textures):
+                self.cur_texture_index = 0
+                self.texture_change_frames = 30
+                self.is_attack_state = False
+            self.set_texture(self.cur_texture_index)
+        self.frame += 1
