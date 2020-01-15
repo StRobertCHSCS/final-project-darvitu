@@ -23,9 +23,14 @@ class Player(arcade.AnimatedTimeSprite):
 
         # change animation rate
         self.texture_change_frames = 30
-
+        # create textures
+        self.textures_left = []
+        self.textures_right = []
+        self.textures_attack_left = []
+        self.textures_attack_right = []
+        self.create_textures()
         # spawn facing forward
-        self.face_direction(direction)
+        self.move_direction(direction)
 
         # setting position of Player
         self.center_x = window_width // 2
@@ -40,41 +45,23 @@ class Player(arcade.AnimatedTimeSprite):
         self.player_height = player_height
 
         # player health - if it reaches 0 then game over
-        self.health = 3
+        self.health = 100
 
-    # animation for the player to face when it is not moving
-    def face_direction(self, direction) -> None:
+    # load textures
+    def create_textures(self) -> None:
         """
-        Faces the character animation based on the direction.
-        :param direction: direction for the character to face
-        :return: None
+        loads textures
+        :return: none
         """
-        if direction == "LEFT":
-            self.textures = []
-            for i in range(3):
-                self.textures.append(
-                    arcade.load_texture("images/player.png", x=i * 96, y=104, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "RIGHT":
-            self.textures = []
-            for i in range(3):
-                self.textures.append(
-                    arcade.load_texture("images/player.png", x=i * 96, y=312, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "UP":
-            self.textures = []
-            for i in range(1):
-                self.textures.append(
-                    arcade.load_texture("images/player.png", x=i * 96, y=208, width=96, height=104,
-                                        scale=0.5))
-        elif direction == "DOWN":
-            self.textures = []
-            for i in range(3):
-                self.textures.append(
-                    arcade.load_texture("images/player.png", x=i * 96, y=0, width=96, height=104, scale=0.5))
-
-        else:
-            print("Invalid direction to face")
+        # add textures to respective locations
+        self.textures_left.append(arcade.load_texture("images/player_phase_1.png", mirrored=True, scale=1))
+        self.textures_left.append(arcade.load_texture("images/player_phase_2.png", mirrored=True, scale=1))
+        self.textures_right.append(arcade.load_texture("images/player_phase_1.png", scale=1))
+        self.textures_right.append(arcade.load_texture("images/player_phase_2.png", scale=1))
+        self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_1.png", scale=1))
+        self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_2.png", scale=1))
+        self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_1.png", mirrored=True, scale=1))
+        self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_2.png", mirrored=True, scale=1))
 
     # animation for moving
     def move_direction(self, direction) -> None:
@@ -84,36 +71,17 @@ class Player(arcade.AnimatedTimeSprite):
         :return: None
         """
         if direction == "DOWN":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/player.png", x=i * 96, y=416, width=96, height=104,
-                                        scale=0.5))
+            self.textures = self.textures_right
         elif direction == "LEFT":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/player.png", x=i * 96, y=520, width=96, height=104,
-                                        scale=0.5))
+            self.textures = self.textures_left
         elif direction == "UP":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/player.png", x=i * 96, y=624, width=96, height=104,
-                                        scale=0.5))
+            self.textures = self.textures_right
         elif direction == "RIGHT":
-            self.textures = []
-            for i in range(10):
-                self.textures.append(
-                    arcade.load_texture("images/player.png", x=i * 96, y=728, width=96, height=104,
-                                        scale=0.5))
-        else:
-            print("Direction not valid to move")
+            self.textures = self.textures_right
 
     def move_player(self, direction):
         self.direction = direction
         if self.direction is not None and self.health > 0:
-            self.texture_change_frames = 2.5
             if self.direction == "RIGHT":
                 self.change_x = 5
             if self.direction == "LEFT":
@@ -122,8 +90,7 @@ class Player(arcade.AnimatedTimeSprite):
                 self.change_y = 5
             if self.direction == "DOWN":
                 self.change_y = -5
-        else:
-            self.texture_change_frames = 30
+
 
     def get_points(self) -> Tuple[Tuple[float, float]]:
         """

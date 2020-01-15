@@ -219,7 +219,7 @@ class Goblin(arcade.AnimatedTimeSprite):
         if self.frame % self.texture_change_frames == 0:
             if self.textures == self.textures_attack_left or self.textures == self.textures_attack_right:
                 if not self.is_player_hit_already:
-                    player.health -= 1
+                    player.health -= 3
                     self.is_player_hit_already = True
             self.cur_texture_index += 1
             if self.cur_texture_index >= len(self.textures):

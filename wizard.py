@@ -87,7 +87,7 @@ class Fireball(arcade.AnimatedTimeSprite):
         self.reset = False
         self.take_damage = False
         self.load_textures()
-        self.is_player_hit  = False
+        self.is_player_hit = False
 
     def load_textures(self) -> None:
         """
@@ -119,20 +119,31 @@ class Fireball(arcade.AnimatedTimeSprite):
         # finding the side lengths of the triangles
         delta_x = abs(self.center_x - end_x)
         delta_y = abs(self.center_y - end_y)
-
         # finding the related acute angle
-        theta = math.atan(delta_y / delta_x) * 180 / math.pi
-        # find where the player is in relation to the fireball
-        if self.center_x + 10 < player.center_x:
-            if self.center_y <= player.center_y:
-                self.angle = theta
-            else:
-                self.angle = 360 - theta
-        elif self.center_x - 10 > player.center_x:
-            if self.center_y <= player.center_y:
-                self.angle = 180 - theta
-            else:
-                self.angle = 180 + theta
+        if delta_x == 0 or delta_y == 0:
+            # find where the player is in relation to the fireball
+            if delta_x == 0:
+                if self.center_y < player.center_y:
+                    self.angle = 90
+                else:
+                    self.angle = 270
+            if delta_y == 0:
+                if self.center_x < player.center_x:
+                    self.angle = 0
+                else:
+                    self.angle = 180
+        else:
+            self.theta = math.atan(delta_y / delta_x) * 180 / math.pi
+            if self.center_x < player.center_x:
+                if self.center_y <= player.center_y:
+                    self.angle = self.theta
+                else:
+                    self.angle = 360 - self.theta
+            elif self.center_x > player.center_x:
+                if self.center_y <= player.center_y:
+                    self.angle = 180 - self.theta
+                else:
+                    self.angle = 180 + self.theta
 
         # distance from fireball to player /5 is the movement speed
         speed = math.sqrt(math.pow(delta_x, 2) + math.pow(delta_y, 2)) / 5
@@ -190,7 +201,7 @@ class Fireball(arcade.AnimatedTimeSprite):
             if self.is_wall_hit:
                 self.reset = True
                 if self.is_player_hit and not self.take_damage:
-                    player.health -= 1
+                    player.health -= 10
                     self.take_damage = True
                     self.is_player_hit = False
             self.cur_texture_index += 1

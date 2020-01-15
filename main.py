@@ -81,8 +81,6 @@ class Main():
         self.move_enemy()
         # check player and enemy collision
         self.player_engine.update(player_to_follow=self.enemies)
-        # check player and fireball collision
-        self.towers_engine[0].update(direction=self.player)
         self.time += 1 / 60
 
     def on_key_press(self, symbol, modifiers) -> None:
@@ -118,16 +116,16 @@ class Main():
         """
         # sets key direction back to None after key release, starts standing animation
         if symbol == arcade.key.RIGHT and self.direction == "RIGHT":
-            self.player.face_direction(self.direction)
+            self.player.move_direction(self.direction)
             self.direction = None
         elif symbol == arcade.key.LEFT and self.direction == "LEFT":
-            self.player.face_direction(self.direction)
+            self.player.move_direction(self.direction)
             self.direction = None
         elif symbol == arcade.key.UP and self.direction == "UP":
-            self.player.face_direction(self.direction)
+            self.player.move_direction(self.direction)
             self.direction = None
         elif symbol == arcade.key.DOWN and self.direction == "DOWN":
-            self.player.face_direction(self.direction)
+            self.player.move_direction(self.direction)
             self.direction = None
 
     def create_enemies(self) -> None:
@@ -135,16 +133,16 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(0):
+        for x in range(5):
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
         for x in range(1):
-            self.towers.append(WizardTower(400, 400, 48, 52))
+            self.towers.append(WizardTower(400, 400 , 48, 52))
         for tower in self.towers:
             self.towers_engine.append(CollisionDetection(tower.fireball, self.tile_map.wall_list))
-        self.enemies.append(self.towers[0].fireball)
+            self.enemies.append(tower.fireball)
 
     def main(self):
         # open window
@@ -168,7 +166,7 @@ class Main():
 
         # add sounds
         self.sound = Sounds()
-        # self.sound.update(0)
+        #self.sound.update(0)
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press
