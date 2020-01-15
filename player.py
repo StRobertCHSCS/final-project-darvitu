@@ -36,8 +36,8 @@ class Player(arcade.AnimatedTimeSprite):
         self.move_direction(direction)
 
         # setting position of Player
-        self.center_x = window_width // 2
-        self.center_y = window_height // 2
+        self.center_x = window_width
+        self.center_y = window_height
 
         # setting up window size
         self.WINDOW_HEIGHT = window_height

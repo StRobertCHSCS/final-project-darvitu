@@ -26,7 +26,7 @@ class Main():
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
         self.time = 0
-        self.world = 0
+        self.world = 1
         self.sound = None
         self.setup()
 
@@ -36,7 +36,7 @@ class Main():
         :return: none, draws to the window
         """
         arcade.start_render()
-        
+
         self.rooms[self.world].ground_list.draw()
         self.rooms[self.world].wall_list.draw()
         self.rooms[self.world].traps_list.draw()
@@ -141,15 +141,15 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(5):
+        for x in range(0):
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
-            self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
-        for x in range(10):
-            self.towers.append(WizardTower(400, 50+75*x , 48, 52))
+            self.enemies_engine.append(CollisionDetection(enemy, self.rooms[self.world].wall_list))
+        for x in range(0):
+            self.towers.append(WizardTower(400, 50 + 75 * x, 48, 52))
         for tower in self.towers:
-            self.towers_engine.append(CollisionDetection(tower.fireball, self.tile_map.wall_list))
+            self.towers_engine.append(CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
             self.enemies.append(tower.fireball)
 
     def setup(self):
@@ -168,7 +168,7 @@ class Main():
         self.enemies = Sprites()
 
         # setting up player
-        self.player = Player(100, 100)
+        self.player = Player(400, 75)
 
         # setting up rooms
         self.tile_map = TiledMap()
@@ -189,13 +189,13 @@ class Main():
         self.rooms.append(room)
 
         # create engines
-        self.player_engine = CollisionDetection(self.player, self.tile_map.wall_list)
+        self.player_engine = CollisionDetection(self.player, self.rooms[self.world].wall_list)
         self.towers = Sprites()
         self.create_enemies()
 
         # add sounds
         self.sound = Sounds()
-        #self.sound.update(0)
+        # self.sound.update(0)
         # override arcade methods
         window = arcade.get_window()
         window.on_key_press = self.on_key_press
@@ -203,7 +203,6 @@ class Main():
         window.on_draw = self.on_draw
         arcade.run()
 
-        print(self.rooms)
 
 
 Main()
