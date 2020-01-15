@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import arcade
 import math
 from player import Player
@@ -34,8 +36,11 @@ class WizardTower(arcade.Sprite):
         else:
             self.texture = arcade.load_texture("images/wizard_tower.png", mirrored=True, scale=1.5)
             self.direction = "LEFT"
-        if self.fireball.reset:
+        if self.fireball.reset and player.health > 0:
             self.reset_fireball()
+        elif player.health <= 0:
+            self.reset_fireball()
+            self.fireball.textures.append(arcade.load_texture("images/fireball_end.png"))
 
     def create_fireball(self) -> arcade.Sprite:
         """
@@ -61,11 +66,13 @@ class WizardTower(arcade.Sprite):
         self.fireball.is_wall_hit = False
         self.fireball.center_x = self.center_x
         self.fireball.center_y = self.center_y
+        self.fireball.change_y = 0
+        self.fireball.change_x = 0
         self.can_shoot = True
         self.fireball.reset = False
 
 
-class Fireball(arcade.Sprite):
+class Fireball(arcade.AnimatedTimeSprite):
     def __init__(self, center_x, center_y):
         """
         Creates a fireball
@@ -77,8 +84,18 @@ class Fireball(arcade.Sprite):
         self.center_x = center_x
         self.center_y = center_y
         self.is_wall_hit = False
-        self.texture = arcade.load_texture("images/fireball.png", scale=0.3)
         self.reset = False
+        self.take_damage = False
+        self.load_textures()
+        self.is_player_hit  = False
+
+    def load_textures(self) -> None:
+        """
+        loads textures
+        :return: none
+        """
+        self.textures.append(arcade.load_texture("images/fireball.png", scale=0.3))
+        self.textures.append(arcade.load_texture("images/fireball_2.png", scale=0.3))
 
     def shoot_fireball(self, player: Player) -> None:
         """
@@ -87,13 +104,24 @@ class Fireball(arcade.Sprite):
         :return: none
         """
         # condition if the fireball has hit the wall to send a new one
-        self.has_reached_wall = False
-
+        self.is_wall_hit = False
+        self.take_damage = False
+        # determine end points of fireball
+        end_x, end_y = player.center_x, player.center_y
+        if player.direction == "UP":
+            end_y = player.center_y + 50
+        if player.direction == "DOWN":
+            end_y = player.center_y - 50
+        if player.direction == "LEFT":
+            end_x = player.center_x - 50
+        if player.direction == "RIGHT":
+            end_x = player.center_x + 50
         # finding the side lengths of the triangles
-        delta_x = abs(self.center_x - player.center_x)
-        delta_y = abs(self.center_y - player.center_y)
+        delta_x = abs(self.center_x - end_x)
+        delta_y = abs(self.center_y - end_y)
+
         # finding the related acute angle
-        theta = math.tan(delta_y / delta_x)
+        theta = math.atan(delta_y / delta_x) * 180 / math.pi
         # find where the player is in relation to the fireball
         if self.center_x + 10 < player.center_x:
             if self.center_y <= player.center_y:
@@ -105,26 +133,68 @@ class Fireball(arcade.Sprite):
                 self.angle = 180 - theta
             else:
                 self.angle = 180 + theta
-        # determine end points of fireball
-        end_x, end_y = player.center_x, player.center_y
-        if player.direction == "UP":
-            end_y = player.center_y + 25
-        if player.direction == "DOWN":
-            end_y = player.center_y - 25
-        if player.direction == "LEFT":
-            end_x = player.center_x - 25
-        if player.direction == "RIGHT":
-            end_x = player.center_x + 25
 
+        # distance from fireball to player /5 is the movement speed
+        speed = math.sqrt(math.pow(delta_x, 2) + math.pow(delta_y, 2)) / 5
         # move fireball
-        self.change_x = (end_x - self.center_x) / 100
-        self.change_y = (end_y - self.center_y) / 100
+        self.change_x = (end_x - self.center_x) / speed
+        self.change_y = (end_y - self.center_y) / speed
 
-    def draw(self, health):
-        """ Draw the sprite. """
-        if not self.is_wall_hit and health > 0:
-            arcade.draw_texture_rectangle(self.center_x, self.center_y,
-                                          self.width, self.height,
-                                          self._texture, self.angle, self.alpha,
-                                          repeat_count_x=self.repeat_count_x,
-                                          repeat_count_y=self.repeat_count_y)
+    def get_points(self) -> Tuple[Tuple[float, float]]:
+        """
+        Get the corner points for the rect that makes up the sprite.
+        """
+        if self._point_list_cache is not None:
+            return self._point_list_cache
+
+        if self._points is not None:
+            point_list = []
+            for point in range(len(self._points)):
+                point = (self._points[point][0] + self.center_x,
+                         self._points[point][1] + self.center_y)
+                point_list.append(point)
+            self._point_list_cache = tuple(point_list)
+        else:
+            x1, y1 = arcade.rotate_point(self.center_x - self.width / 4,
+                                         self.center_y - self.width / 4,
+                                         self.center_x,
+                                         self.center_y,
+                                         self.angle)
+            x2, y2 = arcade.rotate_point(self.center_x + self.width / 4,
+                                         self.center_y - self.height / 4,
+                                         self.center_x,
+                                         self.center_y,
+                                         self.angle)
+            x3, y3 = arcade.rotate_point(self.center_x + self.width / 4,
+                                         self.center_y + self.height / 4,
+                                         self.center_x,
+                                         self.center_y,
+                                         self.angle)
+            x4, y4 = arcade.rotate_point(self.center_x - self.width / 4,
+                                         self.center_y + self.height / 4,
+                                         self.center_x,
+                                         self.center_y,
+                                         self.angle)
+
+            self._point_list_cache = ((x1, y1), (x2, y2), (x3, y3), (x4, y4))
+        return self._point_list_cache
+
+    points = property(get_points, arcade.Sprite.set_points)
+
+    def update_animation(self, player: Player):
+        """
+        Logic for selecting the proper texture to use.
+        """
+
+        if self.frame % self.texture_change_frames == 0:
+            if self.is_wall_hit:
+                self.reset = True
+                if self.is_player_hit and not self.take_damage:
+                    player.health -= 1
+                    self.take_damage = True
+                    self.is_player_hit = False
+            self.cur_texture_index += 1
+            if self.cur_texture_index >= len(self.textures):
+                self.cur_texture_index = 0
+            self.set_texture(self.cur_texture_index)
+        self.frame += 1

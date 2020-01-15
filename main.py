@@ -41,7 +41,6 @@ class Main():
         self.player.draw()
         self.enemies.draw()
         self.towers.draw()
-        self.towers[0].fireball.draw(self.player.health)
 
     def move_player(self) -> None:
         """
@@ -82,6 +81,8 @@ class Main():
         self.move_enemy()
         # check player and enemy collision
         self.player_engine.update(player_to_follow=self.enemies)
+        # check player and fireball collision
+        self.towers_engine[0].update(direction=self.player)
         self.time += 1 / 60
 
     def on_key_press(self, symbol, modifiers) -> None:
@@ -134,15 +135,16 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(5):
+        for x in range(0):
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
         for x in range(1):
-            self.towers.append(WizardTower(200, 200, 48, 52))
+            self.towers.append(WizardTower(400, 400, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(CollisionDetection(tower.fireball, self.tile_map.wall_list))
+        self.enemies.append(self.towers[0].fireball)
 
     def main(self):
         # open window
