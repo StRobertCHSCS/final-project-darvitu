@@ -58,10 +58,25 @@ class Player(arcade.AnimatedTimeSprite):
         self.textures_left.append(arcade.load_texture("images/player_phase_2.png", mirrored=True, scale=1))
         self.textures_right.append(arcade.load_texture("images/player_phase_1.png", scale=1))
         self.textures_right.append(arcade.load_texture("images/player_phase_2.png", scale=1))
-        self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_1.png", scale=1))
-        self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_2.png", scale=1))
-        self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_1.png", mirrored=True, scale=1))
-        self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_2.png", mirrored=True, scale=1))
+        self.textures_attack_right.append(arcade.load_texture("images/player_phase_1.png"))
+        self.textures_attack_right.append(arcade.load_texture("images/player_attack_1.png", scale=1))
+        self.textures_attack_right.append(arcade.load_texture("images/player_attack_2.png", scale=1))
+        self.textures_attack_left.append(arcade.load_texture("images/player_phase_1.png", mirrored=True, scale=1))
+        self.textures_attack_left.append(arcade.load_texture("images/player_attack_1.png", mirrored=True, scale=1))
+        self.textures_attack_left.append(arcade.load_texture("images/player_attack_2.png", mirrored=True, scale=1))
+
+    # animation and destruction of enemies
+    def attack(self) -> None:
+        """
+        Sets animations and destroys affected enemies
+        :return: none
+        """
+        if self.direction == "UP" or self.direction == "DOWN" or self.direction == "RIGHT":
+            self.textures = self.textures_attack_right
+        elif self.direction == "LEFT":
+            self.textures = self.textures_attack_left
+        else:
+            self.textures = self.textures_attack_right
 
     # animation for moving
     def move_direction(self, direction) -> None:
@@ -70,14 +85,10 @@ class Player(arcade.AnimatedTimeSprite):
         :param direction: direction of player movement
         :return: None
         """
-        if direction == "DOWN":
+        if direction == "DOWN" or direction == "RIGHT" or direction == "UP":
             self.textures = self.textures_right
         elif direction == "LEFT":
             self.textures = self.textures_left
-        elif direction == "UP":
-            self.textures = self.textures_right
-        elif direction == "RIGHT":
-            self.textures = self.textures_right
 
     def move_player(self, direction):
         self.direction = direction
@@ -90,7 +101,6 @@ class Player(arcade.AnimatedTimeSprite):
                 self.change_y = 5
             if self.direction == "DOWN":
                 self.change_y = -5
-
 
     def get_points(self) -> Tuple[Tuple[float, float]]:
         """

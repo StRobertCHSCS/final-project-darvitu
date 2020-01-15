@@ -104,8 +104,8 @@ class Main():
         elif symbol == arcade.key.DOWN:
             self.direction = "DOWN"
             self.player.move_direction(self.direction)
-        else:
-            print("invalid key press")
+        elif symbol == arcade.key.SPACE:
+            self.player.attack()
 
     def on_key_release(self, symbol, modifiers) -> None:
         """
@@ -127,18 +127,23 @@ class Main():
         elif symbol == arcade.key.DOWN and self.direction == "DOWN":
             self.player.move_direction(self.direction)
             self.direction = None
+        elif symbol == arcade.key.SPACE:
+            if self.direction is None:
+                self.player.move_direction("RIGHT")
+            else:
+                self.player.move_direction(self.direction)
 
     def create_enemies(self) -> None:
         """
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(5):
+        for x in range(0):
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(CollisionDetection(enemy, self.tile_map.wall_list))
-        for x in range(1):
+        for x in range(0):
             self.towers.append(WizardTower(400, 400 , 48, 52))
         for tower in self.towers:
             self.towers_engine.append(CollisionDetection(tower.fireball, self.tile_map.wall_list))
