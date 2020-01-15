@@ -26,7 +26,7 @@ class Main():
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
         self.time = 0
-        self.world = 3
+        self.world = 1
         self.sound = None
         self.setup()
 
@@ -44,6 +44,8 @@ class Main():
         self.player.draw()
         self.enemies.draw()
         self.towers.draw()
+        # draw health bar
+        self.draw_health_bar(self.player.health)
 
     def move_player(self) -> None:
         """
@@ -85,6 +87,25 @@ class Main():
         # check player and enemy collision
         self.player_engine.update(player_to_follow=self.enemies)
         self.time += 1 / 60
+
+    def draw_health_bar(self, health: int) -> None:
+        """
+        Draws healthbar to screen
+        :param health: health of player
+        :return: none
+        """
+
+        num_of_bars = health // 1
+        # draw background of health bar
+        arcade.draw_texture_rectangle(730, 792, 100, 10, arcade.load_texture("images/health_bar_2.png"))
+        for x in range(num_of_bars):
+            if num_of_bars <= 20:
+                arcade.draw_texture_rectangle(681 + x, 792, 1, 10, arcade.load_texture("images/health_bar_red.png"))
+            elif num_of_bars <= 60:
+                arcade.draw_texture_rectangle(681 + x, 792, 1, 10,
+                                              arcade.load_texture("images/health_bar_orange.png"))
+            else:
+                arcade.draw_texture_rectangle(681 + x, 792, 1, 10, arcade.load_texture("images/health_bar_green.png"))
 
     def on_key_press(self, symbol, modifiers) -> None:
         '''
@@ -202,7 +223,6 @@ class Main():
         window.on_key_release = self.on_key_release
         window.on_draw = self.on_draw
         arcade.run()
-
 
 
 Main()

@@ -172,7 +172,7 @@ class Player(arcade.AnimatedTimeSprite):
             self.cur_texture_index += 1
             if self.cur_texture_index >= len(self.textures):
                 self.cur_texture_index = 0
-                self.texture_change_frames = 30
+                self.texture_change_frames = 15
                 self.is_attack_state = False
             self.set_texture(self.cur_texture_index)
         self.frame += 1
