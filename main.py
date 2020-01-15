@@ -36,9 +36,11 @@ class Main():
         :return: none, draws to the window
         """
         arcade.start_render()
-        self.tile_map.ground_list.draw()
-        self.tile_map.wall_list.draw()
-        self.tile_map.traps_list.draw()
+        
+        self.rooms[self.world].ground_list.draw()
+        self.rooms[self.world].wall_list.draw()
+        self.rooms[self.world].traps_list.draw()
+
         self.player.draw()
         self.enemies.draw()
         self.towers.draw()
@@ -162,13 +164,30 @@ class Main():
         # create character list
         self.enemies_engine = []
         self.towers_engine = []
+        self.rooms = []
         self.enemies = Sprites()
+
         # setting up player
         self.player = Player(100, 100)
 
-        # add player to the list of characters
+        # setting up rooms
         self.tile_map = TiledMap()
-        self.tile_map.tutorial_world()
+
+        room = self.tile_map.tutorial_world()
+        self.rooms.append(room)
+
+        room = self.tile_map.stage_one()
+        self.rooms.append(room)
+
+        room = self.tile_map.stage_two()
+        self.rooms.append(room)
+
+        room = self.tile_map.stage_three()
+        self.rooms.append(room)
+
+        room = self.tile_map.boss_world()
+        self.rooms.append(room)
+
         # create engines
         self.player_engine = CollisionDetection(self.player, self.tile_map.wall_list)
         self.towers = Sprites()
@@ -183,6 +202,8 @@ class Main():
         window.on_key_release = self.on_key_release
         window.on_draw = self.on_draw
         arcade.run()
+
+        print(self.rooms)
 
 
 Main()
