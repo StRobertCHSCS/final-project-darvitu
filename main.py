@@ -95,17 +95,18 @@ class Main():
         :return: none
         """
 
-        num_of_bars = health // 1
+        num_of_bars = health
         # draw background of health bar
         arcade.draw_texture_rectangle(730, 792, 100, 10, arcade.load_texture("images/health_bar_2.png"))
+        #health portion
         for x in range(num_of_bars):
-            if num_of_bars <= 20:
-                arcade.draw_texture_rectangle(681 + x, 792, 1, 10, arcade.load_texture("images/health_bar_red.png"))
-            elif num_of_bars <= 60:
-                arcade.draw_texture_rectangle(681 + x, 792, 1, 10,
+            if num_of_bars <= 5:
+                arcade.draw_texture_rectangle(682 + x * 4, 792, 4, 10, arcade.load_texture("images/health_bar_red.png"))
+            elif num_of_bars <= 11:
+                arcade.draw_texture_rectangle(682 + x*4, 792, 4, 10,
                                               arcade.load_texture("images/health_bar_orange.png"))
             else:
-                arcade.draw_texture_rectangle(681 + x, 792, 1, 10, arcade.load_texture("images/health_bar_green.png"))
+                arcade.draw_texture_rectangle(682 + x*4, 792, 4, 10, arcade.load_texture("images/health_bar_green.png"))
 
     def on_key_press(self, symbol, modifiers) -> None:
         '''
