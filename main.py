@@ -94,29 +94,22 @@ class Main():
         :param health: health of player
         :return: none
         """
-
-        num_of_bars = health
         # draw background of health bar
-        # arcade.draw_texture_rectangle(730, 792, 100, 10, arcade.load_texture("images/health_bar_2.png"))
-        # #health portion
-        # for x in range(num_of_bars):
-        #     if num_of_bars <= 5:
-        #         arcade.draw_texture_rectangle(682 + x * 4, 792, 4, 10, arcade.load_texture("images/health_bar_red.png"))
-        #     elif num_of_bars <= 11:
-        #         arcade.draw_texture_rectangle(682 + x*4, 792, 4, 10,
-        #                                       arcade.load_texture("images/health_bar_orange.png"))
-        #     else:
-        #         arcade.draw_texture_rectangle(682 + x*4, 792, 4, 10, arcade.load_texture("images/health_bar_green.png"))
-        # draw background of health bar
-        arcade.draw_texture_rectangle(730, 792, 100, 10, arcade.load_texture("images/health_bar_2.png"))
+        arcade.draw_texture_rectangle(self.player.center_x, self.player.center_y + 30, 52, 7,
+                                      arcade.load_texture("images/health_bar_1.png"))
+        arcade.draw_texture_rectangle(self.player.center_x, self.player.center_y + 30, 50, 5,
+                                      arcade.load_texture("images/health_bar_2.png"))
         if health >= 80:
-            arcade.draw_texture_rectangle(680 + (health // 2), 792, health, 10,
+            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30, health//2,
+                                          5,
                                           arcade.load_texture("images/health_bar_green.png"))
         elif health >= 40:
-            arcade.draw_texture_rectangle(680 + (health // 2), 792, health, 10,
+            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30, health//2,
+                                          5,
                                           arcade.load_texture("images/health_bar_orange.png"))
-        else:
-            arcade.draw_texture_rectangle(680 + (health // 2), 792, health, 10,
+        elif health > 0:
+            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30, health//2,
+                                          5,
                                           arcade.load_texture("images/health_bar_red.png"))
 
     def on_key_press(self, symbol, modifiers) -> None:
