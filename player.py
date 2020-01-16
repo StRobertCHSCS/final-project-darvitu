@@ -48,7 +48,7 @@ class Player(arcade.AnimatedTimeSprite):
         self.player_height = player_height
 
         # player health - if it reaches 0 then game over
-        self.health = 10000
+        self.health = 100
 
     # load textures
     def create_textures(self) -> None:
