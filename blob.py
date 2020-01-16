@@ -44,6 +44,7 @@ class Blob(arcade.AnimatedTimeSprite):
         self.is_player_hit_already = False
         self.is_player_hit = False
         self.stop = False
+        self.health = 3
 
     # create textures
     def create_textures(self) -> None:
@@ -135,7 +136,7 @@ class Blob(arcade.AnimatedTimeSprite):
         if player.health < 1 :
             self.direction = None
             self.move_direction("RIGHT")
-        if self.stop:
+        if self.health < 1:
             self.direction = None
             self.textures = self.textures_dead
 

@@ -34,7 +34,8 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
             if len(hit_list) > 0:
                 for item in hit_list:
                     if self.player.is_attack_state:
-                        item.stop = True
+                        if not isinstance(item, Fireball):
+                            item.health -= 1
                     if isinstance(item, Goblin):
                         item.is_player_hit = True
                     if isinstance(item, Blob):

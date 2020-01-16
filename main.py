@@ -65,7 +65,7 @@ class Main():
         for enemy in self.enemies_engine:
             enemy.update(enemy, self.player)
         for tower in self.towers:
-            if tower.can_shoot:
+            if tower.can_shoot and self.time % 50 == 0:
                 tower.shoot(self.player)
             tower.point_towards(self.player)
         for tower in self.towers_engine:
@@ -86,7 +86,7 @@ class Main():
         self.move_enemy()
         # check player and enemy collision
         self.player_engine.update(player_to_follow=self.enemies)
-        self.time += 1 / 60
+        self.time += 1
 
     def draw_health_bar(self, health: int) -> None:
         """
@@ -100,15 +100,18 @@ class Main():
         arcade.draw_texture_rectangle(self.player.center_x, self.player.center_y + 30, 50, 5,
                                       arcade.load_texture("images/health_bar_2.png"))
         if health >= 80:
-            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30, health//2,
+            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30,
+                                          health // 2,
                                           5,
                                           arcade.load_texture("images/health_bar_green.png"))
         elif health >= 40:
-            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30, health//2,
+            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30,
+                                          health // 2,
                                           5,
                                           arcade.load_texture("images/health_bar_orange.png"))
         elif health > 0:
-            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30, health//2,
+            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30,
+                                          health // 2,
                                           5,
                                           arcade.load_texture("images/health_bar_red.png"))
 
@@ -134,7 +137,8 @@ class Main():
             self.direction = "DOWN"
             self.player.move_direction(self.direction)
         elif symbol == arcade.key.SPACE:
-            self.player.attack()
+            if self.player.health > 0:
+                self.player.attack()
 
     def on_key_release(self, symbol, modifiers) -> None:
         """

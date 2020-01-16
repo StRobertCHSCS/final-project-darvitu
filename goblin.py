@@ -5,7 +5,7 @@ from typing import Tuple
 
 
 class Goblin(arcade.AnimatedTimeSprite):
-    def __init__(self, center_x: int, center_y: int, health: int, direction="DOWN",
+    def __init__(self, center_x: int, center_y: int, health: int = 10, direction="DOWN",
                  enemy_width=32,
                  enemy_height=48):
         """Constructor of the Player class, that is the entity that the user will be moving controlling.
@@ -66,8 +66,8 @@ class Goblin(arcade.AnimatedTimeSprite):
         self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_2.png", scale=1))
         self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_1.png", mirrored=True, scale=1))
         self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_2.png", mirrored=True, scale=1))
-        self.textures_dead.append(arcade.load_texture("images/blob_dead.png",scale=1.1))
-        self.textures_dead.append(arcade.load_texture("images/blob_dead.png",scale=1.1))
+        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=1.1))
+        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=1.1))
 
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
@@ -153,7 +153,7 @@ class Goblin(arcade.AnimatedTimeSprite):
         if player.health < 1:
             self.direction = None
             self.move_direction("RIGHT")
-        if self.stop:
+        if self.health < 1:
             self.direction = None
             self.textures = self.textures_dead
         if self.direction is not None:
