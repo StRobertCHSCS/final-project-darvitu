@@ -29,6 +29,7 @@ class Main():
         self.world = 1
         self.sound = None
         self.obstacles = None
+        self.enemy_count = 0
         self.setup()
 
     def on_draw(self) -> None:
@@ -87,6 +88,11 @@ class Main():
         self.move_enemy()
         # check player and enemy collision
         self.player_engine.update(player_to_follow=self.enemies)
+        # remove dead sprites
+        for item in self.enemies:
+            if not isinstance(item, Fireball):
+                if item.health < 1:
+
         self.time += 1
 
     def draw_health_bar(self, health: int) -> None:
@@ -227,6 +233,7 @@ class Main():
         self.player_engine = CollisionDetection(self.player, self.obstacles)
         self.towers = Sprites()
         self.create_enemies()
+        self.enemy_count = len(self.enemies_engine)
 
         # add sounds
         self.sound = Sounds()
