@@ -92,7 +92,7 @@ class Main():
         for item in self.enemies:
             if not isinstance(item, Fireball):
                 if item.health < 1:
-
+                    pass
         self.time += 1
 
     def draw_health_bar(self, health: int) -> None:
