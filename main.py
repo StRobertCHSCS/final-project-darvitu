@@ -31,6 +31,7 @@ class Main():
         self.obstacles = None
         self.enemy_count = 0
         self.start_attack_time = 0
+        self.rooms = []
         self.setup()
 
     def on_draw(self) -> None:
@@ -190,18 +191,25 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(10):
+        for x in range(9):
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(
-                CollisionDetection(enemy, self.rooms[self.world].wall_list, self.rooms[self.world].traps_list))
+                CollisionDetection(enemy, self.obstacles))
         for x in range(1):
             self.towers.append(WizardTower(400, 400, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
-                CollisionDetection(tower.fireball, self.rooms[self.world].wall_list, self.rooms[self.world].traps_list))
+                CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
             self.enemies.append(tower.fireball)
+
+    def room_tutorial(self) -> None:
+        """
+        loads room tutorial
+        :return: none
+        """
+        pass
 
     def setup(self):
         """
@@ -249,7 +257,6 @@ class Main():
         self.towers = Sprites()
         self.create_enemies()
         self.enemy_count = len(self.enemies_engine)
-
         # add sounds
         self.sound = Sounds()
         # self.sound.update(0)

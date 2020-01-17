@@ -1,6 +1,7 @@
 import arcade
 import pytiled_parser
-from arcade.tilemap import get_tilemap_layer, _process_tile_layer, _process_object_layer
+from arcade.tilemap import get_tilemap_layer, _process_tile_layer, _process_object_layer, _create_sprite_from_tile, \
+    _get_tile_by_gid
 
 
 class TiledMap(arcade.TiledMap):
@@ -77,7 +78,6 @@ class TiledMap(arcade.TiledMap):
         :returns: A SpriteList.
 
         """
-
         if len(base_directory) > 0 and not base_directory.endswith("/"):
             base_directory += "/"
 
@@ -91,3 +91,33 @@ class TiledMap(arcade.TiledMap):
 
         elif isinstance(layer, pytiled_parser.objects.ObjectLayer):
             return _process_object_layer(map_object, layer, scaling, base_directory)
+
+    def _process_tile_layer(map_object: pytiled_parser.objects.TileMap,
+                            layer: pytiled_parser.objects.TileLayer,
+                            scaling: float = 1,
+                            base_directory: str = "") -> arcade.SpriteList:
+        sprite_list = arcade.SpriteList()
+        map_array = layer.data
+
+        # Loop through the layer and add in the wall list
+        for row_index, row in enumerate(map_array):
+            for column_index, item in enumerate(row):
+                # Check for empty square
+                if item == 0:
+                    continue
+
+                tile = _get_tile_by_gid(map_object, item)
+                if tile is None:
+                    print(f"Warning, couldn't find tile for item {item} in layer "
+                          f"'{layer.name}' in file '{map_object.tmx_file}'.")
+                    continue
+
+                my_sprite = _create_sprite_from_tile(map_object, tile, scaling=scaling,
+                                                     base_directory=base_directory)
+
+                my_sprite.right = column_index * (map_object.tile_size[0] * scaling)
+                my_sprite.top = (map_object.map_size.height - row_index - 1) * (map_object.tile_size[1] * scaling)
+
+                sprite_list.append(my_sprite)
+
+        return sprite_list

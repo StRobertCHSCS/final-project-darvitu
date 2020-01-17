@@ -9,7 +9,7 @@ from wizard import Fireball, WizardTower
 
 
 class CollisionDetection(arcade.PhysicsEngineSimple):
-    def __init__(self, player: Player, walls, traps) -> None:
+    def __init__(self, player: Player, walls, traps=None) -> None:
         """
         Class in charge of monitoring collisions between player, walls, enemies, and other sprites
         :param player: user
@@ -19,6 +19,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
         # initiate class variables
         self.player = player
         self.walls = walls
+        self.traps = traps
 
     def update(self, direction=None, player_to_follow=None) -> None:
         """
@@ -70,7 +71,6 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                                                self.player.left) + 5
                         self.player.direction = None
                         return arcade.key.LEFT
-
             # update y position
             self.player.center_y += self.player.change_y
             # Check for wall hit
@@ -92,7 +92,13 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                                                  self.player.bottom) + 5
                         self.player.direction = None
                         return arcade.key.DOWN
+            # check for trap hit
+            hit_list = \
+                check_for_collision_with_list(self.player, self.traps)
+            if len(hit_list) > 0:
+                self.player.health -= 0.25
             self.player.change_x, self.player.change_y = 0, 0
+
         # if it isn't the player
         elif isinstance(self.player, Blob):
             # --- Move sprite
