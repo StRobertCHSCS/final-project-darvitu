@@ -28,6 +28,7 @@ class Main():
         self.time = 0
         self.world = 1
         self.sound = None
+        self.obstacles = None
         self.setup()
 
     def on_draw(self) -> None:
@@ -138,7 +139,7 @@ class Main():
             self.player.move_direction(self.direction)
         elif symbol == arcade.key.SPACE:
             if self.player.health > 0:
-                self.player.attack()
+                self.player.attack(self.towers)
 
     def on_key_release(self, symbol, modifiers) -> None:
         """
@@ -171,7 +172,7 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(5):
+        for x in range(10):
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
@@ -217,9 +218,13 @@ class Main():
 
         room = self.tile_map.boss_world()
         self.rooms.append(room)
-
+        self.obstacles = arcade.SpriteList()
+        for item in self.rooms[self.world].wall_list:
+            self.obstacles.append(item)
+        for item in self.rooms[self.world].traps_list:
+            self.obstacles.append(item)
         # create engines
-        self.player_engine = CollisionDetection(self.player, self.rooms[self.world].wall_list)
+        self.player_engine = CollisionDetection(self.player, self.obstacles)
         self.towers = Sprites()
         self.create_enemies()
 
