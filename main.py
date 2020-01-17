@@ -30,6 +30,7 @@ class Main():
         self.sound = None
         self.obstacles = None
         self.enemy_count = 0
+        self.start_attack_time = 0
         self.setup()
 
     def on_draw(self) -> None:
@@ -52,7 +53,6 @@ class Main():
     def move_player(self) -> None:
         """
         Moves the player
-        :param delta_time: execution time
         :return:
         """
         output = self.player_engine.update(self.direction)
@@ -81,6 +81,7 @@ class Main():
         """
         # updates the animation state of the player sprite
         self.enemies.update_animation(self.player)
+
         self.player.update_animation()
         # move player
         self.move_player()
@@ -145,7 +146,14 @@ class Main():
             self.player.move_direction(self.direction)
         elif symbol == arcade.key.SPACE:
             if self.player.health > 0:
-                self.player.attack(self.towers)
+                if self.start_attack_time == 0 and not self.player.is_attack_state:
+                    self.start_attack_time = self.time
+                    self.player.attack(self.towers)
+                    self.on_key_release(arcade.key.SPACE, None)
+                elif self.time - self.start_attack_time > 6 and not self.player.is_attack_state:
+                    self.start_attack_time = self.time
+                    self.player.attack(self.towers)
+                    self.on_key_release(arcade.key.SPACE, None)
 
     def on_key_release(self, symbol, modifiers) -> None:
         """
@@ -157,19 +165,23 @@ class Main():
         # sets key direction back to None after key release, starts standing animation
         if symbol == arcade.key.RIGHT and self.direction == "RIGHT":
             self.player.move_direction(self.direction)
+            self.player.last_direction = self.direction
             self.direction = None
         elif symbol == arcade.key.LEFT and self.direction == "LEFT":
             self.player.move_direction(self.direction)
+            self.player.last_direction = self.direction
             self.direction = None
         elif symbol == arcade.key.UP and self.direction == "UP":
             self.player.move_direction(self.direction)
+            self.player.last_direction = self.direction
             self.direction = None
         elif symbol == arcade.key.DOWN and self.direction == "DOWN":
             self.player.move_direction(self.direction)
+            self.player.last_direction = self.direction
             self.direction = None
         elif symbol == arcade.key.SPACE:
             if self.direction is None:
-                self.player.move_direction("RIGHT")
+                self.player.move_direction(self.player.last_direction)
             else:
                 self.player.move_direction(self.direction)
 
@@ -182,11 +194,13 @@ class Main():
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
-            self.enemies_engine.append(CollisionDetection(enemy, self.rooms[self.world].wall_list))
+            self.enemies_engine.append(
+                CollisionDetection(enemy, self.rooms[self.world].wall_list, self.rooms[self.world].traps_list))
         for x in range(1):
             self.towers.append(WizardTower(400, 400, 48, 52))
         for tower in self.towers:
-            self.towers_engine.append(CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
+            self.towers_engine.append(
+                CollisionDetection(tower.fireball, self.rooms[self.world].wall_list, self.rooms[self.world].traps_list))
             self.enemies.append(tower.fireball)
 
     def setup(self):
@@ -230,7 +244,8 @@ class Main():
         for item in self.rooms[self.world].traps_list:
             self.obstacles.append(item)
         # create engines
-        self.player_engine = CollisionDetection(self.player, self.obstacles)
+        self.player_engine = CollisionDetection(self.player, self.rooms[self.world].wall_list,
+                                                self.rooms[self.world].traps_list)
         self.towers = Sprites()
         self.create_enemies()
         self.enemy_count = len(self.enemies_engine)

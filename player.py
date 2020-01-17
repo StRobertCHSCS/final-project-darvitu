@@ -20,6 +20,7 @@ class Player(arcade.AnimatedTimeSprite):
         # setting speed and direction based on creation of Player object
         self.player_speed = player_speed
         self.direction = direction
+        self.last_direction = None
 
         # change animation rate
         self.texture_change_frames = 30
@@ -174,6 +175,13 @@ class Player(arcade.AnimatedTimeSprite):
                 self.textures = self.textures_attack_left
             else:
                 self.textures = self.textures_attack_right
+        elif self.direction is not None:
+            self.move_direction(self.direction)
+        else:
+            if self.last_direction is not None:
+                self.move_direction(self.last_direction)
+            else:
+                self.textures = self.textures_right
         if self.frame % self.texture_change_frames == 0:
             self.cur_texture_index += 1
             if self.cur_texture_index >= len(self.textures):

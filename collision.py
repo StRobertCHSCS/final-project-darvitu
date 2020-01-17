@@ -9,7 +9,7 @@ from wizard import Fireball, WizardTower
 
 
 class CollisionDetection(arcade.PhysicsEngineSimple):
-    def __init__(self, player: Player, walls) -> None:
+    def __init__(self, player: Player, walls, traps) -> None:
         """
         Class in charge of monitoring collisions between player, walls, enemies, and other sprites
         :param player: user
