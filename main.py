@@ -1,3 +1,5 @@
+import math
+
 import arcade
 import time
 import random
@@ -31,6 +33,7 @@ class Main():
         self.obstacles = None
         self.enemy_count = 0
         self.start_attack_time = 0
+        self.is_game_active = True
         self.rooms = []
         self.setup()
 
@@ -40,16 +43,18 @@ class Main():
         :return: none, draws to the window
         """
         arcade.start_render()
+        arcade.start_render()
+        arcade.start_render()
+        if self.is_game_active:
+            self.rooms[self.world].ground_list.draw()
+            self.rooms[self.world].wall_list.draw()
+            self.rooms[self.world].traps_list.draw()
 
-        self.rooms[self.world].ground_list.draw()
-        self.rooms[self.world].wall_list.draw()
-        self.rooms[self.world].traps_list.draw()
-
-        self.player.draw()
-        self.enemies.draw()
-        self.towers.draw()
-        # draw health bar
-        self.draw_health_bar(self.player.health)
+            self.player.draw()
+            self.enemies.draw()
+            self.towers.draw()
+            # draw health bar
+            self.draw_health_bar(self.player.health)
 
     def move_player(self) -> None:
         """
@@ -66,7 +71,10 @@ class Main():
         :return: none
         """
         for enemy in self.enemies_engine:
-            enemy.update(enemy, self.player)
+            if math.sqrt(
+                    math.pow(self.player.center_x - enemy.player.center_x, 2) + math.pow(self.player.center_y - enemy.player.center_y,
+                                                                                  2)) < 500:
+                enemy.update(enemy, self.player)
         for tower in self.towers:
             if tower.can_shoot and self.time % 50 == 0:
                 tower.shoot(self.player)
@@ -186,30 +194,46 @@ class Main():
             else:
                 self.player.move_direction(self.direction)
 
-    def create_enemies(self) -> None:
-        """
-        temporary testing function that creates enemies
-        :return:
-        """
-        for x in range(0):
-            self.enemies.append(Blob(400, 400))
-            self.enemies.append(Goblin(400, 400, 3))
-        for enemy in self.enemies:
-            self.enemies_engine.append(
-                CollisionDetection(enemy, self.obstacles))
-        for x in range(1):
-            self.towers.append(WizardTower(400, 400, 48, 52))
-        for tower in self.towers:
-            self.towers_engine.append(
-                CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
-            self.enemies.append(tower.fireball)
-
     def room_tutorial(self) -> None:
         """
         loads room tutorial
         :return: none
         """
-        pass
+        # draw the transition here TODO: add transitions
+        # setting up player
+        self.player = Player(50, 50)
+        # setting up enemies
+        self.enemies_engine = []
+        self.towers_engine = []
+        self.enemies = Sprites()
+        self.towers = Sprites()
+        self.obstacles = arcade.SpriteList()
+        self.enemies.append(Blob(750, 750))
+        self.enemies.append(Blob(750, 50))
+        self.enemies.append(Blob(50, 750))
+        self.enemies.append(Goblin(750, 750, 3))
+        self.enemies.append(Goblin(750, 50, 3))
+        self.enemies.append(Goblin(50, 750, 3))
+        self.enemies.append(Blob(400, 400))
+        self.enemies.append(Goblin(400, 400, 3))
+
+        for enemy in self.enemies:
+            self.enemies_engine.append(
+                CollisionDetection(enemy, self.obstacles))
+        self.towers.append(WizardTower(400, 400, 48, 52))
+        for tower in self.towers:
+            self.towers_engine.append(
+                CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
+            self.enemies.append(tower.fireball)
+        for item in self.rooms[self.world].wall_list:
+            self.obstacles.append(item)
+        for item in self.rooms[self.world].traps_list:
+            self.obstacles.append(item)
+        # create engines
+        self.player_engine = CollisionDetection(self.player, self.rooms[self.world].wall_list,
+                                                self.rooms[self.world].traps_list)
+
+        self.enemy_count = len(self.enemies_engine)
 
     def setup(self):
         """
@@ -220,18 +244,10 @@ class Main():
         arcade.open_window(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, "Main")
         arcade.schedule(self.on_update, 1 / 60)
         arcade.set_background_color(arcade.color.BLACK)
-        # create character list
-        self.enemies_engine = []
-        self.towers_engine = []
-        self.rooms = []
-        self.enemies = Sprites()
-
-        # setting up player
-        self.player = Player(400, 75)
 
         # setting up rooms
         self.tile_map = TiledMap()
-
+        self.rooms = []
         room = self.tile_map.tutorial_world()
         self.rooms.append(room)
 
@@ -246,17 +262,7 @@ class Main():
 
         room = self.tile_map.boss_world()
         self.rooms.append(room)
-        self.obstacles = arcade.SpriteList()
-        for item in self.rooms[self.world].wall_list:
-            self.obstacles.append(item)
-        for item in self.rooms[self.world].traps_list:
-            self.obstacles.append(item)
-        # create engines
-        self.player_engine = CollisionDetection(self.player, self.rooms[self.world].wall_list,
-                                                self.rooms[self.world].traps_list)
-        self.towers = Sprites()
-        self.create_enemies()
-        self.enemy_count = len(self.enemies_engine)
+        self.room_tutorial()
         # add sounds
         self.sound = Sounds()
         # self.sound.update(0)
