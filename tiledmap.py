@@ -61,7 +61,7 @@ class TiledMap(arcade.TiledMap):
 
         return room
 
-    def process_layer(self,map_object: pytiled_parser.objects.TileMap,
+    def process_layer(self, map_object: pytiled_parser.objects.TileMap,
                       layer_name: str,
                       scaling: float = 1,
                       base_directory: str = "") -> arcade.SpriteList:
