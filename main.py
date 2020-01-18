@@ -99,7 +99,7 @@ class Main():
 
     def draw_health_bar(self, health: int) -> None:
         """
-        Draws healthbar to screen
+        Draws health bar to screen
         :param health: health of player
         :return: none
         """
@@ -109,18 +109,18 @@ class Main():
         arcade.draw_texture_rectangle(self.player.center_x, self.player.center_y + 30, 50, 5,
                                       arcade.load_texture("images/health_bar_2.png"))
         if health >= 80:
-            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30,
-                                          health // 2,
+            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health / 4), self.player.center_y + 30,
+                                          health / 2,
                                           5,
                                           arcade.load_texture("images/health_bar_green.png"))
         elif health >= 40:
-            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30,
-                                          health // 2,
+            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health / 4), self.player.center_y + 30,
+                                          health / 2,
                                           5,
                                           arcade.load_texture("images/health_bar_orange.png"))
         elif health > 0:
-            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health // 4), self.player.center_y + 30,
-                                          health // 2,
+            arcade.draw_texture_rectangle(self.player.center_x - 25 + (health / 4), self.player.center_y + 30,
+                                          health / 2,
                                           5,
                                           arcade.load_texture("images/health_bar_red.png"))
 
@@ -191,7 +191,7 @@ class Main():
         temporary testing function that creates enemies
         :return:
         """
-        for x in range(9):
+        for x in range(0):
             self.enemies.append(Blob(400, 400))
             self.enemies.append(Goblin(400, 400, 3))
         for enemy in self.enemies:
