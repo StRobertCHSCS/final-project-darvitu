@@ -29,12 +29,12 @@ class Boss(arcade.AnimatedTimeSprite):
         :return: none
         """
         # add textures to respective locations
-        self.textures_left.append(arcade.load_texture("images/player_phase_1.png", mirrored=True, scale=1))
-        self.textures_left.append(arcade.load_texture("images/player_phase_2.png", mirrored=True, scale=1))
-        self.textures_right.append(arcade.load_texture("images/player_phase_1.png", scale=1))
-        self.textures_right.append(arcade.load_texture("images/player_phase_2.png", scale=1))
-        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=1.1))
-        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=1.1))
+        self.textures_left.append(arcade.load_texture("images/boss_sprite.png", mirrored=True, scale=0.5))
+        self.textures_left.append(arcade.load_texture("images/boss_sprite.png", mirrored=True, scale=0.5))
+        self.textures_right.append(arcade.load_texture("images/boss_sprite.png", scale=0.5))
+        self.textures_right.append(arcade.load_texture("images/boss_sprite.png", scale=0.5))
+        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=5))
+        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=5))
 
     # animation for facing
     def point_towards(self, player: Player) -> None:
@@ -46,9 +46,9 @@ class Boss(arcade.AnimatedTimeSprite):
         if self.health < 1:
             self.textures = self.textures_dead
         elif player.center_x < self.center_x:
-            self.textures = self.textures_left
-        else:
             self.textures = self.textures_right
+        else:
+            self.textures = self.textures_left
 
     # def get_points(self) -> Tuple[Tuple[float, float]]:
     #     """

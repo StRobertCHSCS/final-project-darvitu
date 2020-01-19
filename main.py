@@ -30,7 +30,7 @@ class Main():
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
         self.time = 0
-        self.world = 0
+        self.world = 4
         self.sound = None
         self.obstacles = None
         self.enemy_count = 0
@@ -73,22 +73,22 @@ class Main():
         :return: none
         """
         # draw background of health bar
-        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 30, 52, 7,
+        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 200, 52, 7,
                                       arcade.load_texture("images/health_bar_1.png"))
-        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 30, 50, 5,
+        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 200, 50, 5,
                                       arcade.load_texture("images/health_bar_2.png"))
         if health >= 80:
-            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 30,
+            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 200,
                                           health / 2,
                                           5,
                                           arcade.load_texture("images/health_bar_green.png"))
         elif health >= 40:
-            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 30,
+            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 200,
                                           health / 2,
                                           5,
                                           arcade.load_texture("images/health_bar_orange.png"))
         elif health > 0:
-            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 30,
+            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 200,
                                           health / 2,
                                           5,
                                           arcade.load_texture("images/health_bar_red.png"))

@@ -47,7 +47,8 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                         item.is_wall_hit = True
                         item.is_player_hit = True
                     if isinstance(item, Boss):
-                        item.health -= 0.25
+                        if self.player.is_attack_state:
+                            item.health -= 0.25
         # if the player is the user
         elif isinstance(self.player, Player):
             if self.player.health < 1:
