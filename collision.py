@@ -1,5 +1,7 @@
 import arcade
 import time
+
+from boss import Boss
 from goblin import Goblin
 from player import Player
 from tiledmap import TiledMap
@@ -44,6 +46,8 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                     if isinstance(item, Fireball):
                         item.is_wall_hit = True
                         item.is_player_hit = True
+                    if isinstance(item, Boss):
+                        item.health -= 0.25
         # if the player is the user
         elif isinstance(self.player, Player):
             if self.player.health < 1:

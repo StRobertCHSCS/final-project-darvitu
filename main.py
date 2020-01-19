@@ -3,6 +3,8 @@ import math
 import arcade
 import time
 import random
+
+from boss import Boss
 from player import Player
 from tiledmap import TiledMap
 from blob import Blob
@@ -59,6 +61,37 @@ class Main():
             self.towers.draw()
             # draw health bar
             self.draw_health_bar(self.player.health)
+            if self.world == 4:
+                for item in self.enemies:
+                    if isinstance(item, Boss):
+                        self.draw_health_bar_boss(item.health, item)
+
+    def draw_health_bar_boss(self, health: int, boss: Boss) -> None:
+        """
+        Draws health bar to screen
+        :param health: health of player
+        :return: none
+        """
+        # draw background of health bar
+        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 30, 52, 7,
+                                      arcade.load_texture("images/health_bar_1.png"))
+        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 30, 50, 5,
+                                      arcade.load_texture("images/health_bar_2.png"))
+        if health >= 80:
+            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 30,
+                                          health / 2,
+                                          5,
+                                          arcade.load_texture("images/health_bar_green.png"))
+        elif health >= 40:
+            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 30,
+                                          health / 2,
+                                          5,
+                                          arcade.load_texture("images/health_bar_orange.png"))
+        elif health > 0:
+            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 30,
+                                          health / 2,
+                                          5,
+                                          arcade.load_texture("images/health_bar_red.png"))
 
     def move_player(self) -> None:
         """
@@ -74,6 +107,10 @@ class Main():
         Moves enemies based on the position of the player
         :return: none
         """
+        for item in self.enemies:
+            if isinstance(item, Boss):
+                item.point_towards(self.player)
+
         for enemy in self.enemies_engine:
             if math.sqrt(
                     math.pow(self.player.center_x - enemy.player.center_x, 2) + math.pow(
@@ -113,12 +150,11 @@ class Main():
             if self.enemy_count == len(self.enemies_engine):
                 if self.level_finish_time == 0:
                     self.level_finish_time = self.time
-                if self.time - self.level_finish_time >= 50:
+                if self.time - self.level_finish_time >= 100:  # increase this value to increase transition delay
                     self.is_game_active = False
                     self.level_finish_time = 0
                     self.enemy_count = 0
                     self.world += 1
-                    print(self.world)
                     if self.world == 1:
                         self.stage_one()
                     elif self.world == 2:
@@ -203,6 +239,8 @@ class Main():
                 self.game_over = False
         elif symbol == arcade.key.DELETE:
             arcade.get_window().close()
+        elif symbol == arcade.key.P:
+            self.is_game_active = not self.is_game_active
 
     def on_key_release(self, symbol, modifiers) -> None:
         """
@@ -255,7 +293,6 @@ class Main():
         self.enemies.append(Goblin(50, 750, 3))
         self.enemies.append(Blob(400, 400))
         self.enemies.append(Goblin(400, 400, 3))
-
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
@@ -403,7 +440,7 @@ class Main():
         self.enemies.append(Goblin(400, 50, 3))
         self.enemies.append(Blob(400, 50))
         self.enemies.append(Goblin(400, 50, 3))
-
+        self.enemies.append(Boss(400, 400))
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
@@ -469,12 +506,12 @@ class Main():
 
         room = self.tile_map.boss_world()
         self.rooms.append(room)
-        self.room_tutorial()
+        self.stage_boss()
         # add start screen
         self.transition = arcade.load_texture("images/start_screen.png")
         # add sounds
         self.sound = Sounds()
-        # self.sound.update(0)
+        self.sound.update(1)
         # override arcade methods
         self.level_finish_time = 0
         self.game_over = False
