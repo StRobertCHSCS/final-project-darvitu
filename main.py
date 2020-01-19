@@ -38,6 +38,7 @@ class Main():
         self.transition = None
         self.setup()
         self.level_finish_time = 0
+        self.game_over = False
 
     def on_draw(self) -> None:
         """
@@ -129,9 +130,11 @@ class Main():
                     elif self.world == 5:
                         self.win_stage()
                         self.is_game_active = False
+                        self.game_over = True
             if self.player.health < 1:
                 self.lose_stage()
                 self.is_game_active = False
+                self.game_over = True
         self.time += 1
 
     def draw_health_bar(self, health: int) -> None:
@@ -193,7 +196,13 @@ class Main():
                     self.player.attack(self.towers)
                     self.on_key_release(arcade.key.SPACE, None)
         elif symbol == arcade.key.ENTER:
-            self.is_game_active = True
+            if not self.game_over:
+                self.is_game_active = True
+            else:
+                self.restart_game()
+                self.game_over = False
+        elif symbol == arcade.key.DELETE:
+            arcade.get_window().close()
 
     def on_key_release(self, symbol, modifiers) -> None:
         """
@@ -425,6 +434,14 @@ class Main():
         """
         self.transition = arcade.load_texture("images/lose_screen.png")
 
+    def restart_game(self) -> None:
+        """
+        Resets the game
+        :return:
+        """
+        self.world = 0
+        self.room_tutorial()
+
     def setup(self):
         """
         Called once at the start
@@ -460,6 +477,7 @@ class Main():
         # self.sound.update(0)
         # override arcade methods
         self.level_finish_time = 0
+        self.game_over = False
         window = arcade.get_window()
         window.on_key_press = self.on_key_press
         window.on_key_release = self.on_key_release

@@ -177,12 +177,12 @@ class Blob(arcade.AnimatedTimeSprite):
             self._point_list_cache = tuple(point_list)
         else:
             x1, y1 = rotate_point(self.center_x - self.enemy_width / 4,
-                                  self.center_y - self.enemy_height / 4,
+                                  self.center_y - self.enemy_height / 3,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
             x2, y2 = rotate_point(self.center_x + self.enemy_width / 4,
-                                  self.center_y - self.enemy_height / 4,
+                                  self.center_y - self.enemy_height / 3,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
