@@ -1,4 +1,4 @@
-import arcade
+import arcade, math
 from arcade.draw_commands import rotate_point
 from typing import Tuple
 
@@ -20,6 +20,7 @@ class Player(arcade.AnimatedTimeSprite):
         # setting speed and direction based on creation of Player object
         self.player_speed = player_speed
         self.direction = direction
+        self.last_direction = None
 
         # change animation rate
         self.texture_change_frames = 30
@@ -69,17 +70,23 @@ class Player(arcade.AnimatedTimeSprite):
         self.textures_attack_left.append(arcade.load_texture("images/player_attack_2.png", mirrored=True, scale=1))
 
     # animation and destruction of enemies
-    def attack(self) -> None:
+    def attack(self, towers) -> None:
         """
         Sets animations and destroys affected enemies
         :return: none
         """
-        if self.direction == "UP" or self.direction == "DOWN" or self.direction == "RIGHT":
-            self.textures = self.textures_attack_right
-        elif self.direction == "LEFT":
+        if self.textures == self.textures_left or self.textures == self.textures_attack_left:
             self.textures = self.textures_attack_left
+        else:
+            self.textures = self.textures_attack_right
         self.is_attack_state = True
         self.texture_change_frames = 10
+
+        for tower in towers:
+            if math.sqrt(math.pow(self.center_x - tower.fireball.center_x, 2) + math.pow(
+                    self.center_y - tower.fireball.center_y,
+                    2)) < 100:
+                tower.fireball.is_wall_hit = True
 
     # animation for moving
     def move_direction(self, direction) -> None:
@@ -164,10 +171,17 @@ class Player(arcade.AnimatedTimeSprite):
         """
         if self.is_attack_state:
             self.frame = 0
-            if self.direction == "LEFT":
+            if self.textures == self.textures_attack_left or self.textures == self.textures_left:
                 self.textures = self.textures_attack_left
             else:
                 self.textures = self.textures_attack_right
+        elif self.direction is not None:
+            self.move_direction(self.direction)
+        else:
+            if self.last_direction is not None:
+                self.move_direction(self.last_direction)
+            else:
+                self.textures = self.textures_right
         if self.frame % self.texture_change_frames == 0:
             self.cur_texture_index += 1
             if self.cur_texture_index >= len(self.textures):
