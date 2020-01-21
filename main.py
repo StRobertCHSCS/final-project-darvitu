@@ -237,6 +237,7 @@ class Main():
             else:
                 self.restart_game()
                 self.game_over = False
+                self.is_game_active = True
         elif symbol == arcade.key.DELETE:
             arcade.get_window().close()
         elif symbol == arcade.key.P:
@@ -511,7 +512,7 @@ class Main():
         self.transition = arcade.load_texture("images/start_screen.png")
         # add sounds
         self.sound = Sounds()
-        self.sound.update(1)
+        #self.sound.update(1)
         # override arcade methods
         self.level_finish_time = 0
         self.game_over = False

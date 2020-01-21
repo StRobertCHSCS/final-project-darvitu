@@ -1,7 +1,7 @@
 import arcade
 
 
-class Sounds():
+class Sounds(arcade.PlaysoundException):
     def __init__(self):
         self.sounds = []
         self.add_sounds()
@@ -12,6 +12,7 @@ class Sounds():
         :return: none
         """
         if 0 <= song < len(self.sounds):
+            self.sounds[song].pause()
             self.sounds[song].play()
 
     def play_sound(self, sound) -> None:
@@ -28,3 +29,4 @@ class Sounds():
         """
         self.sounds.append(arcade.Sound("sounds/minecraft-theme.mp3"))
         self.sounds.append(arcade.Sound("sounds/starcraft-theme.mp3"))
+        self.sounds.append(arcade.Sound("sounds/player_attack.mp3"))

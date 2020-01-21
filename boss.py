@@ -30,11 +30,14 @@ class Boss(arcade.AnimatedTimeSprite):
         """
         # add textures to respective locations
         self.textures_left.append(arcade.load_texture("images/boss_sprite.png", mirrored=True, scale=0.5))
-        self.textures_left.append(arcade.load_texture("images/boss_sprite.png", mirrored=True, scale=0.5))
+        self.textures_left.append(arcade.load_texture("images/boss_sprite_2.png", mirrored=True, scale=0.5))
         self.textures_right.append(arcade.load_texture("images/boss_sprite.png", scale=0.5))
-        self.textures_right.append(arcade.load_texture("images/boss_sprite.png", scale=0.5))
+        self.textures_right.append(arcade.load_texture("images/boss_sprite_2.png", scale=0.5))
         self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=5))
         self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=5))
+
+        # slow animation rate
+        self.texture_change_frames = 45
 
     # animation for facing
     def point_towards(self, player: Player) -> None:
@@ -98,7 +101,7 @@ class Boss(arcade.AnimatedTimeSprite):
         if self.frame % self.texture_change_frames == 0:
             self.cur_texture_index += 1
             if self.health < 100:
-                self.health += 0.25
+                self.health += 1
             if self.cur_texture_index >= len(self.textures):
                 self.cur_texture_index = 0
             self.set_texture(self.cur_texture_index)

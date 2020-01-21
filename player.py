@@ -2,6 +2,8 @@ import arcade, math
 from arcade.draw_commands import rotate_point
 from typing import Tuple
 
+from sounds import Sounds
+
 
 class Player(arcade.AnimatedTimeSprite):
     def __init__(self, window_width: int, window_height: int, player_speed=250, direction="DOWN", player_width=32,
@@ -75,6 +77,7 @@ class Player(arcade.AnimatedTimeSprite):
         Sets animations and destroys affected enemies
         :return: none
         """
+        #Sounds().update(2)
         if self.textures == self.textures_left or self.textures == self.textures_attack_left:
             self.textures = self.textures_attack_left
         else:
