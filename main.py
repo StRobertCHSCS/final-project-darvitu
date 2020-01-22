@@ -51,7 +51,7 @@ class Main():
         if self.transition is not None:
             arcade.draw_texture_rectangle(self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 2, 800, 800,
                                           self.transition)
-            arcade.draw_text("<PRESS ENTER>", 300,40, arcade.color.WHITE, 24)
+            arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
         if self.is_game_active:
             self.rooms[self.world].ground_list.draw()
             self.rooms[self.world].wall_list.draw()
@@ -513,7 +513,7 @@ class Main():
         self.transition = arcade.load_texture("images/start_screen.png")
         # add sounds
         self.sound = Sounds()
-        #self.sound.update(1)
+        # self.sound.update(1)
         # override arcade methods
         self.level_finish_time = 0
         self.game_over = False
