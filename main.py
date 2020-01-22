@@ -30,7 +30,7 @@ class Main():
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
         self.time = 0
-        self.world = 4
+        self.world = 0
         self.sound = None
         self.obstacles = None
         self.enemy_count = 0
@@ -49,7 +49,7 @@ class Main():
         """
         arcade.start_render()
         if self.transition is not None:
-            arcade.draw_texture_rectangle(self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 2, 800, 800,
+            arcade.draw_texture_rectangle(self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 2, 50, 50,
                                           self.transition)
         if self.is_game_active:
             self.rooms[self.world].ground_list.draw()
@@ -316,7 +316,7 @@ class Main():
         :return: none
         """
         # transition
-        self.transition = arcade.load_texture("images/level_1_screen.png")
+        self.transition = arcade.load_texture("images/1st-room.png")
         # setting up player
         self.player = Player(50, 50)
         # setting up enemies
@@ -356,7 +356,7 @@ class Main():
         :return: none
         """
         # transition
-        self.transition = arcade.load_texture("images/level_2_screen.png")
+        self.transition = arcade.load_texture("images/2nd-room.png")
         # setting up player
         self.player = Player(50, 50)
         # setting up enemies
@@ -392,7 +392,7 @@ class Main():
         :return: none
         """
         # transition
-        self.transition = arcade.load_texture("images/level_3_screen.png")
+        self.transition = arcade.load_texture("images/3rd-room.png")
         # setting up player
         self.player = Player(50, 50)
         # setting up enemies
@@ -488,7 +488,7 @@ class Main():
         # open window
         arcade.open_window(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, "Main")
         arcade.schedule(self.on_update, 1 / 60)
-        arcade.set_background_color(arcade.color.WHITE)
+        arcade.set_background_color(arcade.color.BLACK)
 
         # setting up rooms
         self.tile_map = TiledMap()
@@ -507,7 +507,7 @@ class Main():
 
         room = self.tile_map.boss_world()
         self.rooms.append(room)
-        self.stage_boss()
+        self.room_tutorial()
         # add start screen
         self.transition = arcade.load_texture("images/start_screen.png")
         # add sounds
