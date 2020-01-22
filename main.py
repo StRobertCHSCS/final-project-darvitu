@@ -49,8 +49,9 @@ class Main():
         """
         arcade.start_render()
         if self.transition is not None:
-            arcade.draw_texture_rectangle(self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 2, 50, 50,
+            arcade.draw_texture_rectangle(self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 2, 800, 800,
                                           self.transition)
+            arcade.draw_text("<PRESS ENTER>", 300,40, arcade.color.WHITE, 24)
         if self.is_game_active:
             self.rooms[self.world].ground_list.draw()
             self.rooms[self.world].wall_list.draw()
@@ -316,7 +317,7 @@ class Main():
         :return: none
         """
         # transition
-        self.transition = arcade.load_texture("images/1st-room.png")
+        self.transition = arcade.load_texture("images/level_1_screen.png")
         # setting up player
         self.player = Player(50, 50)
         # setting up enemies
@@ -356,7 +357,7 @@ class Main():
         :return: none
         """
         # transition
-        self.transition = arcade.load_texture("images/2nd-room.png")
+        self.transition = arcade.load_texture("images/level_2_screen.png")
         # setting up player
         self.player = Player(50, 50)
         # setting up enemies
@@ -392,7 +393,7 @@ class Main():
         :return: none
         """
         # transition
-        self.transition = arcade.load_texture("images/3rd-room.png")
+        self.transition = arcade.load_texture("images/level_3_screen.png")
         # setting up player
         self.player = Player(50, 50)
         # setting up enemies
