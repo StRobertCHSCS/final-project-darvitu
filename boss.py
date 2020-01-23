@@ -60,8 +60,8 @@ class Boss(arcade.AnimatedTimeSprite):
         self.textures_left.append(arcade.load_texture("images/boss_sprite_2.png", mirrored=True, scale=0.5))
         self.textures_right.append(arcade.load_texture("images/boss_sprite.png", scale=0.5))
         self.textures_right.append(arcade.load_texture("images/boss_sprite_2.png", scale=0.5))
-        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=5))
-        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=5))
+        self.textures_dead.append(arcade.load_texture("images/boss_dead.png", scale=0.5))
+        self.textures_dead.append(arcade.load_texture("images/boss_dead.png", scale=0.5))
 
         # slow animation rate
         self.texture_change_frames = 45

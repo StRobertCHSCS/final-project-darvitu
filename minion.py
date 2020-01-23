@@ -57,8 +57,8 @@ class Minion(arcade.AnimatedTimeSprite):
         self.textures_right.append(arcade.load_texture("images/boss_sprite_2.png", mirrored=True, scale=0.1))
         self.textures_left.append(arcade.load_texture("images/boss_sprite.png", scale=0.1))
         self.textures_left.append(arcade.load_texture("images/boss_sprite_2.png", scale=0.1))
-        self.textures_dead.append(arcade.load_texture("images/minion_dead.png", scale=1.1))
-        self.textures_dead.append(arcade.load_texture("images/minion_dead.png", scale=1.1))
+        self.textures_dead.append(arcade.load_texture("images/boss_dead.png", scale=0.1))
+        self.textures_dead.append(arcade.load_texture("images/boss_dead.png", scale=0.1))
 
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
