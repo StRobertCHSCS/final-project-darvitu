@@ -65,22 +65,14 @@ class Main():
                                           self.transition)
             arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
 
-            # draw tutorial instructions
-            if self.world == 0:
-                arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
-                arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
-                arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
-                arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
-                arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
-                arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
         if self.is_game_active:
             self.rooms[self.world].ground_list.draw()
             self.rooms[self.world].wall_list.draw()
             self.rooms[self.world].traps_list.draw()
-
-            self.enemies.draw()
-            self.towers.draw()
-            self.player.draw()
+            if self.enemies[0].textures is not None:
+                self.enemies.draw()
+                self.towers.draw()
+                self.player.draw()
 
             # draw health bar
             self.draw_health_bar(self.player.health)
@@ -88,10 +80,17 @@ class Main():
             for item in self.enemies:
                 if isinstance(item, Boss):
                     self.draw_health_bar_boss(item.health, item)
+                # draw tutorial instructions
+            if self.world == 0:
+                arcade.draw_text("Press SPACE to ATTACK", 10, 30, arcade.color.WHITE, 24)
+                arcade.draw_text("Dodge FIREBALLS", 300, 300, arcade.color.WHITE, 24)
+                arcade.draw_text("Kill ENEMIES", 300, 80, arcade.color.WHITE, 24)
+                arcade.draw_text("Avoid the LAVA", 560, 450, arcade.color.WHITE, 24)
 
     def draw_health_bar_boss(self, health: int, boss: Boss) -> None:
         """
         Draws health bar to screen
+        :param boss:  boss
         :param health: health of player
         :return: none
         """
@@ -141,7 +140,7 @@ class Main():
                         2)) < 500:
                 enemy.update(enemy, self.player)
         for tower in self.towers:
-            if tower.can_shoot and self.time % 500 == 0:
+            if tower.can_shoot and self.time % 100 == 0:
                 tower.shoot(self.player)
             tower.point_towards(self.player)
         for tower in self.towers_engine:
@@ -363,6 +362,13 @@ class Main():
         self.enemies.append(Blob(400, 400))
         self.enemies.append(Goblin(400, 400, 3))
 
+        self.enemies.append(Blob(400, 40))
+        self.enemies.append(Goblin(400, 40, 3))
+        self.enemies.append(Blob(400, 700))
+        self.enemies.append(Goblin(400, 700, 3))
+        self.enemies.append(Blob(750, 400))
+        self.enemies.append(Goblin(750, 400, 3))
+
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
@@ -387,22 +393,31 @@ class Main():
         # transition
         self.transition = arcade.load_texture("images/level_2_screen.png")
         # setting up player
-        self.player = Player(50, 50)
+        self.player = Player(100, 50)
         # setting up enemies
         self.enemies_engine = []
         self.towers_engine = []
         self.enemies = Sprites()
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
-        self.enemies.append(Blob(400, 50))
-        self.enemies.append(Goblin(400, 50, 3))
-        self.enemies.append(Blob(400, 50))
-        self.enemies.append(Goblin(400, 50, 3))
+
+        self.enemies.append(Blob(300, 700))
+        self.enemies.append(Goblin(300, 700))
+        self.enemies.append(Blob(500, 700))
+        self.enemies.append(Goblin(500, 700))
+        self.enemies.append(Blob(100, 70))
+        self.enemies.append(Goblin(100, 70))
+        self.enemies.append(Blob(700, 700))
+        self.enemies.append(Goblin(700, 700))
+
+
 
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
         self.towers.append(WizardTower(400, 700, 48, 52))
+        self.towers.append(WizardTower(300, 700, 48, 52))
+        self.towers.append(WizardTower(500, 700, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))

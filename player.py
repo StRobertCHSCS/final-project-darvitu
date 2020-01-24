@@ -95,11 +95,11 @@ class Player(arcade.AnimatedTimeSprite):
         self.is_attack_state = True
         self.texture_change_frames = 10
 
-        for tower in towers:
-            if math.sqrt(math.pow(self.center_x - tower.fireball.center_x, 2) + math.pow(
-                    self.center_y - tower.fireball.center_y,
-                    2)) < 100:
-                tower.fireball.is_wall_hit = True
+        # for tower in towers:
+        #     if math.sqrt(math.pow(self.center_x - tower.fireball.center_x, 2) + math.pow(
+        #             self.center_y - tower.fireball.center_y,
+        #             2)) < 100:
+        #         tower.fireball.is_wall_hit = True
 
     # animation for moving
     def move_direction(self, direction) -> None:

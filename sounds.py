@@ -22,7 +22,6 @@ class Sounds(arcade.PlaysoundException):
         :return: none
         """
         if 0 <= song < len(self.sounds):
-            self.sounds[song].pause()
             self.sounds[song].play()
 
     def play_sound(self, sound) -> None:
@@ -31,6 +30,7 @@ class Sounds(arcade.PlaysoundException):
         :param sound: sound name
         :return: none
         """
+        pass
 
     def add_sounds(self) -> None:
         """
