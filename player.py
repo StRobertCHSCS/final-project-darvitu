@@ -1,3 +1,13 @@
+"""
+-------------------------------------------------------------------------------
+Name: player.py
+Purpose: Code for the player.
+
+Author:	Wang.D
+
+Created: 14/12/2020
+-------------------------------------------------------------------------------
+"""
 import arcade, math
 from arcade.draw_commands import rotate_point
 from typing import Tuple

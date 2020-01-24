@@ -1,3 +1,13 @@
+"""
+-------------------------------------------------------------------------------
+Name: collisino.py
+Purpose: Collision engine for all sprites.
+
+Author:	Wang.D
+
+Created: 23/01/2020
+-------------------------------------------------------------------------------
+"""
 import arcade
 import time
 

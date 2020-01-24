@@ -1,3 +1,13 @@
+"""
+-------------------------------------------------------------------------------
+Name: minion.py
+Purpose: Code for the minion enemy type.
+
+Author:	Wang.D
+
+Created: 23/01/2020
+-------------------------------------------------------------------------------
+"""
 import arcade, math, random
 from player import Player
 from arcade.draw_commands import rotate_point
@@ -203,7 +213,7 @@ class Minion(arcade.AnimatedTimeSprite):
         if self.frame % self.texture_change_frames == 0:
             if self.is_player_hit:
                 if not self.is_player_hit_already:
-                    player.health -= 3
+                    player.health -= 0.5
                     self.is_player_hit_already = True
                     self.is_player_hit = False
             self.cur_texture_index += 1

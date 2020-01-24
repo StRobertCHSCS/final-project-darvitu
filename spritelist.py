@@ -1,3 +1,13 @@
+"""
+-------------------------------------------------------------------------------
+Name: spritelist.py
+Purpose: Code for custom build arcade spritelist.
+
+Author:	Wang.D
+
+Created: 01/01/2020
+-------------------------------------------------------------------------------
+"""
 import arcade
 
 from blob import Blob

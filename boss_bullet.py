@@ -1,3 +1,13 @@
+"""
+-------------------------------------------------------------------------------
+Name: boss_bullet.py
+Purpose: Code for the bullet that the boss shoots. (not used)
+
+Author:	Wang.D
+
+Created: 23/01/2020
+-------------------------------------------------------------------------------
+"""
 from random import random
 from typing import Tuple
 

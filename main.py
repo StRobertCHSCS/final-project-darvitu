@@ -1,3 +1,14 @@
+"""
+-------------------------------------------------------------------------------
+Name: main.py
+Purpose: Main class to be run to start game.
+
+Author:	Wang.D
+
+Created: 14/12/2020
+-------------------------------------------------------------------------------
+"""
+
 import math
 
 import arcade
@@ -31,7 +42,7 @@ class Main():
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 800
         self.time = 0
-        self.world = 4
+        self.world = 0
         self.sound = None
         self.obstacles = None
         self.enemy_count = 0
@@ -523,7 +534,7 @@ class Main():
 
         room = self.tile_map.boss_world()
         self.rooms.append(room)
-        self.stage_boss()
+        self.room_tutorial()
         # add start screen
         self.transition = arcade.load_texture("images/start_screen.png")
         # add sounds

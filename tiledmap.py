@@ -1,3 +1,13 @@
+"""
+-------------------------------------------------------------------------------
+Name: tiledmap.py
+Purpose: Code for loading tiledmaps and rooms.
+
+Author:	Wang.D
+
+Created: 23/12/2020
+-------------------------------------------------------------------------------
+"""
 import arcade
 import pytiled_parser
 from arcade.tilemap import get_tilemap_layer, _process_tile_layer, _process_object_layer, _create_sprite_from_tile, \

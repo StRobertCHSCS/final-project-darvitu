@@ -1,3 +1,14 @@
+"""
+-------------------------------------------------------------------------------
+Name: boss.py
+Purpose: Code for the boss enemy type.
+
+Author:	Wang.D
+
+Created: 23/01/2020
+-------------------------------------------------------------------------------
+"""
+
 import arcade
 from typing import Tuple
 

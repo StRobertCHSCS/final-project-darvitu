@@ -1,3 +1,13 @@
+"""
+-------------------------------------------------------------------------------
+Name: wizard.py
+Purpose: Code for the mage enemy type.
+
+Author:	Wang.D
+
+Created: 01/01/2020
+-------------------------------------------------------------------------------
+"""
 from typing import Tuple
 
 import arcade
@@ -148,7 +158,7 @@ class Fireball(arcade.AnimatedTimeSprite):
         # distance from fireball to player /5 is the movement speed
         speed = math.sqrt(math.pow(delta_x, 2) + math.pow(delta_y, 2)) / 5
         # move fireball
-        if (end_x - self.center_x) is not 0 and (end_y - self.center_y) is not 0:
+        if speed is not 0:
             self.change_x = (end_x - self.center_x) / speed
             self.change_y = (end_y - self.center_y) / speed
 
