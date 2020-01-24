@@ -63,15 +63,23 @@ class Main():
         if self.transition is not None:
             arcade.draw_texture_rectangle(self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 2, 800, 800,
                                           self.transition)
-            arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
+            if self.player.health > 0 and self.world == 4:
+                arcade.draw_text("<PRESS DELETE TO EXIT>", 290, 40, arcade.color.WHITE, 24)
+            else:
+                arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
 
         if self.is_game_active:
             self.rooms[self.world].ground_list.draw()
             self.rooms[self.world].wall_list.draw()
             self.rooms[self.world].traps_list.draw()
-            if self.enemies[0].textures is not None:
-                self.enemies.draw()
-                self.towers.draw()
+
+            for item in self.enemies:
+                if item.textures is not None:
+                    item.draw()
+            for item in self.towers:
+                if item.textures is not None:
+                    item.draw()
+            if self.player.textures is not None:
                 self.player.draw()
 
             # draw health bar
@@ -82,10 +90,10 @@ class Main():
                     self.draw_health_bar_boss(item.health, item)
                 # draw tutorial instructions
             if self.world == 0:
-                arcade.draw_text("Press SPACE to ATTACK", 10, 30, arcade.color.WHITE, 24)
+                arcade.draw_text("Press SPACE to ATTACK", 30, 30, arcade.color.WHITE, 24)
                 arcade.draw_text("Dodge FIREBALLS", 300, 300, arcade.color.WHITE, 24)
-                arcade.draw_text("Kill ENEMIES", 300, 80, arcade.color.WHITE, 24)
-                arcade.draw_text("Avoid the LAVA", 560, 450, arcade.color.WHITE, 24)
+                arcade.draw_text("Kill ENEMIES", 300, 750, arcade.color.WHITE, 24)
+                arcade.draw_text("Avoid the LAVA", 560, 510, arcade.color.WHITE, 24)
 
     def draw_health_bar_boss(self, health: int, boss: Boss) -> None:
         """
@@ -401,23 +409,22 @@ class Main():
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
 
-        self.enemies.append(Blob(300, 700))
-        self.enemies.append(Goblin(300, 700))
-        self.enemies.append(Blob(500, 700))
-        self.enemies.append(Goblin(500, 700))
-        self.enemies.append(Blob(100, 70))
-        self.enemies.append(Goblin(100, 70))
-        self.enemies.append(Blob(700, 700))
-        self.enemies.append(Goblin(700, 700))
-
-
+        self.enemies.append(Blob(300, 710))
+        self.enemies.append(Goblin(300, 710))
+        self.enemies.append(Blob(400, 710))
+        self.enemies.append(Goblin(400, 710))
+        self.enemies.append(Blob(500, 710))
+        self.enemies.append(Goblin(500, 710))
+        self.enemies.append(Blob(100, 710))
+        self.enemies.append(Goblin(100, 710))
+        self.enemies.append(Blob(700, 710))
+        self.enemies.append(Goblin(700, 710))
 
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
         self.towers.append(WizardTower(400, 700, 48, 52))
-        self.towers.append(WizardTower(300, 700, 48, 52))
-        self.towers.append(WizardTower(500, 700, 48, 52))
+        self.towers.append(WizardTower(400, 100, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
@@ -445,15 +452,24 @@ class Main():
         self.enemies = Sprites()
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
-        self.enemies.append(Blob(400, 150))
-        self.enemies.append(Goblin(400, 150, 3))
-        self.enemies.append(Blob(400, 150))
-        self.enemies.append(Goblin(400, 150, 3))
+        self.enemies.append(Blob(750, 700))
+        self.enemies.append(Goblin(750, 700, 10))
+
+        self.enemies.append(Blob(750, 100))
+        self.enemies.append(Goblin(750, 100, 10))
+
+        self.enemies.append(Blob(80, 700))
+        self.enemies.append(Goblin(80, 700, 10))
+
+        self.enemies.append(Goblin(400, 400, 20))
 
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
-        self.towers.append(WizardTower(400, 700, 48, 52))
+        # self.towers.append(WizardTower(400, 300, 48, 52))
+        # self.towers.append(WizardTower(400, 500, 48, 52))
+        self.towers.append(WizardTower(300, 400, 48, 52))
+        self.towers.append(WizardTower(500, 400, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))

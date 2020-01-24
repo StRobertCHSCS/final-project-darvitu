@@ -54,7 +54,7 @@ class Minion(arcade.AnimatedTimeSprite):
         self.is_player_hit_already = False
         self.is_player_hit = False
         self.stop = False
-        self.health = 10
+        self.health = 20
 
     # create textures
     def create_textures(self) -> None:
