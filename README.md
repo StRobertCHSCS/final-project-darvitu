@@ -26,6 +26,10 @@ There are 3 main enemy types in Attack on Stronghold, the Slime, Executioner, an
 
 * Slime: A fast moving enemy which always chases the player. Attack is a light melee attack when the smile is in contact with the player. Attack deals 1 damage but has no cooldown.
 
+* Minion: A fast moving enemy that floats, meaning it can travel over walls and lava. Deals 1 damage when in contact with the player. They have more healh than the other enemies and is only present in the boss stage. They have no cooldown. 
+
+* Boss: The final enemy to kill before winning the game. Does not do damage but has a 100 health and has its own health bar. 
+
 
 ### SCORING
 There is no formal scoring system in Attack on Stronghold. The success of a game is determined by how far does the player progress through the stages. On the event that the player dies, the game ends and the player must start from the begining. The difficulty of each stage increases as the player progresses. Each game either ends with a completion or failure. 
