@@ -64,7 +64,7 @@ class Main():
             arcade.draw_texture_rectangle(self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 2, 800, 800,
                                           self.transition)
             if self.transition == arcade.load_texture("images/win_screen.png"):
-                arcade.draw_text("<PRESS DELETE TO EXIT>", 270, 40, arcade.color.WHITE, 24)
+                arcade.draw_text("<PRESS DELETE TO EXIT>", 250, 40, arcade.color.WHITE, 24)
             else:
                 arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
 
@@ -94,6 +94,8 @@ class Main():
                 arcade.draw_text("Dodge FIREBALLS", 300, 300, arcade.color.WHITE, 24)
                 arcade.draw_text("Kill ENEMIES", 300, 750, arcade.color.WHITE, 24)
                 arcade.draw_text("Avoid the LAVA", 560, 510, arcade.color.WHITE, 24)
+                arcade.draw_text("Press P to PAUSE", 50, 750, arcade.color.WHITE, 24)
+                arcade.draw_text("ARROW KEYS to MOVE", 150, 500, arcade.color.WHITE, 24)
 
     def draw_health_bar_boss(self, health: int, boss: Boss) -> None:
         """
@@ -509,10 +511,17 @@ class Main():
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
-        self.towers.append(WizardTower(50, 50, 48, 52))
-        self.towers.append(WizardTower(750, 50, 48, 52))
-        self.towers.append(WizardTower(50, 750, 48, 52))
-        self.towers.append(WizardTower(750, 750, 48, 52))
+        self.towers.append(WizardTower(100, 50, 48, 52))
+        self.towers.append(WizardTower(50, 100, 48, 52))
+
+        self.towers.append(WizardTower(700, 750, 48, 52))
+        self.towers.append(WizardTower(750, 700, 48, 52))
+
+        self.towers.append(WizardTower(100, 750, 48, 52))
+        self.towers.append(WizardTower(50, 700, 48, 52))
+
+        self.towers.append(WizardTower(700, 50, 48, 52))
+        self.towers.append(WizardTower(750, 100, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
