@@ -63,8 +63,8 @@ class Main():
         if self.transition is not None:
             arcade.draw_texture_rectangle(self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 2, 800, 800,
                                           self.transition)
-            if self.player.health > 0 and self.world == 4:
-                arcade.draw_text("<PRESS DELETE TO EXIT>", 290, 40, arcade.color.WHITE, 24)
+            if self.transition == arcade.load_texture("images/win_screen.png"):
+                arcade.draw_text("<PRESS DELETE TO EXIT>", 270, 40, arcade.color.WHITE, 24)
             else:
                 arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
 
