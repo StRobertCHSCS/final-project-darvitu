@@ -22,7 +22,7 @@ There are 3 main enemy types in Attack on Stronghold, the Slime, Executioner, an
 
 * Mage: A non moving enemy and always faces toward the player. Attack is a ranged fireball which deals 10 damage and has a cooldown of 1 second after the fireball is either destroyed by the player attack or it hits a wall. Cannot be killed.
 
-* Executioner: A slow moving enemy and always moves towards the player. Attack is a heavy hitting axe slash which deals 3 damage on hit. Each attack has a 2 second cooldown
+* Executioner: A slow moving enemy and always moves towards the player. Attack is a heavy hitting axe slash which deals 3 damage on hit. Each attack has a 2 second cooldown.
 
 * Slime: A fast moving enemy which always chases the player. Attack is a light melee attack when the slime is in contact with the player. Attack deals 1 damage but has no cooldown.
 
