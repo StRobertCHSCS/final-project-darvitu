@@ -1,6 +1,18 @@
+"""
+-------------------------------------------------------------------------------
+Name: player.py
+Purpose: Code for the player.
+
+Author:	Wang.D
+
+Created: 14/12/2020
+-------------------------------------------------------------------------------
+"""
 import arcade, math
 from arcade.draw_commands import rotate_point
 from typing import Tuple
+
+from sounds import Sounds
 
 
 class Player(arcade.AnimatedTimeSprite):
@@ -75,6 +87,7 @@ class Player(arcade.AnimatedTimeSprite):
         Sets animations and destroys affected enemies
         :return: none
         """
+        #Sounds().update(2)
         if self.textures == self.textures_left or self.textures == self.textures_attack_left:
             self.textures = self.textures_attack_left
         else:
@@ -82,11 +95,11 @@ class Player(arcade.AnimatedTimeSprite):
         self.is_attack_state = True
         self.texture_change_frames = 10
 
-        for tower in towers:
-            if math.sqrt(math.pow(self.center_x - tower.fireball.center_x, 2) + math.pow(
-                    self.center_y - tower.fireball.center_y,
-                    2)) < 100:
-                tower.fireball.is_wall_hit = True
+        # for tower in towers:
+        #     if math.sqrt(math.pow(self.center_x - tower.fireball.center_x, 2) + math.pow(
+        #             self.center_y - tower.fireball.center_y,
+        #             2)) < 100:
+        #         tower.fireball.is_wall_hit = True
 
     # animation for moving
     def move_direction(self, direction) -> None:

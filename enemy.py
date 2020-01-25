@@ -1,3 +1,14 @@
+"""
+-------------------------------------------------------------------------------
+Name: enemy.py
+Purpose: Base code for all enemies.
+
+Author:	Wang.D
+
+Created: 23/01/2020
+-------------------------------------------------------------------------------
+"""
+
 import arcade, math, random
 from player import Player
 from arcade.draw_commands import rotate_point

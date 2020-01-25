@@ -1,11 +1,11 @@
 """
 -------------------------------------------------------------------------------
-Name: goblin.py
-Purpose: Code for the executioner enemy type.
+Name: minion.py
+Purpose: Code for the minion enemy type.
 
 Author:	Wang.D
 
-Created: 15/12/2020
+Created: 23/01/2020
 -------------------------------------------------------------------------------
 """
 import arcade, math, random
@@ -14,11 +14,10 @@ from arcade.draw_commands import rotate_point
 from typing import Tuple
 
 
-class Goblin(arcade.AnimatedTimeSprite):
-    def __init__(self, center_x: int, center_y: int, health: int = 10, direction="DOWN",
-                 enemy_width=32,
+class Minion(arcade.AnimatedTimeSprite):
+    def __init__(self, center_x: int, center_y: int, direction="DOWN", enemy_width=32,
                  enemy_height=48):
-        """Constructor of the Goblin class, that is one of the enemies.
+        """Constructor of the Player class, that is the entity that the user will be moving controlling.
 
                           :param direction: default direction of player
                           :param player_speed: speed of player
@@ -44,22 +43,18 @@ class Goblin(arcade.AnimatedTimeSprite):
         self.count = 0
         self.hit = False
         self.time = None
-        self.is_player_hit_already = True
 
         # create textures for animations
         self.textures_left = []
         self.textures_right = []
-        self.textures_attack_left = []
-        self.textures_attack_right = []
         self.textures_dead = []
         self.create_textures()
         # spawn facing forward
         self.face_direction(direction)
-        # goblin health
-        self.health = health
-        # if goblin hits player
+        self.is_player_hit_already = False
         self.is_player_hit = False
         self.stop = False
+        self.health = 30
 
     # create textures
     def create_textures(self) -> None:
@@ -68,16 +63,12 @@ class Goblin(arcade.AnimatedTimeSprite):
         :return: none
         """
         # add textures to respective locations
-        self.textures_left.append(arcade.load_texture("images/goblin_phase_1.png", mirrored=True, scale=1))
-        self.textures_left.append(arcade.load_texture("images/goblin_phase_2.png", mirrored=True, scale=1))
-        self.textures_right.append(arcade.load_texture("images/goblin_phase_1.png", scale=1))
-        self.textures_right.append(arcade.load_texture("images/goblin_phase_2.png", scale=1))
-        self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_1.png", scale=1))
-        self.textures_attack_right.append(arcade.load_texture("images/goblin_attack_2.png", scale=1))
-        self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_1.png", mirrored=True, scale=1))
-        self.textures_attack_left.append(arcade.load_texture("images/goblin_attack_2.png", mirrored=True, scale=1))
-        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=1.1))
-        self.textures_dead.append(arcade.load_texture("images/blob_dead.png", scale=1.1))
+        self.textures_right.append(arcade.load_texture("images/boss_sprite.png", mirrored=True, scale=0.1))
+        self.textures_right.append(arcade.load_texture("images/boss_sprite_2.png", mirrored=True, scale=0.1))
+        self.textures_left.append(arcade.load_texture("images/boss_sprite.png", scale=0.1))
+        self.textures_left.append(arcade.load_texture("images/boss_sprite_2.png", scale=0.1))
+        self.textures_dead.append(arcade.load_texture("images/boss_dead.png", scale=0.1))
+        self.textures_dead.append(arcade.load_texture("images/boss_dead.png", scale=0.1))
 
     # animation for the player to face when it is not moving
     def face_direction(self, direction) -> None:
@@ -95,16 +86,6 @@ class Goblin(arcade.AnimatedTimeSprite):
         else:
             print("Invalid direction to face")
 
-    def attack(self) -> None:
-        """
-        Loads the current animation to the attack frames
-        :return:none
-        """
-        if self.direction == "RIGHT" or self.direction == "UP" or self.direction == "DOWN":
-            self.textures = self.textures_attack_right
-        else:
-            self.textures = self.textures_attack_left
-
     # animation for moving
     def move_direction(self, direction) -> None:
         """
@@ -121,7 +102,7 @@ class Goblin(arcade.AnimatedTimeSprite):
         else:
             print("Direction not valid to move")
 
-    def follow(self, player: Player) -> None:
+    def follow(self, player: Player, delta_time=1 / 60) -> None:
         """
         Makes enemy follow the player, engine that will run all moving sprites
         Method that is called in the main.py file on_update()
@@ -129,7 +110,8 @@ class Goblin(arcade.AnimatedTimeSprite):
         :param player: the player to follow
         :return: none
         """
-        self.texture_change_frames = 15
+        self.texture_change_frames = 30
+
         wait = random.randint(10, 30)
         if self.movement:
             self.count += 1
@@ -154,35 +136,31 @@ class Goblin(arcade.AnimatedTimeSprite):
         if self.count == wait:
             self.movement = not self.movement
             self.count = 0
-        # if enemy hits a wall
-        if self.hit:
-            if self.previous_direction is not None and self.previous_direction is not self.direction:
-                self.hit = False
-            self.previous_direction = self.direction
-            self.direction = None
+
         if player.health < 1:
             self.direction = None
             self.move_direction("RIGHT")
         if self.health < 1:
             self.direction = None
             self.textures = self.textures_dead
+
         if self.direction is not None:
             if self.direction == "RIGHT":
-                self.change_x = 1.5
+                self.change_x = 2
             if self.direction == "LEFT":
-                self.change_x = -1.5
+                self.change_x = -2
             if self.direction == "UP":
-                self.change_y = 1.5
+                self.change_y = 2
             if self.direction == "DOWN":
-                self.change_y = -1.5
+                self.change_y = -2
 
             # update direction of sprite
             if self.is_player_hit:
-                self.attack()
-                self.is_player_hit = False
                 self.is_player_hit_already = False
-            else:
-                self.move_direction(self.direction)
+
+            self.move_direction(self.direction)
+
+
         else:
             # update to standing animation
             self.texture_change_frames = 30
@@ -203,12 +181,12 @@ class Goblin(arcade.AnimatedTimeSprite):
             self._point_list_cache = tuple(point_list)
         else:
             x1, y1 = rotate_point(self.center_x - self.enemy_width / 4,
-                                  self.center_y - self.enemy_height / 4,
+                                  self.center_y - self.enemy_height / 3,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
             x2, y2 = rotate_point(self.center_x + self.enemy_width / 4,
-                                  self.center_y - self.enemy_height / 4,
+                                  self.center_y - self.enemy_height / 3,
                                   self.center_x,
                                   self.center_y,
                                   self.angle)
@@ -232,12 +210,12 @@ class Goblin(arcade.AnimatedTimeSprite):
         """
         Logic for selecting the proper texture to use.
         """
-
         if self.frame % self.texture_change_frames == 0:
-            if self.textures == self.textures_attack_left or self.textures == self.textures_attack_right:
+            if self.is_player_hit:
                 if not self.is_player_hit_already:
-                    player.health -= 3
+                    player.health -= 0.25
                     self.is_player_hit_already = True
+                    self.is_player_hit = False
             self.cur_texture_index += 1
             if self.cur_texture_index >= len(self.textures):
                 self.cur_texture_index = 0

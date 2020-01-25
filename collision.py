@@ -1,8 +1,20 @@
+"""
+-------------------------------------------------------------------------------
+Name: collisino.py
+Purpose: Collision engine for all sprites.
+
+Author:	Wang.D
+
+Created: 23/01/2020
+-------------------------------------------------------------------------------
+"""
 import arcade
 import time
 
 from boss import Boss
+from boss_bullet import BossBullet
 from goblin import Goblin
+from minion import Minion
 from player import Player
 from tiledmap import TiledMap
 from arcade.geometry import check_for_collision_with_list
@@ -11,7 +23,7 @@ from wizard import Fireball, WizardTower
 
 
 class CollisionDetection(arcade.PhysicsEngineSimple):
-    def __init__(self, player: Player, walls, traps=None) -> None:
+    def __init__(self, player, walls = None, traps=None) -> None:
         """
         Class in charge of monitoring collisions between player, walls, enemies, and other sprites
         :param player: user
@@ -47,7 +59,8 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                         item.is_wall_hit = True
                         item.is_player_hit = True
                     if isinstance(item, Boss):
-                        item.health -= 0.25
+                        if self.player.is_attack_state:
+                            item.health -= 0.25
         # if the player is the user
         elif isinstance(self.player, Player):
             if self.player.health < 1:
@@ -156,6 +169,26 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                 else:
                     print("Error, collision while enemy wasn't moving.")
             self.player.change_x, self.player.change_y = 0, 0
+        elif isinstance(self.player, Minion):
+            # --- Move sprite
+            self.player.follow(player_to_follow)
+            if arcade.check_for_collision(self.player, player_to_follow):
+                self.player.is_player_hit = True
+            # update x position
+            self.player.center_x += self.player.change_x
+            self.player.center_y += self.player.change_y
+
+            # Check for wall hit
+            if self.player.center_x > 890:
+                self.player.center_x = 890
+            if self.player.center_x < 20:
+                self.player.center_x = 20
+            if self.player.center_y > 890:
+                self.player.center_y = 890
+            if self.player.center_y < 20:
+                self.player.center_y = 20
+            self.player.change_x, self.player.change_y = 0, 0
+
         elif isinstance(self.player, Goblin):
             # --- Move sprite
             self.player.follow(player_to_follow)
@@ -254,3 +287,11 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                     print("Error, collision while enemy wasn't moving.")
                 self.player.is_wall_hit = True
                 self.player.reset = True
+        # elif isinstance(self.player, BossBullet):
+        #     hit_list = \
+        #         check_for_collision_with_list(self.player, self.walls)
+        #     if len(hit_list) > 0:
+        #         self.player.stop = True
+        #     if arcade.geometry.check_for_collision(self.player, direction):
+        #         self.player.stop = True
+        #         direction.health -= 1

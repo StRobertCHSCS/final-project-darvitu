@@ -1,3 +1,14 @@
+"""
+-------------------------------------------------------------------------------
+Name: main.py
+Purpose: Main class to be run to start game.
+
+Author:	Wang.D
+
+Created: 14/12/2020
+-------------------------------------------------------------------------------
+"""
+
 import math
 
 import arcade
@@ -13,6 +24,7 @@ from sounds import Sounds
 from goblin import Goblin
 from spritelist import Sprites
 from wizard import WizardTower, Fireball
+from minion import Minion
 
 
 class Main():
@@ -51,44 +63,64 @@ class Main():
         if self.transition is not None:
             arcade.draw_texture_rectangle(self.WINDOW_WIDTH / 2, self.WINDOW_HEIGHT / 2, 800, 800,
                                           self.transition)
+            if self.transition == arcade.load_texture("images/win_screen.png"):
+                arcade.draw_text("<PRESS DELETE TO EXIT>", 250, 40, arcade.color.WHITE, 24)
+            else:
+                arcade.draw_text("<PRESS ENTER>", 300, 40, arcade.color.WHITE, 24)
+
         if self.is_game_active:
             self.rooms[self.world].ground_list.draw()
             self.rooms[self.world].wall_list.draw()
             self.rooms[self.world].traps_list.draw()
 
-            self.player.draw()
-            self.enemies.draw()
-            self.towers.draw()
+            for item in self.enemies:
+                if item.textures is not None:
+                    item.draw()
+            for item in self.towers:
+                if item.textures is not None:
+                    item.draw()
+            if self.player.textures is not None:
+                self.player.draw()
+
             # draw health bar
             self.draw_health_bar(self.player.health)
-            if self.world == 4:
-                for item in self.enemies:
-                    if isinstance(item, Boss):
-                        self.draw_health_bar_boss(item.health, item)
+            # if self.world == 4:
+            for item in self.enemies:
+                if isinstance(item, Boss):
+                    self.draw_health_bar_boss(item.health, item)
+                # draw tutorial instructions
+            if self.world == 0:
+                arcade.draw_text("Press SPACE to ATTACK", 30, 30, arcade.color.WHITE, 24)
+                arcade.draw_text("Dodge FIREBALLS", 300, 300, arcade.color.WHITE, 24)
+                arcade.draw_text("Kill ENEMIES", 300, 750, arcade.color.WHITE, 24)
+                arcade.draw_text("Avoid the LAVA", 560, 510, arcade.color.WHITE, 24)
+                arcade.draw_text("Press P to PAUSE", 50, 750, arcade.color.WHITE, 24)
+                arcade.draw_text("ARROW KEYS to MOVE", 150, 500, arcade.color.WHITE, 24)
 
     def draw_health_bar_boss(self, health: int, boss: Boss) -> None:
         """
         Draws health bar to screen
+        :param boss:  boss
         :param health: health of player
         :return: none
         """
         # draw background of health bar
-        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 30, 52, 7,
+        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 100, 52, 7,
                                       arcade.load_texture("images/health_bar_1.png"))
-        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 30, 50, 5,
+        arcade.draw_texture_rectangle(boss.center_x, boss.center_y + 100, 50, 5,
                                       arcade.load_texture("images/health_bar_2.png"))
         if health >= 80:
-            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 30,
+            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 100,
                                           health / 2,
                                           5,
                                           arcade.load_texture("images/health_bar_green.png"))
         elif health >= 40:
-            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 30,
+            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 100,
                                           health / 2,
                                           5,
                                           arcade.load_texture("images/health_bar_orange.png"))
         elif health > 0:
-            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 30,
+            arcade.draw_texture_rectangle(boss.center_x - 25 + (health / 4), boss.center_y + 100,
                                           health / 2,
                                           5,
                                           arcade.load_texture("images/health_bar_red.png"))
@@ -118,7 +150,7 @@ class Main():
                         2)) < 500:
                 enemy.update(enemy, self.player)
         for tower in self.towers:
-            if tower.can_shoot and self.time % 50 == 0:
+            if tower.can_shoot and self.time % 100 == 0:
                 tower.shoot(self.player)
             tower.point_towards(self.player)
         for tower in self.towers_engine:
@@ -171,7 +203,13 @@ class Main():
                 self.lose_stage()
                 self.is_game_active = False
                 self.game_over = True
-        self.time += 1
+            # add minions
+            # if self.time % 1000 == 0:
+            #     if self.world == 4:
+            #         for item in self.enemies:
+            #             item.health = 10
+
+            self.time += 1
 
     def draw_health_bar(self, health: int) -> None:
         """
@@ -237,6 +275,7 @@ class Main():
             else:
                 self.restart_game()
                 self.game_over = False
+                self.is_game_active = True
         elif symbol == arcade.key.DELETE:
             arcade.get_window().close()
         elif symbol == arcade.key.P:
@@ -333,6 +372,13 @@ class Main():
         self.enemies.append(Blob(400, 400))
         self.enemies.append(Goblin(400, 400, 3))
 
+        self.enemies.append(Blob(400, 40))
+        self.enemies.append(Goblin(400, 40, 3))
+        self.enemies.append(Blob(400, 700))
+        self.enemies.append(Goblin(400, 700, 3))
+        self.enemies.append(Blob(750, 400))
+        self.enemies.append(Goblin(750, 400, 3))
+
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
@@ -357,22 +403,30 @@ class Main():
         # transition
         self.transition = arcade.load_texture("images/level_2_screen.png")
         # setting up player
-        self.player = Player(50, 50)
+        self.player = Player(100, 50)
         # setting up enemies
         self.enemies_engine = []
         self.towers_engine = []
         self.enemies = Sprites()
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
-        self.enemies.append(Blob(400, 50))
-        self.enemies.append(Goblin(400, 50, 3))
-        self.enemies.append(Blob(400, 50))
-        self.enemies.append(Goblin(400, 50, 3))
+
+        self.enemies.append(Blob(300, 710))
+        self.enemies.append(Goblin(300, 710))
+        self.enemies.append(Blob(400, 710))
+        self.enemies.append(Goblin(400, 710))
+        self.enemies.append(Blob(500, 710))
+        self.enemies.append(Goblin(500, 710))
+        self.enemies.append(Blob(100, 710))
+        self.enemies.append(Goblin(100, 710))
+        self.enemies.append(Blob(700, 710))
+        self.enemies.append(Goblin(700, 710))
 
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
         self.towers.append(WizardTower(400, 700, 48, 52))
+        self.towers.append(WizardTower(400, 100, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
@@ -400,15 +454,24 @@ class Main():
         self.enemies = Sprites()
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
-        self.enemies.append(Blob(400, 150))
-        self.enemies.append(Goblin(400, 150, 3))
-        self.enemies.append(Blob(400, 150))
-        self.enemies.append(Goblin(400, 150, 3))
+        self.enemies.append(Blob(750, 700))
+        self.enemies.append(Goblin(750, 700, 10))
+
+        self.enemies.append(Blob(750, 100))
+        self.enemies.append(Goblin(750, 100, 10))
+
+        self.enemies.append(Blob(80, 700))
+        self.enemies.append(Goblin(80, 700, 10))
+
+        self.enemies.append(Goblin(400, 400, 20))
 
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
-        self.towers.append(WizardTower(400, 700, 48, 52))
+        # self.towers.append(WizardTower(400, 300, 48, 52))
+        # self.towers.append(WizardTower(400, 500, 48, 52))
+        self.towers.append(WizardTower(300, 400, 48, 52))
+        self.towers.append(WizardTower(500, 400, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
@@ -429,22 +492,36 @@ class Main():
         # transition
         self.transition = arcade.load_texture("images/boss_screen.png")
         # setting up player
-        self.player = Player(50, 50)
+        self.player = Player(400, 50)
         # setting up enemies
         self.enemies_engine = []
         self.towers_engine = []
         self.enemies = Sprites()
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
-        self.enemies.append(Blob(400, 50))
-        self.enemies.append(Goblin(400, 50, 3))
-        self.enemies.append(Blob(400, 50))
-        self.enemies.append(Goblin(400, 50, 3))
+        self.enemies.append(Minion(400, 400))
+        self.enemies.append(Minion(400, 400))
+        self.enemies.append(Minion(400, 400))
+        self.enemies.append(Minion(400, 400))
+        self.enemies.append(Minion(400, 400))
+        self.enemies.append(Minion(400, 400))
+        self.enemies.append(Minion(400, 400))
+        self.enemies.append(Minion(400, 400))
         self.enemies.append(Boss(400, 400))
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
-        self.towers.append(WizardTower(400, 700, 48, 52))
+        self.towers.append(WizardTower(100, 50, 48, 52))
+        self.towers.append(WizardTower(50, 100, 48, 52))
+
+        self.towers.append(WizardTower(700, 750, 48, 52))
+        self.towers.append(WizardTower(750, 700, 48, 52))
+
+        self.towers.append(WizardTower(100, 750, 48, 52))
+        self.towers.append(WizardTower(50, 700, 48, 52))
+
+        self.towers.append(WizardTower(700, 50, 48, 52))
+        self.towers.append(WizardTower(750, 100, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
@@ -487,7 +564,7 @@ class Main():
         # open window
         arcade.open_window(self.WINDOW_WIDTH, self.WINDOW_HEIGHT, "Main")
         arcade.schedule(self.on_update, 1 / 60)
-        arcade.set_background_color(arcade.color.WHITE)
+        arcade.set_background_color(arcade.color.BLACK)
 
         # setting up rooms
         self.tile_map = TiledMap()
@@ -506,7 +583,7 @@ class Main():
 
         room = self.tile_map.boss_world()
         self.rooms.append(room)
-        self.stage_boss()
+        self.room_tutorial()
         # add start screen
         self.transition = arcade.load_texture("images/start_screen.png")
         # add sounds
@@ -521,6 +598,3 @@ class Main():
         window.on_draw = self.on_draw
         arcade.finish_render()
         arcade.run()
-
-
-Main()

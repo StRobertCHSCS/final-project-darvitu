@@ -1,3 +1,13 @@
+"""
+-------------------------------------------------------------------------------
+Name: wizard.py
+Purpose: Code for the mage enemy type.
+
+Author:	Wang.D
+
+Created: 01/01/2020
+-------------------------------------------------------------------------------
+"""
 from typing import Tuple
 
 import arcade
@@ -148,8 +158,9 @@ class Fireball(arcade.AnimatedTimeSprite):
         # distance from fireball to player /5 is the movement speed
         speed = math.sqrt(math.pow(delta_x, 2) + math.pow(delta_y, 2)) / 5
         # move fireball
-        self.change_x = (end_x - self.center_x) / speed
-        self.change_y = (end_y - self.center_y) / speed
+        if speed is not 0:
+            self.change_x = (end_x - self.center_x) / speed
+            self.change_y = (end_y - self.center_y) / speed
 
     def get_points(self) -> Tuple[Tuple[float, float]]:
         """
@@ -201,7 +212,7 @@ class Fireball(arcade.AnimatedTimeSprite):
             if self.is_wall_hit:
                 self.reset = True
                 if self.is_player_hit and not self.take_damage:
-                    player.health -= 10
+                    player.health -= 5
                     self.take_damage = True
                     self.is_player_hit = False
             self.cur_texture_index += 1

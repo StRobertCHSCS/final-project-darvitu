@@ -1,7 +1,17 @@
+"""
+-------------------------------------------------------------------------------
+Name: sounds.py
+Purpose: Code adding music.
+
+Author:	Wang.D
+
+Created: 12/01/2020
+-------------------------------------------------------------------------------
+"""
 import arcade
 
 
-class Sounds():
+class Sounds(arcade.PlaysoundException):
     def __init__(self):
         self.sounds = []
         self.add_sounds()
@@ -20,6 +30,7 @@ class Sounds():
         :param sound: sound name
         :return: none
         """
+        pass
 
     def add_sounds(self) -> None:
         """
@@ -28,3 +39,4 @@ class Sounds():
         """
         self.sounds.append(arcade.Sound("sounds/minecraft-theme.mp3"))
         self.sounds.append(arcade.Sound("sounds/starcraft-theme.mp3"))
+        self.sounds.append(arcade.Sound("sounds/player_attack.mp3"))
