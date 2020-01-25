@@ -1,6 +1,6 @@
 """
 -------------------------------------------------------------------------------
-Name: wizard.py
+Name: mage.py
 Purpose: Code for the mage enemy type.
 
 Author:	Wang.D
@@ -15,7 +15,7 @@ import math
 from player import Player
 
 
-class WizardTower(arcade.Sprite):
+class Mage(arcade.Sprite):
     def __init__(self, center_x, center_y, width, height):
         """
         Wizard tower that shoots towards player

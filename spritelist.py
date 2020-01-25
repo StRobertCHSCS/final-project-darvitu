@@ -10,8 +10,8 @@ Created: 01/01/2020
 """
 import arcade
 
-from blob import Blob
-from goblin import Goblin
+from slime import Slime
+from executioner import Executioner
 from player import Player
 
 

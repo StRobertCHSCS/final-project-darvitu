@@ -1,6 +1,6 @@
 """
 -------------------------------------------------------------------------------
-Name: goblin.py
+Name: executioner.py
 Purpose: Code for the executioner enemy type.
 
 Author:	Wang.D
@@ -14,7 +14,7 @@ from arcade.draw_commands import rotate_point
 from typing import Tuple
 
 
-class Goblin(arcade.AnimatedTimeSprite):
+class Executioner(arcade.AnimatedTimeSprite):
     def __init__(self, center_x: int, center_y: int, health: int = 10, direction="DOWN",
                  enemy_width=32,
                  enemy_height=48):

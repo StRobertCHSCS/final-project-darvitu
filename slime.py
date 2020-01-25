@@ -1,6 +1,6 @@
 """
 -------------------------------------------------------------------------------
-Name: blob.py
+Name: slime.py
 Purpose: Code for the slime enemy type.
 
 Author:	Wang.D
@@ -16,7 +16,7 @@ from arcade.draw_commands import rotate_point
 from typing import Tuple
 
 
-class Blob(arcade.AnimatedTimeSprite):
+class Slime(arcade.AnimatedTimeSprite):
     def __init__(self, center_x: int, center_y: int, direction="DOWN", enemy_width=32,
                  enemy_height=48):
         """Constructor of the Player class, that is the entity that the user will be moving controlling.

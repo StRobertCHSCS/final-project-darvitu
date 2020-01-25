@@ -18,12 +18,12 @@ import random
 from boss import Boss
 from player import Player
 from tiledmap import TiledMap
-from blob import Blob
+from slime import Slime
 from collision import CollisionDetection
 from sounds import Sounds
-from goblin import Goblin
+from executioner import Executioner
 from spritelist import Sprites
-from wizard import WizardTower, Fireball
+from mage import Mage, Fireball
 from minion import Minion
 
 
@@ -324,18 +324,18 @@ class Main():
         self.enemies = Sprites()
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
-        self.enemies.append(Blob(750, 750))
-        self.enemies.append(Blob(750, 50))
-        self.enemies.append(Blob(50, 750))
-        self.enemies.append(Goblin(750, 750, 3))
-        self.enemies.append(Goblin(750, 50, 3))
-        self.enemies.append(Goblin(50, 750, 3))
-        self.enemies.append(Blob(400, 400))
-        self.enemies.append(Goblin(400, 400, 3))
+        self.enemies.append(Slime(750, 750))
+        self.enemies.append(Slime(750, 50))
+        self.enemies.append(Slime(50, 750))
+        self.enemies.append(Executioner(750, 750, 3))
+        self.enemies.append(Executioner(750, 50, 3))
+        self.enemies.append(Executioner(50, 750, 3))
+        self.enemies.append(Slime(400, 400))
+        self.enemies.append(Executioner(400, 400, 3))
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
-        self.towers.append(WizardTower(400, 400, 48, 52))
+        self.towers.append(Mage(400, 400, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
@@ -363,26 +363,26 @@ class Main():
         self.enemies = Sprites()
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
-        self.enemies.append(Blob(750, 750))
-        self.enemies.append(Blob(750, 50))
-        self.enemies.append(Blob(50, 750))
-        self.enemies.append(Goblin(750, 750, 3))
-        self.enemies.append(Goblin(750, 50, 3))
-        self.enemies.append(Goblin(50, 750, 3))
-        self.enemies.append(Blob(400, 400))
-        self.enemies.append(Goblin(400, 400, 3))
+        self.enemies.append(Slime(750, 750))
+        self.enemies.append(Slime(750, 50))
+        self.enemies.append(Slime(50, 750))
+        self.enemies.append(Executioner(750, 750, 3))
+        self.enemies.append(Executioner(750, 50, 3))
+        self.enemies.append(Executioner(50, 750, 3))
+        self.enemies.append(Slime(400, 400))
+        self.enemies.append(Executioner(400, 400, 3))
 
-        self.enemies.append(Blob(400, 40))
-        self.enemies.append(Goblin(400, 40, 3))
-        self.enemies.append(Blob(400, 700))
-        self.enemies.append(Goblin(400, 700, 3))
-        self.enemies.append(Blob(750, 400))
-        self.enemies.append(Goblin(750, 400, 3))
+        self.enemies.append(Slime(400, 40))
+        self.enemies.append(Executioner(400, 40, 3))
+        self.enemies.append(Slime(400, 700))
+        self.enemies.append(Executioner(400, 700, 3))
+        self.enemies.append(Slime(750, 400))
+        self.enemies.append(Executioner(750, 400, 3))
 
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
-        self.towers.append(WizardTower(400, 400, 48, 52))
+        self.towers.append(Mage(400, 400, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
@@ -411,22 +411,22 @@ class Main():
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
 
-        self.enemies.append(Blob(300, 710))
-        self.enemies.append(Goblin(300, 710))
-        self.enemies.append(Blob(400, 710))
-        self.enemies.append(Goblin(400, 710))
-        self.enemies.append(Blob(500, 710))
-        self.enemies.append(Goblin(500, 710))
-        self.enemies.append(Blob(100, 710))
-        self.enemies.append(Goblin(100, 710))
-        self.enemies.append(Blob(700, 710))
-        self.enemies.append(Goblin(700, 710))
+        self.enemies.append(Slime(300, 710))
+        self.enemies.append(Executioner(300, 710))
+        self.enemies.append(Slime(400, 710))
+        self.enemies.append(Executioner(400, 710))
+        self.enemies.append(Slime(500, 710))
+        self.enemies.append(Executioner(500, 710))
+        self.enemies.append(Slime(100, 710))
+        self.enemies.append(Executioner(100, 710))
+        self.enemies.append(Slime(700, 710))
+        self.enemies.append(Executioner(700, 710))
 
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
-        self.towers.append(WizardTower(400, 700, 48, 52))
-        self.towers.append(WizardTower(400, 100, 48, 52))
+        self.towers.append(Mage(400, 700, 48, 52))
+        self.towers.append(Mage(400, 100, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
@@ -454,24 +454,24 @@ class Main():
         self.enemies = Sprites()
         self.towers = Sprites()
         self.obstacles = arcade.SpriteList()
-        self.enemies.append(Blob(750, 700))
-        self.enemies.append(Goblin(750, 700, 10))
+        self.enemies.append(Slime(750, 700))
+        self.enemies.append(Executioner(750, 700, 10))
 
-        self.enemies.append(Blob(750, 100))
-        self.enemies.append(Goblin(750, 100, 10))
+        self.enemies.append(Slime(750, 100))
+        self.enemies.append(Executioner(750, 100, 10))
 
-        self.enemies.append(Blob(80, 700))
-        self.enemies.append(Goblin(80, 700, 10))
+        self.enemies.append(Slime(80, 700))
+        self.enemies.append(Executioner(80, 700, 10))
 
-        self.enemies.append(Goblin(400, 400, 20))
+        self.enemies.append(Executioner(400, 400, 20))
 
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
         # self.towers.append(WizardTower(400, 300, 48, 52))
         # self.towers.append(WizardTower(400, 500, 48, 52))
-        self.towers.append(WizardTower(300, 400, 48, 52))
-        self.towers.append(WizardTower(500, 400, 48, 52))
+        self.towers.append(Mage(300, 400, 48, 52))
+        self.towers.append(Mage(500, 400, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))
@@ -511,17 +511,17 @@ class Main():
         for enemy in self.enemies:
             self.enemies_engine.append(
                 CollisionDetection(enemy, self.obstacles))
-        self.towers.append(WizardTower(100, 50, 48, 52))
-        self.towers.append(WizardTower(50, 100, 48, 52))
+        self.towers.append(Mage(100, 50, 48, 52))
+        self.towers.append(Mage(50, 100, 48, 52))
 
-        self.towers.append(WizardTower(700, 750, 48, 52))
-        self.towers.append(WizardTower(750, 700, 48, 52))
+        self.towers.append(Mage(700, 750, 48, 52))
+        self.towers.append(Mage(750, 700, 48, 52))
 
-        self.towers.append(WizardTower(100, 750, 48, 52))
-        self.towers.append(WizardTower(50, 700, 48, 52))
+        self.towers.append(Mage(100, 750, 48, 52))
+        self.towers.append(Mage(50, 700, 48, 52))
 
-        self.towers.append(WizardTower(700, 50, 48, 52))
-        self.towers.append(WizardTower(750, 100, 48, 52))
+        self.towers.append(Mage(700, 50, 48, 52))
+        self.towers.append(Mage(750, 100, 48, 52))
         for tower in self.towers:
             self.towers_engine.append(
                 CollisionDetection(tower.fireball, self.rooms[self.world].wall_list))

@@ -1,6 +1,6 @@
 """
 -------------------------------------------------------------------------------
-Name: goblin.py
+Name: executioner.py
 Purpose: Code for the executioner enemy type.
 
 Author:	Wang.D

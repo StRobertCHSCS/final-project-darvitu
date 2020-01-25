@@ -13,13 +13,13 @@ import time
 
 from boss import Boss
 from boss_bullet import BossBullet
-from goblin import Goblin
+from executioner import Executioner
 from minion import Minion
 from player import Player
 from tiledmap import TiledMap
 from arcade.geometry import check_for_collision_with_list
-from blob import Blob
-from wizard import Fireball, WizardTower
+from slime import Slime
+from mage import Fireball, Mage
 
 
 class CollisionDetection(arcade.PhysicsEngineSimple):
@@ -51,9 +51,9 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                     if self.player.is_attack_state:
                         if not isinstance(item, Fireball):
                             item.health -= 1.5
-                    if isinstance(item, Goblin):
+                    if isinstance(item, Executioner):
                         item.is_player_hit = True
-                    if isinstance(item, Blob):
+                    if isinstance(item, Slime):
                         item.is_player_hit = True
                     if isinstance(item, Fireball):
                         item.is_wall_hit = True
@@ -117,7 +117,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
             self.player.change_x, self.player.change_y = 0, 0
 
         # if it isn't the player
-        elif isinstance(self.player, Blob):
+        elif isinstance(self.player, Slime):
             # --- Move sprite
             self.player.follow(player_to_follow)
             # update x position
@@ -189,7 +189,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                 self.player.center_y = 20
             self.player.change_x, self.player.change_y = 0, 0
 
-        elif isinstance(self.player, Goblin):
+        elif isinstance(self.player, Executioner):
             # --- Move sprite
             self.player.follow(player_to_follow)
             # update x position
