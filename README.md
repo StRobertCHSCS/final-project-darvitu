@@ -24,11 +24,11 @@ There are 3 main enemy types in Attack on Stronghold, the Slime, Executioner, an
 
 * Executioner: A slow moving enemy and always moves towards the player. Attack is a heavy hitting axe slash which deals 3 damage on hit. Each attack has a 2 second cooldown
 
-* Slime: A fast moving enemy which always chases the player. Attack is a light melee attack when the smile is in contact with the player. Attack deals 1 damage but has no cooldown.
+* Slime: A fast moving enemy which always chases the player. Attack is a light melee attack when the slime is in contact with the player. Attack deals 1 damage but has no cooldown.
 
-* Minion: A fast moving enemy that floats, meaning it can travel over walls and lava. Deals 1 damage when in contact with the player. They have more healh than the other enemies and is only present in the boss stage. They have no cooldown. 
+* Minion: A fast moving enemy that follows the player and can pass through walls. Deals 1 damage when in contact with the player. They have more health than the other enemies and is only present in the boss stage. They have no respawn cooldown. 
 
-* Boss: The final enemy to kill before winning the game. Does not do damage but has a 100 health and has its own health bar. 
+* Boss: The final enemy to defeat before winning the game. Does not deal damage to the player directly but spawns minions. Has 100 health and can be attacked by player.  
 
 
 ### SCORING
