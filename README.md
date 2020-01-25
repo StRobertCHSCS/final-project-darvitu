@@ -41,7 +41,7 @@ The Arcade library, while useful, has several limitations. Due to how the sprite
 ### SCREEN MOCK-UPS
 
 Preliminary level design:
-![image of level](https://github.com/StRobertCHSCS/final-project-darvitu/blob/master/images/mock1.png) 
+![image of level](images/mock1.png) 
 
 Basic enemy and player mechanics:
-![image of mechanics](https://github.com/StRobertCHSCS/final-project-darvitu/blob/master/images/mock2.png)
+![image of mechanics](images/mock2.png)
