@@ -37,3 +37,11 @@ There is no formal scoring system in Attack on Stronghold. The success of a game
 
 ### FUNCTIONALITY AND LIMITATIONS
 The Arcade library, while useful, has several limitations. Due to how the sprite class works, detailed movement animations cannot be made if collision is to work properly. Addititonally, due to Python's slower execution time, not to many animated sprites can be put on the screen. Rapid key presses or jitter movements will overload Arcade's built-in user input module and cause glitches. Arcade has no built in timer so some elements need to be sequenced manually. Background music is essential to games, however it slows the game down dramatically. 
+
+### SCREEN MOCK-UPS
+
+Preliminary level design:
+![image of level](https://github.com/StRobertCHSCS/final-project-darvitu/blob/master/images/mock1.png) 
+
+Basic enemy and player mechanics:
+![image of mechanics](https://github.com/StRobertCHSCS/final-project-darvitu/blob/master/images/mock2.png)
