@@ -7,7 +7,7 @@ Attack on Stronghold is a single-player roguelike game where the goal is to go t
 ### GAMEPLAY INSTRUCTIONS
 
 #### CONTROLS
-Player will move the character around the screen using the arrow keys. A short attack will be made by the character when pressing space and it is possible to spam the attack with no cooldown
+Player will move the character around the screen using the arrow keys. A short attack will be made by the character when pressing space and it is possible to spam the attack with no cooldown. Press P at any time to pause the game, DELETE to exit the game, and ENTER to continue to the next level. 
 
 #### MECHANICS
 
@@ -36,4 +36,4 @@ There is no formal scoring system in Attack on Stronghold. The success of a game
 
 
 ### FUNCTIONALITY AND LIMITATIONS
-The Arcade library, while useful, has several limitations. Due to how the sprite class works, detailed movement animations cannot be made if collision is to work properly. Addititonally, due to Python's slower execution time, not to many animated sprites can be put on the screen. Rapid key presses or jitter movements will overload Arcade's built-in user input module and cause glitches. Arcade has no built in timer so some elements need to be sequenced manually.
+The Arcade library, while useful, has several limitations. Due to how the sprite class works, detailed movement animations cannot be made if collision is to work properly. Addititonally, due to Python's slower execution time, not to many animated sprites can be put on the screen. Rapid key presses or jitter movements will overload Arcade's built-in user input module and cause glitches. Arcade has no built in timer so some elements need to be sequenced manually. Background music is essential to games, however it slows the game down dramatically. 
