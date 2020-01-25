@@ -7,7 +7,7 @@ Attack on Stronghold is a single-player roguelike game where the goal is to go t
 ### GAMEPLAY INSTRUCTIONS
 
 #### CONTROLS
-Player will move the character around the screen using the arrow keys. A short attack will be made by the character when pressing space and it is possible to spam the attack with no cooldown
+Player will move the character around the screen using the arrow keys. A short attack will be made by the character when pressing space and it is possible to spam the attack with no cooldown. Press P at any time to pause the game, DELETE to exit the game, and ENTER to continue to the next level. 
 
 #### MECHANICS
 
@@ -22,13 +22,13 @@ There are 3 main enemy types in Attack on Stronghold, the Slime, Executioner, an
 
 * Mage: A non moving enemy and always faces toward the player. Attack is a ranged fireball which deals 10 damage and has a cooldown of 1 second after the fireball is either destroyed by the player attack or it hits a wall. Cannot be killed.
 
-* Executioner: A slow moving enemy and always moves towards the player. Attack is a heavy hitting axe slash which deals 3 damage on hit. Each attack has a 2 second cooldown
+* Executioner: A slow moving enemy and always moves towards the player. Attack is a heavy hitting axe slash which deals 3 damage on hit. Each attack has a 2 second cooldown.
 
-* Slime: A fast moving enemy which always chases the player. Attack is a light melee attack when the smile is in contact with the player. Attack deals 1 damage but has no cooldown.
+* Slime: A fast moving enemy which always chases the player. Attack is a light melee attack when the slime is in contact with the player. Attack deals 1 damage but has no cooldown.
 
-* Minion: A fast moving enemy that floats, meaning it can travel over walls and lava. Deals 1 damage when in contact with the player. They have more healh than the other enemies and is only present in the boss stage. They have no cooldown. 
+* Minion: A fast moving enemy that follows the player and can pass through walls. Deals 1 damage when in contact with the player. They have more health than the other enemies and is only present in the boss stage. They have no respawn cooldown. 
 
-* Boss: The final enemy to kill before winning the game. Does not do damage but has a 100 health and has its own health bar. 
+* Boss: The final enemy to defeat before winning the game. Does not deal damage to the player directly but spawns minions. Has 100 health and can be attacked by player.  
 
 
 ### SCORING
@@ -36,4 +36,4 @@ There is no formal scoring system in Attack on Stronghold. The success of a game
 
 
 ### FUNCTIONALITY AND LIMITATIONS
-The Arcade library, while useful, has several limitations. Due to how the sprite class works, detailed movement animations cannot be made if collision is to work properly. Addititonally, due to Python's slower execution time, not to many animated sprites can be put on the screen. Rapid key presses or jitter movements will overload Arcade's built-in user input module and cause glitches. Arcade has no built in timer so some elements need to be sequenced manually.
+The Arcade library, while useful, has several limitations. Due to how the sprite class works, detailed movement animations cannot be made if collision is to work properly. Addititonally, due to Python's slower execution time, not to many animated sprites can be put on the screen. Rapid key presses or jitter movements will overload Arcade's built-in user input module and cause glitches. Arcade has no built in timer so some elements need to be sequenced manually. Background music is essential to games, however it slows the game down dramatically. 
