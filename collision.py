@@ -50,7 +50,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                 for item in hit_list:
                     if self.player.is_attack_state:
                         if not isinstance(item, Fireball):
-                            item.health -= 1
+                            item.health -= 1.5
                     if isinstance(item, Goblin):
                         item.is_player_hit = True
                     if isinstance(item, Blob):
@@ -60,7 +60,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
                         item.is_player_hit = True
                     if isinstance(item, Boss):
                         if self.player.is_attack_state:
-                            item.health -= 0.25
+                            item.health -= 0.5
         # if the player is the user
         elif isinstance(self.player, Player):
             if self.player.health < 1:
@@ -113,7 +113,7 @@ class CollisionDetection(arcade.PhysicsEngineSimple):
             hit_list = \
                 check_for_collision_with_list(self.player, self.traps)
             if len(hit_list) > 0:
-                self.player.health -= 0.25
+                self.player.health -= 0.1
             self.player.change_x, self.player.change_y = 0, 0
 
         # if it isn't the player

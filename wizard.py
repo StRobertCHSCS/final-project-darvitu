@@ -212,7 +212,7 @@ class Fireball(arcade.AnimatedTimeSprite):
             if self.is_wall_hit:
                 self.reset = True
                 if self.is_player_hit and not self.take_damage:
-                    player.health -= 5
+                    player.health -= 2.5
                     self.take_damage = True
                     self.is_player_hit = False
             self.cur_texture_index += 1
